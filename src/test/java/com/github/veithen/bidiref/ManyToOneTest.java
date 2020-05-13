@@ -33,4 +33,33 @@ public class ManyToOneTest {
         child2.setParent(parent);
         assertThat(parent.getChildren()).containsExactly(child1, child2).inOrder();
     }
+
+    @Test
+    public void testAddChild() {
+        Parent parent = new Parent();
+        Child child = new Child();
+        parent.getChildren().add(child);
+        assertThat(child.getParent()).isSameInstanceAs(parent);
+    }
+
+    @Test
+    public void testAddChildToOtherParent() {
+        Parent parent1 = new Parent();
+        Parent parent2 = new Parent();
+        Child child = new Child();
+        parent1.getChildren().add(child);
+        assertThat(child.getParent()).isSameInstanceAs(parent1);
+        parent2.getChildren().add(child);
+        assertThat(child.getParent()).isSameInstanceAs(parent2);
+        assertThat(parent1.getChildren()).isEmpty();
+    }
+
+    @Test
+    public void testRemoveChild() {
+        Parent parent = new Parent();
+        Child child = new Child();
+        child.setParent(parent);
+        assertThat(parent.getChildren().remove(child)).isTrue();
+        assertThat(child.getParent()).isNull();
+    }
 }

@@ -22,6 +22,7 @@ package com.github.veithen.bidiref;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 public final class References<T> extends ReferenceHolder<T> implements Set<T> {
@@ -37,7 +38,9 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         @SuppressWarnings("unchecked")
         @Override
         public T next() {
-            // TODO: throw exception if hasNext==false
+            if (nextIndex == -1) {
+                throw new NoSuchElementException();
+            }
             Object element = elements[nextIndex];
             // TODO: check element != null and throw ConcurrentModificationException
             nextIndex = nextIndexes[currentIndex = nextIndex];
@@ -190,8 +193,11 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     @Override
     public boolean remove(Object object) {
         // TODO: avoid cast here
-        // TODO: invoke listener
-        return internalRemove((T)object);
+        boolean removed = internalRemove((T)object);
+        if (removed) {
+            listener.removed((T)object);
+        }
+        return removed;
     }
 
     @Override
@@ -222,5 +228,19 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     public void clear() {
         // TODO
         throw new UnsupportedOperationException();
+    }
+
+    public Iterable<T> snapshot() {
+        final Object[] elements = new Object[this.elements.length];
+        System.arraycopy(this.elements, 0, elements, 0, elements.length);
+        final int[] nextIndexes = new int[this.nextIndexes.length];
+        System.arraycopy(this.nextIndexes, 0, nextIndexes, 0, nextIndexes.length);
+        final int firstIndex = this.firstIndex;
+        return new Iterable<T>() {
+            @Override
+            public Iterator<T> iterator() {
+                return new SnapshotIterator<>(elements, nextIndexes, firstIndex);
+            }
+        };
     }
 }

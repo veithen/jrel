@@ -26,6 +26,10 @@ public class Child {
 
     private final Reference<Parent> parent = Relations.PARENT.newReference(this);
 
+    public Parent getParent() {
+        return parent.get();
+    }
+
     public void setParent(Parent parent) {
         this.parent.set(parent);
     }

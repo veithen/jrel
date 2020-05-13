@@ -20,8 +20,10 @@
 package com.github.veithen.bidiref;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
 
@@ -99,6 +101,7 @@ public class ReferencesTest {
         assertThat(it.hasNext()).isTrue();
         assertThat(it.next()).isSameInstanceAs(child3);
         assertThat(it.hasNext()).isFalse();
+        assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
@@ -117,5 +120,28 @@ public class ReferencesTest {
         assertThat(it.hasNext()).isTrue();
         assertThat(it.next()).isSameInstanceAs(child3);
         assertThat(children).containsExactly(child1, child3);
+    }
+
+    @Test
+    public void testSnapshot() {
+        References<Child> children = new Parent().getChildren();
+        Child child1 = new Child();
+        Child child2 = new Child();
+        Child child3 = new Child();
+        children.add(child1);
+        children.add(child2);
+        children.add(child3);
+        Iterable<Child> snapshot = children.snapshot();
+        children.remove(child1);
+        children.add(new Child());
+        Iterator<Child> it = snapshot.iterator();
+        assertThat(it.hasNext()).isTrue();
+        assertThat(it.next()).isSameInstanceAs(child1);
+        assertThat(it.hasNext()).isTrue();
+        assertThat(it.next()).isSameInstanceAs(child2);
+        assertThat(it.hasNext()).isTrue();
+        assertThat(it.next()).isSameInstanceAs(child3);
+        assertThat(it.hasNext()).isFalse();
+        assertThrows(NoSuchElementException.class, it::next);
     }
 }

@@ -26,6 +26,8 @@ public abstract class ReferenceHolder<T> {
         this.listener = listener;
     }
 
+    public abstract void clear();
+
     abstract boolean internalAdd(T object);
     abstract boolean internalRemove(T object);
 }

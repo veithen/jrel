@@ -19,11 +19,17 @@
  */
 package com.github.veithen.bidiref;
 
-public final class Reference<T> extends ReferenceHolder<T> {
+import java.util.function.Supplier;
+
+public final class Reference<T> extends ReferenceHolder<T> implements Supplier<T> {
     private T target;
 
     Reference(ReferenceListener<?,T> listener) {
         super(listener);
+    }
+
+    public T get() {
+        return target;
     }
 
     public void set(T target) {
@@ -39,15 +45,29 @@ public final class Reference<T> extends ReferenceHolder<T> {
         }
     }
 
+    public void clear() {
+        if (target != null) {
+            listener.removed(target);
+            target = null;
+        }
+    }
+
     @Override
     boolean internalAdd(T object) {
-        // TODO Auto-generated method stub
-        return false;
+        if (object == target) {
+            return false;
+        }
+        clear();
+        target = object;
+        return true;
     }
 
     @Override
     boolean internalRemove(T object) {
-        // TODO Auto-generated method stub
-        return false;
+        if (object != target) {
+            return false;
+        }
+        target = null;
+        return true;
     }
 }

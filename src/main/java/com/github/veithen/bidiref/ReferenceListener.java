@@ -29,10 +29,14 @@ final class ReferenceListener<T,U> {
     }
 
     void added(U object) {
-        reverseRelation.getter().apply(object).internalAdd(owner);
+        if (!reverseRelation.getter().apply(object).internalAdd(owner)) {
+            throw new IllegalStateException();
+        }
     }
 
     void removed(U object) {
-        reverseRelation.getter().apply(object).internalRemove(owner);
+        if (!reverseRelation.getter().apply(object).internalRemove(owner)) {
+            throw new IllegalStateException();
+        }
     }
 }
