@@ -52,9 +52,10 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
             if (currentIndex == -1) {
                 throw new IllegalStateException();
             }
+            Object element = elements[currentIndex];
             removeElementAt(currentIndex);
             currentIndex = -1;
-            // TODO: call listener
+            listener.removed((T)element);
         }
     }
 

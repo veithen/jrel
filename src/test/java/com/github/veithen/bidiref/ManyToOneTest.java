@@ -21,6 +21,8 @@ package com.github.veithen.bidiref;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.Iterator;
+
 import org.junit.jupiter.api.Test;
 
 public class ManyToOneTest {
@@ -60,6 +62,17 @@ public class ManyToOneTest {
         Child child = new Child();
         child.setParent(parent);
         assertThat(parent.getChildren().remove(child)).isTrue();
+        assertThat(child.getParent()).isNull();
+    }
+
+    @Test
+    public void testRemoveChildUsingIterator() {
+        Parent parent = new Parent();
+        Child child = new Child();
+        child.setParent(parent);
+        Iterator<Child> it = parent.getChildren().iterator();
+        it.next();
+        it.remove();
         assertThat(child.getParent()).isNull();
     }
 }
