@@ -53,6 +53,18 @@ public class ReferencesTest {
     }
 
     @Test
+    public void testAddMany() {
+        References<Child> children = new Parent().getChildren();
+        Child[] expectedChildren = new Child[1000];
+        for (int i=0; i<expectedChildren.length; i++) {
+            Child child = new Child();
+            children.add(child);
+            expectedChildren[i] = child;
+        }
+        assertThat(children).containsExactlyElementsIn(expectedChildren);
+    }
+
+    @Test
     public void testContains() {
         References<Child> children = new Parent().getChildren();
         for (int i=0; i<10; i++) {

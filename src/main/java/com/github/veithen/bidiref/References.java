@@ -60,15 +60,18 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
 
     private final static Object TOMBSTONE = new Object();
 
+    private final float loadFactor;
     private int size;
+    private int tombstones;
     private Object[] elements;
     private int[] prevIndexes;
     private int[] nextIndexes;
     private int firstIndex = -1;
     private int lastIndex = -1;
 
-    References(ReferenceListener<?,T> listener, int initialCapacity) {
+    References(ReferenceListener<?,T> listener, int initialCapacity, float loadFactor) {
         super(listener);
+        this.loadFactor = loadFactor;
         elements = new Object[initialCapacity];
         prevIndexes = new int[initialCapacity];
         Arrays.fill(prevIndexes, -1);
@@ -78,12 +81,65 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
 
     @Override
     boolean internalAdd(T object) {
-        int hash = System.identityHashCode(object);
         int capacity = elements.length;
+        if (size + tombstones >= capacity*loadFactor) {
+            // We only take into account size here because we will remove the tombstones. Note that
+            // this means that we don't necessarily increase the capacity (and just remove the
+            // tombstones).
+            while (size >= capacity*loadFactor) {
+                capacity *= 2;
+            }
+            Object[] newElements = new Object[capacity];
+            int[] indexMap = new int[elements.length];
+            for (int oldIndex = 0; oldIndex<elements.length; oldIndex++) {
+                Object element = elements[oldIndex];
+                if (element == null || element == TOMBSTONE) {
+                    continue;
+                }
+                int hash = System.identityHashCode(element);
+                int newIndex = hash % capacity;
+                while (newElements[newIndex] != null) {
+                    newIndex = (newIndex + 1) % capacity;
+                }
+                newElements[newIndex] = element;
+                indexMap[oldIndex] = newIndex;
+            }
+            int[] newPrevIndexes = new int[capacity];
+            Arrays.fill(newPrevIndexes, -1);
+            int[] newNextIndexes = new int[capacity];
+            Arrays.fill(newNextIndexes, -1);
+            for (int oldIndex = 0; oldIndex<elements.length; oldIndex++) {
+                Object element = elements[oldIndex];
+                if (element == null || element == TOMBSTONE) {
+                    continue;
+                }
+                if (prevIndexes[oldIndex] != -1) {
+                    newPrevIndexes[indexMap[oldIndex]] = indexMap[prevIndexes[oldIndex]];
+                }
+                if (nextIndexes[oldIndex] != -1) {
+                    newNextIndexes[indexMap[oldIndex]] = indexMap[nextIndexes[oldIndex]];
+                }
+            }
+            tombstones = 0;
+            elements = newElements;
+            prevIndexes = newPrevIndexes;
+            nextIndexes = newNextIndexes;
+            if (firstIndex != -1) {
+                firstIndex = indexMap[firstIndex];
+            }
+            if (lastIndex != -1) {
+                lastIndex = indexMap[lastIndex];
+            }
+        }
+        int hash = System.identityHashCode(object);
         int index = hash % capacity;
         while (true) {
             Object element = elements[index];
             if (element == null) {
+                break;
+            }
+            if (element == TOMBSTONE) {
+                tombstones--;
                 break;
             }
             if (element == object) {
@@ -116,6 +172,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
             nextIndexes[prevIndexes[index]] = nextIndexes[index];
         }
         size--;
+        tombstones++;
     }
 
     @Override
