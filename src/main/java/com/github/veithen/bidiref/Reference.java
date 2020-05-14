@@ -36,9 +36,7 @@ public final class Reference<T> extends ReferenceHolder<T> implements Supplier<T
         if (this.target == target) {
             return;
         }
-        if (this.target != null) {
-            listener.removed(this.target);
-        }
+        clear();
         this.target = target;
         if (target != null) {
             listener.added(target);
