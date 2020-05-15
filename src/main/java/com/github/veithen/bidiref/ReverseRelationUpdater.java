@@ -22,7 +22,7 @@ package com.github.veithen.bidiref;
 import java.util.Deque;
 import java.util.LinkedList;
 
-final class ReverseRelationUpdater<T,U> implements ReferenceListener<U> {
+final class ReverseRelationUpdater<T,U> implements CollectionListener<U> {
     private interface Action {
         <T> boolean execute(ReferenceHolder<T> referenceHolder, T object);
     }

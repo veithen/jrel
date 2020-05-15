@@ -18,25 +18,8 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-final class ReferenceListenerList<T> {
-    private final List<ReferenceListener<? super T>> listeners = new ArrayList<>();
-
-    void add(ReferenceListener<? super T> listener) {
-        listeners.add(listener);
-    }
-
-    void fireAdded(T object) {
-        for (ReferenceListener<? super T> listener : listeners) {
-            listener.added(object);
-        }
-    }
-
-    void fireRemoved(T object) {
-        for (ReferenceListener<? super T> listener : listeners) {
-            listener.removed(object);
-        }
-    }
+public interface ListenableCollection<T> extends Collection<T> {
+    void addListener(CollectionListener<? super T> listener);
 }

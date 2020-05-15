@@ -20,7 +20,7 @@
 package com.github.veithen.bidiref;
 
 public interface ReferenceHolder<T> {
-    void addReferenceListener(ReferenceListener<? super T> listener);
+    void addListener(CollectionListener<? super T> listener);
     void clear();
     boolean add(T object);
     boolean remove(Object object);

@@ -19,7 +19,7 @@
  */
 package com.github.veithen.bidiref;
 
-public interface ReferenceListener<T> {
+public interface CollectionListener<T> {
     void added(T object);
     void removed(T object);
 }

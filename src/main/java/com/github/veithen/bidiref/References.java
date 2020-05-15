@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public final class References<T> extends AbstractSet<T> implements ReferenceHolder<T> {
+public final class References<T> extends AbstractSet<T> implements ReferenceHolder<T>, ListenableCollection<T> {
     private class It implements Iterator<T> {
         private int currentIndex = -1;
         private int nextIndex = firstIndex;
@@ -59,7 +59,7 @@ public final class References<T> extends AbstractSet<T> implements ReferenceHold
 
     private final static Object TOMBSTONE = new Object();
 
-    private final ReferenceListenerList<T> listeners = new ReferenceListenerList<>();
+    private final ListenableCollectionSupport<T> listeners = new ListenableCollectionSupport<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
@@ -78,8 +78,8 @@ public final class References<T> extends AbstractSet<T> implements ReferenceHold
         Arrays.fill(nextIndexes, -1);
     }
 
-    public void addReferenceListener(ReferenceListener<? super T> listener) {
-        listeners.add(listener);
+    public void addListener(CollectionListener<? super T> listener) {
+        listeners.addListener(listener);
     }
 
     @Override

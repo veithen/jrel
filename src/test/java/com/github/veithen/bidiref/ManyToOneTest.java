@@ -95,7 +95,7 @@ public class ManyToOneTest {
         boolean[] removedFired = new boolean[2];
         Parent parent = new Parent();
         Child child = new Child();
-        parent.getChildren().addReferenceListener(new ReferenceListener<Child>() {
+        parent.getChildren().addListener(new CollectionListener<Child>() {
             @Override
             public void added(Child object) {
                 assertThat(object).isSameInstanceAs(child);
@@ -108,7 +108,7 @@ public class ManyToOneTest {
                 removedFired[0] = true;
             }
         });
-        child.getParentReference().addReferenceListener(new ReferenceListener<Parent>() {
+        child.getParentReference().addListener(new CollectionListener<Parent>() {
             @Override
             public void added(Parent object) {
                 assertThat(object).isSameInstanceAs(parent);

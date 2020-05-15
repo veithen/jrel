@@ -21,13 +21,8 @@ package com.github.veithen.bidiref;
 
 import java.util.function.Supplier;
 
-public final class Reference<T> implements ReferenceHolder<T>, Supplier<T> {
-    private final ReferenceListenerList<T> listeners = new ReferenceListenerList<>();
+public final class Reference<T> extends ListenableCollectionSupport<T> implements ReferenceHolder<T>, Supplier<T> {
     private T target;
-
-    public void addReferenceListener(ReferenceListener<? super T> listener) {
-        listeners.add(listener);
-    }
 
     public T get() {
         return target;
@@ -40,13 +35,13 @@ public final class Reference<T> implements ReferenceHolder<T>, Supplier<T> {
         clear();
         this.target = target;
         if (target != null) {
-            listeners.fireAdded(target);
+            fireAdded(target);
         }
     }
 
     public void clear() {
         if (target != null) {
-            listeners.fireRemoved(target);
+            fireRemoved(target);
             target = null;
         }
     }
@@ -58,7 +53,7 @@ public final class Reference<T> implements ReferenceHolder<T>, Supplier<T> {
         }
         clear();
         target = object;
-        listeners.fireAdded(object);
+        fireAdded(object);
         return true;
     }
 
