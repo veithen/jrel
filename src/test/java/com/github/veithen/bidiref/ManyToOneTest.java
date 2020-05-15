@@ -75,4 +75,16 @@ public class ManyToOneTest {
         it.remove();
         assertThat(child.getParent()).isNull();
     }
+
+    @Test
+    public void testClearChildren() {
+        Parent parent = new Parent();
+        Child child1 = new Child();
+        Child child2 = new Child();
+        child1.setParent(parent);
+        child2.setParent(parent);
+        parent.getChildren().clear();
+        assertThat(child1.getParent()).isNull();
+        assertThat(child2.getParent()).isNull();
+    }
 }

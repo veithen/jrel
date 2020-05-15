@@ -286,8 +286,22 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
 
     @Override
     public void clear() {
-        // TODO
-        throw new UnsupportedOperationException();
+        if (size == 0) {
+            return;
+        }
+        for (int i=0; i<elements.length; i++) {
+            Object element = elements[i];
+            if (element != null && element != TOMBSTONE) {
+                listener.removed((T)element);
+            }
+        }
+        size = 0;
+        tombstones = 0;
+        Arrays.fill(elements, null);
+        Arrays.fill(prevIndexes, -1);
+        Arrays.fill(nextIndexes, -1);
+        firstIndex = -1;
+        lastIndex = -1;
     }
 
     public Iterable<T> snapshot() {
