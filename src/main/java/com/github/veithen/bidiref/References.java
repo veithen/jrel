@@ -303,4 +303,21 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
             }
         };
     }
+
+    @Override
+    public String toString() {
+        Iterator<T> it = iterator();
+        if (!it.hasNext()) {
+            return "[]";
+        }
+        StringBuilder builder = new StringBuilder("[");
+        while (true) {
+            builder.append(it.next());
+            if (!it.hasNext()) {
+                builder.append("]");
+                return builder.toString();
+            }
+            builder.append(", ");
+        }
+    }
 }

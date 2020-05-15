@@ -22,6 +22,7 @@ package com.github.veithen.bidiref;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
@@ -180,5 +181,15 @@ public class ReferencesTest {
         assertThat(it.next()).isSameInstanceAs(child3);
         assertThat(it.hasNext()).isFalse();
         assertThrows(NoSuchElementException.class, it::next);
+    }
+
+    @Test
+    public void testToString() {
+        References<Child> children = new Parent().getChildren();
+        Child child1 = new Child();
+        Child child2 = new Child();
+        children.add(child1);
+        children.add(child2);
+        assertThat(children.toString()).isEqualTo(new LinkedHashSet<Child>(Arrays.asList(child1, child2)).toString());
     }
 }
