@@ -21,6 +21,7 @@ package com.github.veithen.bidiref;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
@@ -86,5 +87,46 @@ public class ManyToOneTest {
         parent.getChildren().clear();
         assertThat(child1.getParent()).isNull();
         assertThat(child2.getParent()).isNull();
+    }
+
+    @Test
+    public void testListeners() {
+        boolean[] addedFired = new boolean[2];
+        boolean[] removedFired = new boolean[2];
+        Parent parent = new Parent();
+        Child child = new Child();
+        parent.getChildren().addReferenceListener(new ReferenceListener<Child>() {
+            @Override
+            public void added(Child object) {
+                assertThat(object).isSameInstanceAs(child);
+                addedFired[0] = true;
+            }
+
+            @Override
+            public void removed(Child object) {
+                assertThat(object).isSameInstanceAs(child);
+                removedFired[0] = true;
+            }
+        });
+        child.getParentReference().addReferenceListener(new ReferenceListener<Parent>() {
+            @Override
+            public void added(Parent object) {
+                assertThat(object).isSameInstanceAs(parent);
+                addedFired[1] = true;
+            }
+
+            @Override
+            public void removed(Parent object) {
+                assertThat(object).isSameInstanceAs(parent);
+                removedFired[1] = true;
+            }
+        });
+        child.setParent(parent);
+        assertThat(addedFired).asList().containsExactly(true, true);
+        assertThat(removedFired).asList().containsExactly(false, false);
+        Arrays.fill(addedFired, false);
+        child.setParent(null);
+        assertThat(addedFired).asList().containsExactly(false, false);
+        assertThat(removedFired).asList().containsExactly(true, true);
     }
 }

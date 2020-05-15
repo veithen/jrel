@@ -24,10 +24,6 @@ import java.util.function.Supplier;
 public final class Reference<T> extends ReferenceHolder<T> implements Supplier<T> {
     private T target;
 
-    Reference(ReverseRelationUpdater<?,T> listener) {
-        super(listener);
-    }
-
     public T get() {
         return target;
     }
@@ -39,29 +35,30 @@ public final class Reference<T> extends ReferenceHolder<T> implements Supplier<T
         clear();
         this.target = target;
         if (target != null) {
-            listener.added(target);
+            fireAdded(target);
         }
     }
 
     public void clear() {
         if (target != null) {
-            listener.removed(target);
+            fireRemoved(target);
             target = null;
         }
     }
 
     @Override
-    boolean internalAdd(T object) {
+    public boolean add(T object) {
         if (object == target) {
             return false;
         }
         clear();
         target = object;
+        fireAdded(object);
         return true;
     }
 
     @Override
-    boolean internalRemove(T object) {
+    public boolean remove(Object object) {
         if (object != target) {
             return false;
         }

@@ -55,7 +55,6 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
             Object element = elements[currentIndex];
             removeElementAt(currentIndex);
             currentIndex = -1;
-            listener.removed((T)element);
         }
     }
 
@@ -70,8 +69,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     private int firstIndex = -1;
     private int lastIndex = -1;
 
-    References(ReverseRelationUpdater<?,T> listener, int initialCapacity, float loadFactor) {
-        super(listener);
+    References(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
         elements = new Object[initialCapacity];
         prevIndexes = new int[initialCapacity];
@@ -81,7 +79,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     }
 
     @Override
-    boolean internalAdd(T object) {
+    public boolean add(T object) {
         int capacity = elements.length;
         if (size + tombstones >= capacity*loadFactor) {
             // We only take into account size here because we will remove the tombstones. Note that
@@ -157,10 +155,12 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         }
         lastIndex = index;
         size++;
+        fireAdded(object);
         return true;
     }
 
     private void removeElementAt(int index) {
+        T object = (T)elements[index];
         elements[index] = TOMBSTONE;
         if (nextIndexes[index] == -1) {
             lastIndex = prevIndexes[index];
@@ -176,10 +176,11 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         nextIndexes[index] = -1;
         size--;
         tombstones++;
+        fireRemoved(object);
     }
 
     @Override
-    boolean internalRemove(T object) {
+    public boolean remove(Object object) {
         int hash = System.identityHashCode(object);
         int capacity = elements.length;
         int index = hash % capacity;
@@ -242,25 +243,6 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     }
 
     @Override
-    public boolean add(T object) {
-        boolean added = internalAdd(object);
-        if (added) {
-            listener.added(object);
-        }
-        return added;
-    }
-
-    @Override
-    public boolean remove(Object object) {
-        // TODO: avoid cast here
-        boolean removed = internalRemove((T)object);
-        if (removed) {
-            listener.removed((T)object);
-        }
-        return removed;
-    }
-
-    @Override
     public boolean containsAll(Collection<?> c) {
         // TODO
         throw new UnsupportedOperationException();
@@ -292,7 +274,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         for (int i=0; i<elements.length; i++) {
             Object element = elements[i];
             if (element != null && element != TOMBSTONE) {
-                listener.removed((T)element);
+                fireRemoved((T)element);
             }
         }
         size = 0;
