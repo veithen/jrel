@@ -193,6 +193,7 @@ public class ReferencesTest {
         assertThat(children.toString()).isEqualTo(new LinkedHashSet<Child>(Arrays.asList(child1, child2)).toString());
     }
 
+    @Test
     public void testToStringEmpty() {
         References<Child> children = new Parent().getChildren();
         assertThat(children.toString()).isEqualTo("[]");
