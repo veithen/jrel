@@ -86,6 +86,10 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         listeners.addListener(listener);
     }
 
+    public void removeListener(CollectionListener<? super T> listener) {
+        listeners.removeListener(listener);
+    }
+
     @Override
     public boolean add(T object) {
         int capacity = elements.length;
@@ -238,12 +242,8 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         if (size == 0) {
             return;
         }
-        for (int i=0; i<elements.length; i++) {
-            Object element = elements[i];
-            if (element != null && element != TOMBSTONE) {
-                listeners.fireRemoved((T)element);
-            }
-        }
+        Object[] oldElements = elements;
+        elements = new Object[elements.length];
         size = 0;
         tombstones = 0;
         Arrays.fill(elements, null);
@@ -251,6 +251,12 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         Arrays.fill(nextIndexes, -1);
         firstIndex = -1;
         lastIndex = -1;
+        for (int i=0; i<oldElements.length; i++) {
+            Object element = oldElements[i];
+            if (element != null && element != TOMBSTONE) {
+                listeners.fireRemoved((T)element);
+            }
+        }
     }
 
     public Iterable<T> snapshot() {

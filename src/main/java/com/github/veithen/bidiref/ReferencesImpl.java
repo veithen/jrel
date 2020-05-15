@@ -29,14 +29,19 @@ final class ReferencesImpl<T,U> extends AbstractReferenceHolder<T,U> implements 
         super(relation, owner);
     }
 
-    public boolean isEmpty() {
-        validate();
-        return set.isEmpty();
-    }
-
     public void addListener(CollectionListener<? super U> listener) {
         validate();
         set.addListener(listener);
+    }
+
+    public void removeListener(CollectionListener<? super U> listener) {
+        validate();
+        set.removeListener(listener);
+    }
+
+    public boolean isEmpty() {
+        validate();
+        return set.isEmpty();
     }
 
     public boolean add(U object) {

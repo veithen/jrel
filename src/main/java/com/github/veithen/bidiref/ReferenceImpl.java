@@ -19,6 +19,9 @@
  */
 package com.github.veithen.bidiref;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 final class ReferenceImpl<T,U> extends AbstractReferenceHolder<T,U> implements Reference<U> {
     private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
     private U target;
@@ -28,6 +31,11 @@ final class ReferenceImpl<T,U> extends AbstractReferenceHolder<T,U> implements R
     }
 
     public void addListener(CollectionListener<? super U> listener) {
+        validate();
+        listeners.addListener(listener);
+    }
+
+    public void removeListener(CollectionListener<? super U> listener) {
         validate();
         listeners.addListener(listener);
     }
@@ -78,5 +86,15 @@ final class ReferenceImpl<T,U> extends AbstractReferenceHolder<T,U> implements R
         }
         target = null;
         return true;
+    }
+
+    @Override
+    public Iterator<U> iterator() {
+        return target == null ? Collections.emptyIterator() : Collections.singleton(target).iterator();
+    }
+
+    @Override
+    public boolean contains(Object object) {
+        return object != null && target == object;
     }
 }

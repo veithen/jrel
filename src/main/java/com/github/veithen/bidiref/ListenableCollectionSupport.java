@@ -29,14 +29,19 @@ class ListenableCollectionSupport<T> {
         listeners.add(listener);
     }
 
+    public final void removeListener(CollectionListener<? super T> listener) {
+        listeners.remove(listener);
+    }
+
     final void fireAdded(T object) {
-        for (CollectionListener<? super T> listener : listeners) {
+        // TODO: find a smarter way to avoid concurrent modifications
+        for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
             listener.added(object);
         }
     }
 
     final void fireRemoved(T object) {
-        for (CollectionListener<? super T> listener : listeners) {
+        for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
             listener.removed(object);
         }
     }

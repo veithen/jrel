@@ -22,23 +22,27 @@ package com.github.veithen.bidiref;
 import java.util.Objects;
 import java.util.function.Function;
 
-public final class Relation<T,U> {
+public class Relation<T,U> {
     private final Relation<U,T> reverse;
     private Function<T,ReferenceHolder<U>> getter;
 
-    private Relation(Relation<U,T> reverse) {
+    Relation(Relation<U,T> reverse) {
         this.reverse = reverse;
     }
 
     public Relation() {
-        reverse = new Relation<U,T>(this);
+        reverse = createReverse();
+    }
+
+    Relation<U,T> createReverse() {
+        return new Relation<U,T>(this);
     }
 
     public Relation<U,T> getReverse() {
         return reverse;
     }
 
-    public synchronized void bind(Function<T,ReferenceHolder<U>> getter) {
+    public final synchronized void bind(Function<T,ReferenceHolder<U>> getter) {
         Objects.requireNonNull(getter);
         if (this.getter != null) {
             throw new IllegalStateException("Already bound");
@@ -46,7 +50,7 @@ public final class Relation<T,U> {
         this.getter = getter;
     }
 
-    synchronized ReferenceHolder<U> getReferenceHolder(T owner) {
+    final synchronized ReferenceHolder<U> getReferenceHolder(T owner) {
         if (getter == null) {
             throw new IllegalStateException("Not bound");
         }
@@ -62,13 +66,13 @@ public final class Relation<T,U> {
         }
     }
 
-    public Reference<U> newReference(T owner) {
+    public final Reference<U> newReference(T owner) {
         Reference<U> reference = new ReferenceImpl<>(this, owner);
         addListener(reference, owner);
         return reference;
     }
 
-    public References<U> newReferences(T owner) {
+    public final References<U> newReferences(T owner) {
         References<U> references = new ReferencesImpl<>(this, owner);
         addListener(references, owner);
         return references;

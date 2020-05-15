@@ -23,4 +23,5 @@ import java.util.Collection;
 
 public interface ListenableCollection<T> extends Collection<T> {
     void addListener(CollectionListener<? super T> listener);
+    void removeListener(CollectionListener<? super T> listener);
 }
