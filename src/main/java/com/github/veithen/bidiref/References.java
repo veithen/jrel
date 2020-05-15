@@ -70,7 +70,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     private int firstIndex = -1;
     private int lastIndex = -1;
 
-    References(ReferenceListener<?,T> listener, int initialCapacity, float loadFactor) {
+    References(ReverseRelationUpdater<?,T> listener, int initialCapacity, float loadFactor) {
         super(listener);
         this.loadFactor = loadFactor;
         elements = new Object[initialCapacity];

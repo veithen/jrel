@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 public final class Reference<T> extends ReferenceHolder<T> implements Supplier<T> {
     private T target;
 
-    Reference(ReferenceListener<?,T> listener) {
+    Reference(ReverseRelationUpdater<?,T> listener) {
         super(listener);
     }
 

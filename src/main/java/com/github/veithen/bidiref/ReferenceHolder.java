@@ -20,9 +20,9 @@
 package com.github.veithen.bidiref;
 
 public abstract class ReferenceHolder<T> {
-    protected final ReferenceListener<?,T> listener;
+    protected final ReferenceListener<T> listener;
 
-    ReferenceHolder(ReferenceListener<?,T> listener) {
+    ReferenceHolder(ReferenceListener<T> listener) {
         this.listener = listener;
     }
 

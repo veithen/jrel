@@ -54,10 +54,10 @@ public final class Relation<T,U> {
     }
 
     public Reference<U> newReference(T owner) {
-        return new Reference<U>(new ReferenceListener<T,U>(owner, reverse));
+        return new Reference<U>(new ReverseRelationUpdater<T,U>(owner, reverse));
     }
 
     public References<U> newReferences(T owner) {
-        return new References<U>(new ReferenceListener<T,U>(owner, reverse), 16, 0.5f);
+        return new References<U>(new ReverseRelationUpdater<T,U>(owner, reverse), 16, 0.5f);
     }
 }

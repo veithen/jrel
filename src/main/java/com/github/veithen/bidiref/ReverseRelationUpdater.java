@@ -19,7 +19,24 @@
  */
 package com.github.veithen.bidiref;
 
-public interface ReferenceListener<T> {
-    void added(T object);
-    void removed(T object);
+final class ReverseRelationUpdater<T,U> implements ReferenceListener<U> {
+    private final T owner;
+    private final Relation<U,T> reverseRelation;
+
+    ReverseRelationUpdater(T owner, Relation<U,T> reverseRelation) {
+        this.owner = owner;
+        this.reverseRelation = reverseRelation;
+    }
+
+    public void added(U object) {
+        if (!reverseRelation.getter().apply(object).internalAdd(owner)) {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void removed(U object) {
+        if (!reverseRelation.getter().apply(object).internalRemove(owner)) {
+            throw new IllegalStateException();
+        }
+    }
 }
