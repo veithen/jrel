@@ -192,4 +192,38 @@ public class ReferencesTest {
         children.add(child2);
         assertThat(children.toString()).isEqualTo(new LinkedHashSet<Child>(Arrays.asList(child1, child2)).toString());
     }
+
+    public void testToStringEmpty() {
+        References<Child> children = new Parent().getChildren();
+        assertThat(children.toString()).isEqualTo("[]");
+    }
+
+    @Test
+    public void testClear() {
+        References<Child> children = new Parent().getChildren();
+        children.add(new Child());
+        children.clear();
+        assertThat(children.size()).isEqualTo(0);
+        assertThat(children.iterator().hasNext()).isFalse();
+    }
+
+    @Test
+    public void testClearAfterRemove() {
+        References<Child> children = new Parent().getChildren();
+        for (int i=0; i<10; i++) {
+            children.add(new Child());
+        }
+        Iterator<Child> it = children.iterator();
+        it.next();
+        it.remove();
+        children.clear();
+        assertThat(children).containsExactly();
+    }
+
+    @Test
+    public void testClearEmpty() {
+        References<Child> children = new Parent().getChildren();
+        children.clear();
+        assertThat(children).isEmpty();
+    }
 }
