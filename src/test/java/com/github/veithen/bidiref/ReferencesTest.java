@@ -23,7 +23,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
+import java.util.Random;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -94,6 +97,28 @@ public class ReferencesTest {
             for (int j=i+1; j<10; j++) {
                 assertThat(children).contains(allChildren[j]);
             }
+        }
+    }
+
+    @Test
+    public void testAddRemoveRandom() {
+        Child[] allChildren = new Child[1000];
+        for (int i=0; i<allChildren.length; i++) {
+            allChildren[i] = new Child();
+        }
+        References<Child> children = new Parent().getChildren();
+        Random random = new Random(0);
+        Set<Child> expectedChildren = new LinkedHashSet<>();
+        for (int i=0; i<allChildren.length*10; i++) {
+            Child child = allChildren[random.nextInt(allChildren.length)];
+            if (expectedChildren.contains(child)) {
+                expectedChildren.remove(child);
+                children.remove(child);
+            } else {
+                expectedChildren.add(child);
+                children.add(child);
+            }
+            assertThat(children).containsExactlyElementsIn(expectedChildren).inOrder();
         }
     }
 

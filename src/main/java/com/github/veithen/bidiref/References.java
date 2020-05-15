@@ -172,6 +172,8 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         } else {
             nextIndexes[prevIndexes[index]] = nextIndexes[index];
         }
+        prevIndexes[index] = -1;
+        nextIndexes[index] = -1;
         size--;
         tombstones++;
     }
