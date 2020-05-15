@@ -35,6 +35,7 @@ final class ReferencesImpl<T,U> extends AbstractReferenceHolder<T,U> implements 
     }
 
     public void addListener(CollectionListener<? super U> listener) {
+        validate();
         set.addListener(listener);
     }
 

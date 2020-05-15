@@ -28,6 +28,7 @@ final class ReferenceImpl<T,U> extends AbstractReferenceHolder<T,U> implements R
     }
 
     public void addListener(CollectionListener<? super U> listener) {
+        validate();
         listeners.addListener(listener);
     }
 

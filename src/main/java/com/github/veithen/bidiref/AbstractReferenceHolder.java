@@ -20,6 +20,13 @@
 package com.github.veithen.bidiref;
 
 public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U> {
+    static final ThreadLocal<Boolean> validationDisabled = new ThreadLocal<Boolean>() {
+        @Override
+        protected Boolean initialValue() {
+            return false;
+        }
+    };
+
     private final Relation<T,U> relation;
     private final T owner;
     private boolean validated;
@@ -30,7 +37,7 @@ public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U>
     }
 
     final void validate() {
-        if (!validated) {
+        if (!validated && !validationDisabled.get()) {
             if (relation.getter().apply(owner) != this) {
                 throw new IllegalStateException();
             }

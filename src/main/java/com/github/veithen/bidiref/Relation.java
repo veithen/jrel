@@ -53,15 +53,24 @@ public final class Relation<T,U> {
         return getter;
     }
 
+    private void addListener(ReferenceHolder<U> referenceHolder, T owner) {
+        AbstractReferenceHolder.validationDisabled.set(true);
+        try {
+            referenceHolder.addListener(new ReverseRelationUpdater<T,U>(owner, reverse, referenceHolder));
+        } finally {
+            AbstractReferenceHolder.validationDisabled.set(false);
+        }
+    }
+
     public Reference<U> newReference(T owner) {
         Reference<U> reference = new ReferenceImpl<>(this, owner);
-        reference.addListener(new ReverseRelationUpdater<T,U>(owner, reverse, reference));
+        addListener(reference, owner);
         return reference;
     }
 
     public References<U> newReferences(T owner) {
         References<U> references = new ReferencesImpl<>(this, owner);
-        references.addListener(new ReverseRelationUpdater<T,U>(owner, reverse, references));
+        addListener(references, owner);
         return references;
     }
 }
