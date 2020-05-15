@@ -19,30 +19,9 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class ReferenceHolder<T> {
-    private final List<ReferenceListener<? super T>> listeners = new ArrayList<>();
-
-    public final void addReferenceListener(ReferenceListener<? super T> listener) {
-        listeners.add(listener);
-    }
-
-    final void fireAdded(T object) {
-        for (ReferenceListener<? super T> listener : listeners) {
-            listener.added(object);
-        }
-    }
-
-    final void fireRemoved(T object) {
-        for (ReferenceListener<? super T> listener : listeners) {
-            listener.removed(object);
-        }
-    }
-
-    public abstract void clear();
-
-    public abstract boolean add(T object);
-    public abstract boolean remove(Object object);
+public interface ReferenceHolder<T> {
+    void addReferenceListener(ReferenceListener<? super T> listener);
+    void clear();
+    boolean add(T object);
+    boolean remove(Object object);
 }

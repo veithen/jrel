@@ -19,13 +19,12 @@
  */
 package com.github.veithen.bidiref;
 
+import java.util.AbstractSet;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
-public final class References<T> extends ReferenceHolder<T> implements Set<T> {
+public final class References<T> extends AbstractSet<T> implements ReferenceHolder<T> {
     private class It implements Iterator<T> {
         private int currentIndex = -1;
         private int nextIndex = firstIndex;
@@ -60,6 +59,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
 
     private final static Object TOMBSTONE = new Object();
 
+    private final ReferenceListenerList<T> listeners = new ReferenceListenerList<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
@@ -76,6 +76,10 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         Arrays.fill(prevIndexes, -1);
         nextIndexes = new int[initialCapacity];
         Arrays.fill(nextIndexes, -1);
+    }
+
+    public void addReferenceListener(ReferenceListener<? super T> listener) {
+        listeners.add(listener);
     }
 
     @Override
@@ -155,7 +159,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         }
         lastIndex = index;
         size++;
-        fireAdded(object);
+        listeners.fireAdded(object);
         return true;
     }
 
@@ -176,7 +180,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         nextIndexes[index] = -1;
         size--;
         tombstones++;
-        fireRemoved(object);
+        listeners.fireRemoved(object);
     }
 
     @Override
@@ -204,11 +208,6 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
     public boolean contains(Object object) {
         int hash = System.identityHashCode(object);
         int capacity = elements.length;
@@ -231,42 +230,6 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
     }
 
     @Override
-    public Object[] toArray() {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public <U> U[] toArray(U[] a) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> c) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void clear() {
         if (size == 0) {
             return;
@@ -274,7 +237,7 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
         for (int i=0; i<elements.length; i++) {
             Object element = elements[i];
             if (element != null && element != TOMBSTONE) {
-                fireRemoved((T)element);
+                listeners.fireRemoved((T)element);
             }
         }
         size = 0;
@@ -298,22 +261,5 @@ public final class References<T> extends ReferenceHolder<T> implements Set<T> {
                 return new SnapshotIterator<>(elements, nextIndexes, firstIndex);
             }
         };
-    }
-
-    @Override
-    public String toString() {
-        Iterator<T> it = iterator();
-        if (!it.hasNext()) {
-            return "[]";
-        }
-        StringBuilder builder = new StringBuilder("[");
-        while (true) {
-            builder.append(it.next());
-            if (!it.hasNext()) {
-                builder.append("]");
-                return builder.toString();
-            }
-            builder.append(", ");
-        }
     }
 }
