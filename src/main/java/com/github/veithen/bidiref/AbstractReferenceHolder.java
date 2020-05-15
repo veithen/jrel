@@ -19,8 +19,22 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.Set;
+public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U> {
+    private final Relation<T,U> relation;
+    private final T owner;
+    private boolean validated;
 
-public interface References<T> extends ReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
+    AbstractReferenceHolder(Relation<T, U> relation, T owner) {
+        this.relation = relation;
+        this.owner = owner;
+    }
 
+    final void validate() {
+        if (!validated) {
+            if (relation.getter().apply(owner) != this) {
+                throw new IllegalStateException();
+            }
+            validated = true;
+        }
+    }
 }

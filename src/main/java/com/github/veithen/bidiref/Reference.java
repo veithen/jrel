@@ -21,49 +21,6 @@ package com.github.veithen.bidiref;
 
 import java.util.function.Supplier;
 
-public final class Reference<T> extends ListenableCollectionSupport<T> implements ReferenceHolder<T>, Supplier<T> {
-    private T target;
-
-    public T get() {
-        return target;
-    }
-
-    public void set(T target) {
-        if (this.target == target) {
-            return;
-        }
-        clear();
-        this.target = target;
-        if (target != null) {
-            fireAdded(target);
-        }
-    }
-
-    public void clear() {
-        if (target != null) {
-            fireRemoved(target);
-            target = null;
-        }
-    }
-
-    @Override
-    public boolean add(T object) {
-        if (object == target) {
-            return false;
-        }
-        clear();
-        target = object;
-        fireAdded(object);
-        return true;
-    }
-
-    @Override
-    public boolean remove(Object object) {
-        // TODO: missing listere invocation here
-        if (object != target) {
-            return false;
-        }
-        target = null;
-        return true;
-    }
+public interface Reference<T> extends ReferenceHolder<T>, Supplier<T> {
+    void set(T target);
 }

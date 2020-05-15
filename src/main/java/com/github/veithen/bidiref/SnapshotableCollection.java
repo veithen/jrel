@@ -19,8 +19,8 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.Set;
+import java.util.Collection;
 
-public interface References<T> extends ReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
-
+public interface SnapshotableCollection<T> extends Collection<T> {
+    Iterable<T> snapshot();
 }
