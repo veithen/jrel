@@ -59,7 +59,7 @@ final class ReverseRelationUpdater<T,U> implements CollectionListener<U> {
     }
 
     private void update(Action action, U object) {
-        ReferenceHolder<T> referenceHolderToUpdate = reverseRelation.getter().apply(object);
+        ReferenceHolder<T> referenceHolderToUpdate = reverseRelation.getReferenceHolder(object);
         Deque<ReferenceHolder<?>> firingReferenceHolders = ReverseRelationUpdater.firingReferenceHolders.get();
         if (firingReferenceHolders.peek() != referenceHolderToUpdate) {
             firingReferenceHolders.push(referenceHolder);

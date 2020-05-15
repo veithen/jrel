@@ -46,11 +46,11 @@ public final class Relation<T,U> {
         this.getter = getter;
     }
 
-    synchronized Function<T,ReferenceHolder<U>> getter() {
+    synchronized ReferenceHolder<U> getReferenceHolder(T owner) {
         if (getter == null) {
             throw new IllegalStateException("Not bound");
         }
-        return getter;
+        return getter.apply(owner);
     }
 
     private void addListener(ReferenceHolder<U> referenceHolder, T owner) {

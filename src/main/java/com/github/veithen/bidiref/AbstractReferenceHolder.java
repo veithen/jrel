@@ -38,7 +38,7 @@ public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U>
 
     final void validate() {
         if (!validated && !validationDisabled.get()) {
-            if (relation.getter().apply(owner) != this) {
+            if (relation.getReferenceHolder(owner) != this) {
                 throw new IllegalStateException();
             }
             validated = true;
