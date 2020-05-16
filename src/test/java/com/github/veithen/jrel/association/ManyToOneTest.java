@@ -140,4 +140,13 @@ public class ManyToOneTest {
         child.setParent(parent);
         assertThat(Relations.PARENT.test(child, parent)).isTrue();
     }
+
+    @Test
+    public void testFunction() {
+        Parent parent = new Parent();
+        Child child = new Child();
+        assertThat(Relations.PARENT.apply(child)).isNull();
+        child.setParent(parent);
+        assertThat(Relations.PARENT.apply(child)).isSameInstanceAs(parent);
+    }
 }

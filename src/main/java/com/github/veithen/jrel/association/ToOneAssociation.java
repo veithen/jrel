@@ -19,10 +19,17 @@
  */
 package com.github.veithen.jrel.association;
 
-public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends MutableReferenceHolder<T>> extends Association<T,U,Reference<U>,ReferenceHolder2> {
+import java.util.function.Function;
+
+public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends MutableReferenceHolder<T>> extends Association<T,U,Reference<U>,ReferenceHolder2> implements Function<T,U> {
     public final Reference<U> newReferenceHolder(T owner) {
         Reference<U> reference = new ReferenceImpl<>(this, owner);
         addListener(reference, owner);
         return reference;
+    }
+
+    @Override
+    public final U apply(T o) {
+        return getReferenceHolder(o).get();
     }
 }
