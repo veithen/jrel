@@ -131,4 +131,13 @@ public class ManyToOneTest {
         assertThat(addedFired).asList().containsExactly(false, false);
         assertThat(removedFired).asList().containsExactly(true, true);
     }
+
+    @Test
+    public void testBiPredicate() {
+        Parent parent = new Parent();
+        Child child = new Child();
+        assertThat(Relations.PARENT.test(child, parent)).isFalse();
+        child.setParent(parent);
+        assertThat(Relations.PARENT.test(child, parent)).isTrue();
+    }
 }
