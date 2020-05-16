@@ -22,14 +22,20 @@ package com.github.veithen.jrel.collection;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ListenableCollectionSupport<T> {
+/**
+ * Maintains a list of {@link CollectionListener} instances for use by {@link ListenableCollection}
+ * instances.
+ * 
+ * @param <T> the type of elements in the collection
+ */
+public final class CollectionListenerList<T> {
     private final List<CollectionListener<? super T>> listeners = new ArrayList<>();
 
-    public void addListener(CollectionListener<? super T> listener) {
+    public void add(CollectionListener<? super T> listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(CollectionListener<? super T> listener) {
+    public void remove(CollectionListener<? super T> listener) {
         listeners.remove(listener);
     }
 

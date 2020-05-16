@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import com.github.veithen.jrel.collection.CollectionListener;
-import com.github.veithen.jrel.collection.ListenableCollectionSupport;
+import com.github.veithen.jrel.collection.CollectionListenerList;
 
 final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
-    private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
+    private final CollectionListenerList<U> listeners = new CollectionListenerList<>();
     private U target;
 
     ReferenceImpl(ToOneAssociation<T,U,?> association, T owner) {
@@ -35,12 +35,12 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
 
     public void addListener(CollectionListener<? super U> listener) {
         validate();
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeListener(CollectionListener<? super U> listener) {
         validate();
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public U get() {

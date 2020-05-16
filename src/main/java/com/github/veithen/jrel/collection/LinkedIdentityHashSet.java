@@ -59,7 +59,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
 
     private final static Object TOMBSTONE = new Object();
 
-    private final ListenableCollectionSupport<T> listeners = new ListenableCollectionSupport<>();
+    private final CollectionListenerList<T> listeners = new CollectionListenerList<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
@@ -83,11 +83,11 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
     }
 
     public void addListener(CollectionListener<? super T> listener) {
-        listeners.addListener(listener);
+        listeners.add(listener);
     }
 
     public void removeListener(CollectionListener<? super T> listener) {
-        listeners.removeListener(listener);
+        listeners.remove(listener);
     }
 
     @Override
