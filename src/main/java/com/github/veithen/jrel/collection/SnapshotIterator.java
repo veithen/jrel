@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.collection;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

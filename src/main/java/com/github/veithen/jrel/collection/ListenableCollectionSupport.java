@@ -17,30 +17,30 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.collection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class ListenableCollectionSupport<T> {
+public final class ListenableCollectionSupport<T> {
     private final List<CollectionListener<? super T>> listeners = new ArrayList<>();
 
-    public final void addListener(CollectionListener<? super T> listener) {
+    public void addListener(CollectionListener<? super T> listener) {
         listeners.add(listener);
     }
 
-    public final void removeListener(CollectionListener<? super T> listener) {
+    public void removeListener(CollectionListener<? super T> listener) {
         listeners.remove(listener);
     }
 
-    final void fireAdded(T object) {
+    public void fireAdded(T object) {
         // TODO: find a smarter way to avoid concurrent modifications
         for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
             listener.added(object);
         }
     }
 
-    final void fireRemoved(T object) {
+    public void fireRemoved(T object) {
         for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
             listener.removed(object);
         }

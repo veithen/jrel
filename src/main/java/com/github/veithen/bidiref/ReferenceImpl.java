@@ -22,6 +22,9 @@ package com.github.veithen.bidiref;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.ListenableCollectionSupport;
+
 final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
     private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
     private U target;

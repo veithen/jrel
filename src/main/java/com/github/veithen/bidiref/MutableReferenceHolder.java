@@ -19,6 +19,8 @@
  */
 package com.github.veithen.bidiref;
 
+import com.github.veithen.jrel.collection.CollectionListener;
+
 public interface MutableReferenceHolder<T> extends ReferenceHolder<T> {
     void addListener(CollectionListener<? super T> listener);
     void removeListener(CollectionListener<? super T> listener);

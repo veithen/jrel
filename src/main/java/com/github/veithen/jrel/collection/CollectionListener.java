@@ -17,11 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.collection;
 
-import java.util.Collection;
-
-public interface ListenableCollection<T> extends Collection<T> {
-    void addListener(CollectionListener<? super T> listener);
-    void removeListener(CollectionListener<? super T> listener);
+public interface CollectionListener<T> {
+    void added(T object);
+    void removed(T object);
 }

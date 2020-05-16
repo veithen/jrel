@@ -22,6 +22,9 @@ package com.github.veithen.bidiref;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
+
 final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 

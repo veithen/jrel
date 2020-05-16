@@ -26,6 +26,8 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.veithen.jrel.collection.CollectionListener;
+
 public class ManyToOneTest {
     @Test
     public void testSetParent() {

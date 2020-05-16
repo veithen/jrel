@@ -22,6 +22,8 @@ package com.github.veithen.bidiref;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import com.github.veithen.jrel.collection.CollectionListener;
+
 final class ConverseAssociationUpdater<T,U> implements CollectionListener<U> {
     private interface Action {
         <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object);
