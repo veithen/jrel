@@ -19,12 +19,8 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.Objects;
-import java.util.function.Function;
-
-public class Relation<T,U> {
+public final class Relation<T,U> extends BinaryRelationship<T,U,ReferenceHolder<U>,ReferenceHolder<T>,Relation<T,U>,Relation<U,T>> {
     private final Relation<U,T> reverse;
-    private Function<T,ReferenceHolder<U>> getter;
 
     Relation(Relation<U,T> reverse) {
         this.reverse = reverse;
@@ -42,21 +38,6 @@ public class Relation<T,U> {
         return reverse;
     }
 
-    public final synchronized void bind(Function<T,ReferenceHolder<U>> getter) {
-        Objects.requireNonNull(getter);
-        if (this.getter != null) {
-            throw new IllegalStateException("Already bound");
-        }
-        this.getter = getter;
-    }
-
-    final synchronized ReferenceHolder<U> getReferenceHolder(T owner) {
-        if (getter == null) {
-            throw new IllegalStateException("Not bound");
-        }
-        return getter.apply(owner);
-    }
-
     private void addListener(ReferenceHolder<U> referenceHolder, T owner) {
         AbstractReferenceHolder.validationDisabled.set(true);
         try {
@@ -66,13 +47,13 @@ public class Relation<T,U> {
         }
     }
 
-    public final Reference<U> newReference(T owner) {
+    public Reference<U> newReference(T owner) {
         Reference<U> reference = new ReferenceImpl<>(this, owner);
         addListener(reference, owner);
         return reference;
     }
 
-    public final References<U> newReferences(T owner) {
+    public References<U> newReferences(T owner) {
         References<U> references = new ReferencesImpl<>(this, owner);
         addListener(references, owner);
         return references;

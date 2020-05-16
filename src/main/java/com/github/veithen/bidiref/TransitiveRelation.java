@@ -19,43 +19,27 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.Objects;
-import java.util.function.Function;
+public final class TransitiveRelation<T> extends BinaryRelationship<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
+    private final Relation<T,T> association;
+    private final TransitiveRelation<T> reverse;
 
-public final class TransitiveRelation<T> extends Relation<T,T> {
-    private Function<T,TransitiveReferences<T>> transitiveGetter;
-
-    public TransitiveRelation() {
-        super();
+    TransitiveRelation(Relation<T,T> association, TransitiveRelation<T> reverse) {
+        this.association = association;
+        this.reverse = reverse;
     }
 
-    TransitiveRelation(TransitiveRelation<T> reverse) {
-        super(reverse);
+    public TransitiveRelation(Relation<T,T> association) {
+        this.association = association;
+        reverse = new TransitiveRelation<T>(association.getReverse(), this);
     }
 
-    @Override
-    TransitiveRelation<T> createReverse() {
-        return new TransitiveRelation<T>(this);
+    public Relation<T,T> getAssociation() {
+        return association;
     }
 
     @Override
     public TransitiveRelation<T> getReverse() {
-        return (TransitiveRelation<T>)super.getReverse();
-    }
-
-    public synchronized void bindTransitive(Function<T,TransitiveReferences<T>> transitiveGetter) {
-        Objects.requireNonNull(transitiveGetter);
-        if (this.transitiveGetter != null) {
-            throw new IllegalStateException("Already bound");
-        }
-        this.transitiveGetter = transitiveGetter;
-    }
-
-    synchronized TransitiveReferences<T> getTransitiveReferences(T owner) {
-        if (transitiveGetter == null) {
-            throw new IllegalStateException("Not bound");
-        }
-        return transitiveGetter.apply(owner);
+        return reverse;
     }
 
     public TransitiveReferences<T> newTransitiveReferences(T owner) {

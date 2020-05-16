@@ -20,20 +20,21 @@
 package com.github.veithen.bidiref;
 
 public class Node {
-    private static final TransitiveRelation<Node> PARENT = new TransitiveRelation<>();
+    private static final Relation<Node,Node> PARENT = new Relation<>();
+    private static final TransitiveRelation<Node> ANCESTOR = new TransitiveRelation<>(PARENT);
 
     static {
         PARENT.bind(o -> o.parent);
-        PARENT.bindTransitive(o -> o.ancestors);
         PARENT.getReverse().bind(o -> o.children);
-        PARENT.getReverse().bindTransitive(o -> o.descendants);
+        ANCESTOR.bind(o -> o.ancestors);
+        ANCESTOR.getReverse().bind(o -> o.descendants);
     }
 
     private final String name;
     public final Reference<Node> parent = PARENT.newReference(this);
-    public final TransitiveReferences<Node> ancestors = PARENT.newTransitiveReferences(this);
+    public final TransitiveReferences<Node> ancestors = ANCESTOR.newTransitiveReferences(this);
     public final References<Node> children = PARENT.getReverse().newReferences(this);
-    public final TransitiveReferences<Node> descendants = PARENT.getReverse().newTransitiveReferences(this);
+    public final TransitiveReferences<Node> descendants = ANCESTOR.getReverse().newTransitiveReferences(this);
 
     public Node(String name) {
         this.name = name;

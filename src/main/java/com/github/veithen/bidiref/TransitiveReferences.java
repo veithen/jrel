@@ -50,12 +50,12 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
                 maybeRemove(object);
             }
         };
-        referenceHolder = relation.getReferenceHolder(owner);
+        referenceHolder = relation.getAssociation().getReferenceHolder(owner);
         CollectionListener<T> directReferenceListener = new CollectionListener<T>() {
             @Override
             public void added(T object) {
                 set.add(object);
-                TransitiveReferences<T> transitiveReferences = relation.getTransitiveReferences(object);
+                TransitiveReferences<T> transitiveReferences = relation.getReferenceHolder(object);
                 set.addAll(transitiveReferences);
                 transitiveReferences.addListener(transitiveReferencesListener);
             }
@@ -63,7 +63,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
             @Override
             public void removed(T object) {
                 maybeRemove(object);
-                TransitiveReferences<T> transitiveReferences = relation.getTransitiveReferences(object);
+                TransitiveReferences<T> transitiveReferences = relation.getReferenceHolder(object);
                 transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
                 transitiveReferences.addListener(transitiveReferencesListener);
             }
@@ -77,7 +77,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
             return;
         }
         for (T reference : referenceHolder) {
-            if (relation.getTransitiveReferences(reference).contains(object)) {
+            if (relation.getReferenceHolder(reference).contains(object)) {
                 return;
             }
         }
