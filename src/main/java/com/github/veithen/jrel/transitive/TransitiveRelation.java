@@ -22,21 +22,21 @@ package com.github.veithen.jrel.transitive;
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.association.Association;
 
-public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
-    private final Association<T,T> association;
+public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>> {
+    private final Association<T,T,?,?> association;
     private final TransitiveRelation<T> converse;
 
-    TransitiveRelation(Association<T,T> association, TransitiveRelation<T> converse) {
+    TransitiveRelation(Association<T,T,?,?> association, TransitiveRelation<T> converse) {
         this.association = association;
         this.converse = converse;
     }
 
-    public TransitiveRelation(Association<T,T> association) {
+    public TransitiveRelation(Association<T,T,?,?> association) {
         this.association = association;
         converse = new TransitiveRelation<T>(association.getConverse(), this);
     }
 
-    public Association<T,T> getAssociation() {
+    public Association<T,T,?,?> getAssociation() {
         return association;
     }
 
@@ -45,7 +45,7 @@ public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveRe
         return converse;
     }
 
-    public TransitiveReferences<T> newTransitiveReferences(T owner) {
+    public TransitiveReferences<T> newReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
     }
 }

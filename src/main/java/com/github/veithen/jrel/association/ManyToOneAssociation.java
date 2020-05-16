@@ -19,14 +19,18 @@
  */
 package com.github.veithen.jrel.association;
 
-public class Parent {
-    static {
-        Relations.PARENT.getConverse().bind(o -> o.children);
+public final class ManyToOneAssociation<T,U> extends ToOneAssociation<T,U,References<T>> {
+    private final OneToManyAssociation<U,T> converse;
+
+    ManyToOneAssociation(OneToManyAssociation<U,T> converse) {
+        this.converse = converse;
     }
 
-    private final References<Child> children = Relations.PARENT.getConverse().newReferenceHolder(this);
+    public ManyToOneAssociation() {
+        converse = new OneToManyAssociation<U,T>(this);
+    }
 
-    public References<Child> getChildren() {
-        return children;
+    public OneToManyAssociation<U,T> getConverse() {
+        return converse;
     }
 }

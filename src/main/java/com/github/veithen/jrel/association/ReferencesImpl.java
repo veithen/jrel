@@ -28,7 +28,7 @@ import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
-    ReferencesImpl(Association<T,U> association, T owner) {
+    ReferencesImpl(ToManyAssociation<T,U,?> association, T owner) {
         super(association, owner);
     }
 

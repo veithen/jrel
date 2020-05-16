@@ -27,11 +27,11 @@ public abstract class AbstractMutableReferenceHolder<T,U> implements MutableRefe
         }
     };
 
-    private final Association<T,U> association;
+    private final Association<T,U,?,?> association;
     private final T owner;
     private boolean validated;
 
-    AbstractMutableReferenceHolder(Association<T, U> association, T owner) {
+    AbstractMutableReferenceHolder(Association<T,U,?,?> association, T owner) {
         this.association = association;
         this.owner = owner;
     }

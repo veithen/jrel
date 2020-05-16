@@ -19,14 +19,10 @@
  */
 package com.github.veithen.jrel.association;
 
-public class Parent {
-    static {
-        Relations.PARENT.getConverse().bind(o -> o.children);
-    }
-
-    private final References<Child> children = Relations.PARENT.getConverse().newReferenceHolder(this);
-
-    public References<Child> getChildren() {
-        return children;
+public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends MutableReferenceHolder<T>> extends Association<T,U,Reference<U>,ReferenceHolder2> {
+    public final Reference<U> newReferenceHolder(T owner) {
+        Reference<U> reference = new ReferenceImpl<>(this, owner);
+        addListener(reference, owner);
+        return reference;
     }
 }

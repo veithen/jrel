@@ -51,10 +51,10 @@ final class ConverseAssociationUpdater<T,U> implements CollectionListener<U> {
     };
 
     private final T owner;
-    private final Association<U,T> converseAssociation;
+    private final Association<U,T,?,?> converseAssociation;
     private final MutableReferenceHolder<U> referenceHolder;
 
-    ConverseAssociationUpdater(T owner, Association<U,T> converseAssociation, MutableReferenceHolder<U> referenceHolder) {
+    ConverseAssociationUpdater(T owner, Association<U,T,?,?> converseAssociation, MutableReferenceHolder<U> referenceHolder) {
         this.owner = owner;
         this.converseAssociation = converseAssociation;
         this.referenceHolder = referenceHolder;

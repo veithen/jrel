@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
-public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends ReferenceHolder<Type2>,ReferenceHolder2 extends ReferenceHolder<Type1>,Self extends BinaryRelation<Type1,Type2,ReferenceHolder1,ReferenceHolder2,Self,Converse>,Converse extends BinaryRelation<Type2,Type1,ReferenceHolder2,ReferenceHolder1,Converse,Self>> implements BiPredicate<Type1,Type2> {
+public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends ReferenceHolder<Type2>,ReferenceHolder2 extends ReferenceHolder<Type1>> implements BiPredicate<Type1,Type2> {
     private Function<Type1,ReferenceHolder1> referenceHolderFunction;
 
     /**
@@ -31,7 +31,7 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
      * 
      * @return the converse relation
      */
-    public abstract Converse getConverse();
+    public abstract BinaryRelation<Type2,Type1,ReferenceHolder2,ReferenceHolder1> getConverse();
 
     public final synchronized void bind(Function<Type1,ReferenceHolder1> referenceHolderFunction) {
         Objects.requireNonNull(referenceHolderFunction);
@@ -45,6 +45,8 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
         bind(referenceHolderFunction1);
         getConverse().bind(referenceHolderFunction2);
     }
+
+    public abstract ReferenceHolder1 newReferenceHolder(Type1 owner);
 
     public final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
         if (referenceHolderFunction == null) {

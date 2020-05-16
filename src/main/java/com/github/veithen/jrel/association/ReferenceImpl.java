@@ -29,7 +29,7 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
     private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
     private U target;
 
-    ReferenceImpl(Association<T,U> association, T owner) {
+    ReferenceImpl(ToOneAssociation<T,U,?> association, T owner) {
         super(association, owner);
     }
 

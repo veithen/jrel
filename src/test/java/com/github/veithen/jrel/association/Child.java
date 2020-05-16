@@ -24,7 +24,7 @@ public class Child {
         Relations.PARENT.bind(o -> o.parent);
     }
 
-    private final Reference<Parent> parent = Relations.PARENT.newReference(this);
+    private final Reference<Parent> parent = Relations.PARENT.newReferenceHolder(this);
 
     public Reference<Parent> getParentReference() {
         return parent;

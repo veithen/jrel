@@ -21,39 +21,15 @@ package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.BinaryRelation;
 
-public final class Association<T,U> extends BinaryRelation<T,U,MutableReferenceHolder<U>,MutableReferenceHolder<T>,Association<T,U>,Association<U,T>> {
-    private final Association<U,T> converse;
+public abstract class Association<T,U,ReferenceHolder1 extends MutableReferenceHolder<U>,ReferenceHolder2 extends MutableReferenceHolder<T>> extends BinaryRelation<T,U,ReferenceHolder1,ReferenceHolder2> {
+    public abstract Association<U,T,ReferenceHolder2,ReferenceHolder1> getConverse();
 
-    Association(Association<U,T> converse) {
-        this.converse = converse;
-    }
-
-    public Association() {
-        converse = new Association<U,T>(this);
-    }
-
-    public Association<U,T> getConverse() {
-        return converse;
-    }
-
-    private void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
+    final void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
         AbstractMutableReferenceHolder.validationDisabled.set(true);
         try {
-            referenceHolder.addListener(new ConverseAssociationUpdater<T,U>(owner, converse, referenceHolder));
+            referenceHolder.addListener(new ConverseAssociationUpdater<T,U>(owner, getConverse(), referenceHolder));
         } finally {
             AbstractMutableReferenceHolder.validationDisabled.set(false);
         }
-    }
-
-    public Reference<U> newReference(T owner) {
-        Reference<U> reference = new ReferenceImpl<>(this, owner);
-        addListener(reference, owner);
-        return reference;
-    }
-
-    public References<U> newReferences(T owner) {
-        References<U> references = new ReferencesImpl<>(this, owner);
-        addListener(references, owner);
-        return references;
     }
 }
