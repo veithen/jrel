@@ -72,7 +72,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
                 maybeRemove(object);
                 TransitiveReferences<T> transitiveReferences = relation.getReferenceHolder(object);
                 transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
-                transitiveReferences.addListener(transitiveReferencesListener);
+                transitiveReferences.removeListener(transitiveReferencesListener);
             }
         };
         referenceHolder.addListener(directReferenceListener);

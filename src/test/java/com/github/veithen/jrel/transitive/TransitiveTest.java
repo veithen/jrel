@@ -59,4 +59,19 @@ public class TransitiveTest {
         node4.parent.clear();
         assertThat(node1.descendants).containsExactly(node2, node3);
     }
+
+    @Test
+    public void test3() {
+        Node node1 = new Node("1");
+        Node node2 = new Node("2");
+        Node node3 = new Node("3");
+        Node node4 = new Node("4");
+        node2.parent.set(node1);
+        node3.parent.set(node2);
+        assertThat(node1.descendants).containsExactly(node2, node3);
+        node2.parent.clear();
+        assertThat(node1.descendants).isEmpty();
+        node4.parent.set(node2);
+        assertThat(node1.descendants).isEmpty();
+    }
 }
