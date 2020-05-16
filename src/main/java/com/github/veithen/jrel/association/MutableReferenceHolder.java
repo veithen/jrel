@@ -17,16 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
 
-public class Parent {
-    static {
-        Relations.PARENT.getConverse().bind(o -> o.children);
-    }
+import com.github.veithen.jrel.ReferenceHolder;
+import com.github.veithen.jrel.collection.CollectionListener;
 
-    private final References<Child> children = Relations.PARENT.getConverse().newReferences(this);
-
-    public References<Child> getChildren() {
-        return children;
-    }
+public interface MutableReferenceHolder<T> extends ReferenceHolder<T> {
+    void addListener(CollectionListener<? super T> listener);
+    void removeListener(CollectionListener<? super T> listener);
+    void clear();
+    boolean add(T object);
+    boolean remove(Object object);
 }

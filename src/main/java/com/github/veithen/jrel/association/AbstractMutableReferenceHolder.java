@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
 
 public abstract class AbstractMutableReferenceHolder<T,U> implements MutableReferenceHolder<U> {
     static final ThreadLocal<Boolean> validationDisabled = new ThreadLocal<Boolean>() {

@@ -23,8 +23,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.github.veithen.bidiref.MutableReferenceHolder;
-import com.github.veithen.bidiref.ReferenceHolder;
+import com.github.veithen.jrel.ReferenceHolder;
+import com.github.veithen.jrel.association.MutableReferenceHolder;
 import com.github.veithen.jrel.collection.CollectionListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableCollection;

@@ -17,7 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
+
+import com.github.veithen.jrel.BinaryRelation;
 
 public final class Association<T,U> extends BinaryRelation<T,U,MutableReferenceHolder<U>,MutableReferenceHolder<T>,Association<T,U>,Association<U,T>> {
     private final Association<U,T> converse;

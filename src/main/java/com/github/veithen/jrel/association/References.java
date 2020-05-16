@@ -17,14 +17,13 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.collection.CollectionListener;
+import java.util.Set;
 
-public interface MutableReferenceHolder<T> extends ReferenceHolder<T> {
-    void addListener(CollectionListener<? super T> listener);
-    void removeListener(CollectionListener<? super T> listener);
-    void clear();
-    boolean add(T object);
-    boolean remove(Object object);
+import com.github.veithen.jrel.collection.ListenableCollection;
+import com.github.veithen.jrel.collection.SnapshotableCollection;
+
+public interface References<T> extends MutableReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
+
 }

@@ -17,13 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
 
-import java.util.Set;
+public final class Relations {
+    private Relations() {}
 
-import com.github.veithen.jrel.collection.ListenableCollection;
-import com.github.veithen.jrel.collection.SnapshotableCollection;
-
-public interface References<T> extends MutableReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
-
+    static final Association<Child,Parent> PARENT = new Association<>();
 }

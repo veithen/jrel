@@ -19,8 +19,8 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import com.github.veithen.bidiref.BinaryRelation;
-import com.github.veithen.bidiref.Association;
+import com.github.veithen.jrel.BinaryRelation;
+import com.github.veithen.jrel.association.Association;
 
 public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
     private final Association<T,T> association;

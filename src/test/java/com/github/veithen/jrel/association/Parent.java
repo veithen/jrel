@@ -17,24 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.association;
 
-public class Child {
+public class Parent {
     static {
-        Relations.PARENT.bind(o -> o.parent);
+        Relations.PARENT.getConverse().bind(o -> o.children);
     }
 
-    private final Reference<Parent> parent = Relations.PARENT.newReference(this);
+    private final References<Child> children = Relations.PARENT.getConverse().newReferences(this);
 
-    public Reference<Parent> getParentReference() {
-        return parent;
-    }
-
-    public Parent getParent() {
-        return parent.get();
-    }
-
-    public void setParent(Parent parent) {
-        this.parent.set(parent);
+    public References<Child> getChildren() {
+        return children;
     }
 }

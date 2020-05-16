@@ -19,9 +19,9 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import com.github.veithen.bidiref.Reference;
-import com.github.veithen.bidiref.References;
-import com.github.veithen.bidiref.Association;
+import com.github.veithen.jrel.association.Association;
+import com.github.veithen.jrel.association.Reference;
+import com.github.veithen.jrel.association.References;
 import com.github.veithen.jrel.transitive.TransitiveReferences;
 import com.github.veithen.jrel.transitive.TransitiveRelation;
 

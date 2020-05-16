@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel;
 
 import java.util.Objects;
 import java.util.function.BiPredicate;
