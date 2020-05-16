@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-public class OneToManyAssociation<T,U> extends ToManyAssociation<T,U,Reference<T>> {
+public final class OneToManyAssociation<T,U> extends ToManyAssociation<T,U,Reference<T>> {
     private final ManyToOneAssociation<U,T> converse;
 
     OneToManyAssociation(ManyToOneAssociation<U,T> converse) {
