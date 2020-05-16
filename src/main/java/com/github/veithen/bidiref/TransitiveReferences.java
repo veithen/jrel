@@ -23,10 +23,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
+public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, SnapshotableCollection<T>, ReferenceHolder<T> {
     private final TransitiveRelation<T> relation;
     private final T owner;
-    private ReferenceHolder<T> referenceHolder;
+    private MutableReferenceHolder<T> referenceHolder;
     private LinkedIdentityHashSet<T> set;
 
     TransitiveReferences(TransitiveRelation<T> relation, T owner) {

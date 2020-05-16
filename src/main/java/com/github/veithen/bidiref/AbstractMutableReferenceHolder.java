@@ -19,7 +19,7 @@
  */
 package com.github.veithen.bidiref;
 
-public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U> {
+public abstract class AbstractMutableReferenceHolder<T,U> implements MutableReferenceHolder<U> {
     static final ThreadLocal<Boolean> validationDisabled = new ThreadLocal<Boolean>() {
         @Override
         protected Boolean initialValue() {
@@ -31,7 +31,7 @@ public abstract class AbstractReferenceHolder<T,U> implements ReferenceHolder<U>
     private final T owner;
     private boolean validated;
 
-    AbstractReferenceHolder(Relation<T, U> relation, T owner) {
+    AbstractMutableReferenceHolder(Relation<T, U> relation, T owner) {
         this.relation = relation;
         this.owner = owner;
     }

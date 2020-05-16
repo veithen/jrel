@@ -19,8 +19,10 @@
  */
 package com.github.veithen.bidiref;
 
-import java.util.function.Supplier;
-
-public interface Reference<T> extends MutableReferenceHolder<T>, Supplier<T> {
-    void set(T target);
+public interface MutableReferenceHolder<T> extends ReferenceHolder<T> {
+    void addListener(CollectionListener<? super T> listener);
+    void removeListener(CollectionListener<? super T> listener);
+    void clear();
+    boolean add(T object);
+    boolean remove(Object object);
 }

@@ -22,12 +22,12 @@ package com.github.veithen.bidiref;
 import java.util.Objects;
 import java.util.function.Function;
 
-public abstract class BinaryRelationship<Type1,Type2,Container1,Container2,Self extends BinaryRelationship<Type1,Type2,Container1,Container2,Self,Opposite>,Opposite extends BinaryRelationship<Type2,Type1,Container2,Container1,Opposite,Self>> {
-    private Function<Type1,Container1> getter;
+public abstract class BinaryRelationship<Type1,Type2,ReferenceHolder1 extends ReferenceHolder<Type2>,ReferenceHolder2 extends ReferenceHolder<Type1>,Self extends BinaryRelationship<Type1,Type2,ReferenceHolder1,ReferenceHolder2,Self,Opposite>,Opposite extends BinaryRelationship<Type2,Type1,ReferenceHolder2,ReferenceHolder1,Opposite,Self>> {
+    private Function<Type1,ReferenceHolder1> getter;
 
     public abstract Opposite getReverse();
 
-    public final synchronized void bind(Function<Type1,Container1> getter) {
+    public final synchronized void bind(Function<Type1,ReferenceHolder1> getter) {
         Objects.requireNonNull(getter);
         if (this.getter != null) {
             throw new IllegalStateException("Already bound");
@@ -35,7 +35,7 @@ public abstract class BinaryRelationship<Type1,Type2,Container1,Container2,Self 
         this.getter = getter;
     }
 
-    final synchronized Container1 getReferenceHolder(Type1 owner) {
+    final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
         if (getter == null) {
             throw new IllegalStateException("Not bound");
         }

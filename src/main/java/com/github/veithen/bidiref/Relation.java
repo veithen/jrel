@@ -19,7 +19,7 @@
  */
 package com.github.veithen.bidiref;
 
-public final class Relation<T,U> extends BinaryRelationship<T,U,ReferenceHolder<U>,ReferenceHolder<T>,Relation<T,U>,Relation<U,T>> {
+public final class Relation<T,U> extends BinaryRelationship<T,U,MutableReferenceHolder<U>,MutableReferenceHolder<T>,Relation<T,U>,Relation<U,T>> {
     private final Relation<U,T> reverse;
 
     Relation(Relation<U,T> reverse) {
@@ -38,12 +38,12 @@ public final class Relation<T,U> extends BinaryRelationship<T,U,ReferenceHolder<
         return reverse;
     }
 
-    private void addListener(ReferenceHolder<U> referenceHolder, T owner) {
-        AbstractReferenceHolder.validationDisabled.set(true);
+    private void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
+        AbstractMutableReferenceHolder.validationDisabled.set(true);
         try {
             referenceHolder.addListener(new ReverseRelationUpdater<T,U>(owner, reverse, referenceHolder));
         } finally {
-            AbstractReferenceHolder.validationDisabled.set(false);
+            AbstractMutableReferenceHolder.validationDisabled.set(false);
         }
     }
 

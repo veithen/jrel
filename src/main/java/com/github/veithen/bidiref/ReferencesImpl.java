@@ -22,7 +22,7 @@ package com.github.veithen.bidiref;
 import java.util.Collection;
 import java.util.Iterator;
 
-final class ReferencesImpl<T,U> extends AbstractReferenceHolder<T,U> implements References<U> {
+final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
     ReferencesImpl(Relation<T,U> relation, T owner) {

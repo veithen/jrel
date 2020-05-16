@@ -22,7 +22,7 @@ package com.github.veithen.bidiref;
 import java.util.Collections;
 import java.util.Iterator;
 
-final class ReferenceImpl<T,U> extends AbstractReferenceHolder<T,U> implements Reference<U> {
+final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
     private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
     private U target;
 

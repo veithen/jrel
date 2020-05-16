@@ -21,6 +21,6 @@ package com.github.veithen.bidiref;
 
 import java.util.Set;
 
-public interface References<T> extends ReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
+public interface References<T> extends MutableReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
 
 }
