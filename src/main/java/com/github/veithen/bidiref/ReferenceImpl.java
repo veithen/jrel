@@ -26,8 +26,8 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
     private final ListenableCollectionSupport<U> listeners = new ListenableCollectionSupport<>();
     private U target;
 
-    ReferenceImpl(Relation<T,U> relation, T owner) {
-        super(relation, owner);
+    ReferenceImpl(Association<T,U> association, T owner) {
+        super(association, owner);
     }
 
     public void addListener(CollectionListener<? super U> listener) {

@@ -27,18 +27,18 @@ public abstract class AbstractMutableReferenceHolder<T,U> implements MutableRefe
         }
     };
 
-    private final Relation<T,U> relation;
+    private final Association<T,U> association;
     private final T owner;
     private boolean validated;
 
-    AbstractMutableReferenceHolder(Relation<T, U> relation, T owner) {
-        this.relation = relation;
+    AbstractMutableReferenceHolder(Association<T, U> association, T owner) {
+        this.association = association;
         this.owner = owner;
     }
 
     final void validate() {
         if (!validated && !validationDisabled.get()) {
-            if (relation.getReferenceHolder(owner) != this) {
+            if (association.getReferenceHolder(owner) != this) {
                 throw new IllegalStateException();
             }
             validated = true;

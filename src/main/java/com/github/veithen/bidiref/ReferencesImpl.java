@@ -25,8 +25,8 @@ import java.util.Iterator;
 final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
-    ReferencesImpl(Relation<T,U> relation, T owner) {
-        super(relation, owner);
+    ReferencesImpl(Association<T,U> association, T owner) {
+        super(association, owner);
     }
 
     public void addListener(CollectionListener<? super U> listener) {

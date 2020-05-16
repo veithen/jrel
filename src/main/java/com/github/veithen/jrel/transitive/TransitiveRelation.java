@@ -20,23 +20,23 @@
 package com.github.veithen.jrel.transitive;
 
 import com.github.veithen.bidiref.BinaryRelation;
-import com.github.veithen.bidiref.Relation;
+import com.github.veithen.bidiref.Association;
 
 public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
-    private final Relation<T,T> association;
+    private final Association<T,T> association;
     private final TransitiveRelation<T> converse;
 
-    TransitiveRelation(Relation<T,T> association, TransitiveRelation<T> converse) {
+    TransitiveRelation(Association<T,T> association, TransitiveRelation<T> converse) {
         this.association = association;
         this.converse = converse;
     }
 
-    public TransitiveRelation(Relation<T,T> association) {
+    public TransitiveRelation(Association<T,T> association) {
         this.association = association;
         converse = new TransitiveRelation<T>(association.getConverse(), this);
     }
 
-    public Relation<T,T> getAssociation() {
+    public Association<T,T> getAssociation() {
         return association;
     }
 

@@ -22,5 +22,5 @@ package com.github.veithen.bidiref;
 public final class Relations {
     private Relations() {}
 
-    static final Relation<Child,Parent> PARENT = new Relation<>();
+    static final Association<Child,Parent> PARENT = new Association<>();
 }

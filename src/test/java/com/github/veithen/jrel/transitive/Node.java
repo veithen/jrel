@@ -21,12 +21,12 @@ package com.github.veithen.jrel.transitive;
 
 import com.github.veithen.bidiref.Reference;
 import com.github.veithen.bidiref.References;
-import com.github.veithen.bidiref.Relation;
+import com.github.veithen.bidiref.Association;
 import com.github.veithen.jrel.transitive.TransitiveReferences;
 import com.github.veithen.jrel.transitive.TransitiveRelation;
 
 public class Node {
-    private static final Relation<Node,Node> PARENT = new Relation<>();
+    private static final Association<Node,Node> PARENT = new Association<>();
     private static final TransitiveRelation<Node> ANCESTOR = new TransitiveRelation<>(PARENT);
 
     static {
