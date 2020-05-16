@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
-  bidiref
+  jrel
   %%
   Copyright (C) 2020 Andreas Veithen
   %%
@@ -27,12 +27,12 @@
         <version>21-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bidiref</artifactId>
+    <artifactId>jrel</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>bidiref</name>
-    <url>https://github.com/veithen/bidiref</url>
+    <name>jrel</name>
+    <url>https://github.com/veithen/jrel</url>
     <inceptionYear>2020</inceptionYear>
     <licenses>
         <license>
@@ -43,14 +43,14 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/veithen/bidiref/tree/master</url>
-        <connection>scm:git:http://github.com/veithen/bidiref.git</connection>
-        <developerConnection>scm:git:https://github.com/veithen/bidiref.git</developerConnection>
+        <url>https://github.com/veithen/jrel/tree/master</url>
+        <connection>scm:git:http://github.com/veithen/jrel.git</connection>
+        <developerConnection>scm:git:https://github.com/veithen/jrel.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
     <properties>
-        <github.repository>bidiref</github.repository>
+        <github.repository>jrel</github.repository>
         <javaVersion>1.8</javaVersion>
     </properties>
 
@@ -83,7 +83,7 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
-                    <projectName>bidiref</projectName>
+                    <projectName>jrel</projectName>
                     <licenseName>apache_v2</licenseName>
                 </configuration>
             </plugin>

@@ -1,6 +1,6 @@
 /*-
  * #%L
- * bidiref
+ * jrel
  * %%
  * Copyright (C) 2020 Andreas Veithen
  * %%

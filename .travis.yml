@@ -12,11 +12,11 @@ script: mvn -B -e -s .travis-settings.xml -Prelease -Dgpg.skip=true verify
 before_cache: "find $HOME/.m2 -name '*-SNAPSHOT' -a -type d -print0 | xargs -0 rm -rf"
 jobs:
   include:
-    - if: repo = "veithen/bidiref" AND branch = master AND type = push
+    - if: repo = "veithen/jrel" AND branch = master AND type = push
       stage: deploy
       script: mvn -B -e -s .travis-settings.xml -Prelease -Dgpg.skip=true -DskipTests=true deploy
       env:
-        - secure: "bAM4I6QO6xAzSWqNsyTwOXJbsM0gNUvxdfhoiMePIA+lVsloKnD5XIpylA+fAXR4sMEYZmywHsaxHiI1CwYZ9ZohG1jqcjDAgKM8xu1G0IrMxUP3ja3ysvPBZDjvdlrIo6zviDBqe/3qMkxmxopgLfitEEvwb2QbJew4jFcnsurwBhAqfe+/dS5Dp/ZuZFOpol6LntqKkTkMCHZ8ITDHxqw1IaOJGRg3ZnNDCxNHdcXEyU9IQOvgqUUqvFV6dlQz9VFbWQy3DqNiNRVsxOgGDEr0op2aaWO/weEOkjb0/NZG+aPmnMEPrbpyq+QUv1sUSLq4mKG6bzTgpwMVKRJwvza1ljLUrTnsmOt78xhJ9Wo3WCFMyKmfdYP71/6hfbOecptnigpy1VMZkUP4FO4YIWXpn0fc/y5RmISbJ5b841BdMWYRRJbScskZv05baXUWsOuEPI64TBy03cdWISmmlSTy+idDMXlvfRaRO4XLEc3xofTrmvvGnbMx4qCf2+2yG9QKAXHq0JRuBz0CweSgs2Lh6Dg231NUbLRN1EFlRTJAo98qoDulfuS6HpGdUCIWpxXkSuqJbH0r8HUSGNH37Y2h8xLPpwK7jSuV3SOkvRPidRI08Yu8gN8t7ux4+SCKODdsbYU/g3ImswN5SVXio6ih6OSfIrBfk0x1eORrXQ0="
+        - secure: "xChZxJU0vdtiK3nHVooreD5Q2nP7PMAQtb/pHUrPTqKwAykQGaMdFI8NurFYEnFN9hdVQ/6ogMd54wNLtEL899zWKabXZkU9+gM1+tNPG2x55yUN1TkluycwC17leuz+5xYONut+CvYMlDHG3FoBxnXy9yN86tXt+/tcax2CCJiTL5owvR0RC/UGMSkiq12lG0JiMbckzmGTZ0a39ggNRs5mogAfzmQX5JG7/Dh6tnnNS0hXz1OUQ0D0Mu9AYuFtIVN14w5qgzatWW9imVDSKn0A0BKYjtjLX+I1xnZPNp0AviPhAf8iUwCdXeHIrs6xPqVHCbZEZAgsZY93I7RBTKCukoc3xcXU8SvNe/kyCC2d1p8/kSvylQmURVqCwOgfjLpmJB0gRB3UwWLzreNPNiG4y5pDsjJnFvowrZwhFWVIEdc2PTUqYtSeZ2+PnWU7hY/GnjuAWjJwjMMuv9H9lyvE+cdJGC6T54j0pdN0wLkUSMcbnPzU3hzVeXPkkKTAI5hkxw33ydlHDp02FDrHK5tOZnoG7vIVU8sJieXWlLpghfFKLiNeGMGwD5K+ApwNFkoPEeWXEypqRmH4LPj7TAOkuFbs31uPn3kaT5rQc45TJ7Iny6xziV+hXrb6kV+6OhBsnvtR7yZax8BB4ojr6fIpC7bI60s15QZ4A8u7xrE="
 cache:
   directories:
     - $HOME/.m2
