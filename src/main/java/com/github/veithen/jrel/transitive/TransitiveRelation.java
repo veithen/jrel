@@ -17,7 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.transitive;
+
+import com.github.veithen.bidiref.BinaryRelation;
+import com.github.veithen.bidiref.Relation;
 
 public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
     private final Relation<T,T> association;

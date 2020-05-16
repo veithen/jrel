@@ -46,7 +46,7 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
         getConverse().bind(referenceHolderFunction2);
     }
 
-    final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
+    public final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
         if (referenceHolderFunction == null) {
             throw new IllegalStateException("Not bound");
         }

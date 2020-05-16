@@ -17,11 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.bidiref;
+package com.github.veithen.jrel.transitive;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.github.veithen.bidiref.CollectionListener;
+import com.github.veithen.bidiref.LinkedIdentityHashSet;
+import com.github.veithen.bidiref.ListenableCollection;
+import com.github.veithen.bidiref.MutableReferenceHolder;
+import com.github.veithen.bidiref.ReferenceHolder;
+import com.github.veithen.bidiref.SnapshotableCollection;
 
 public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, SnapshotableCollection<T>, ReferenceHolder<T> {
     private final TransitiveRelation<T> relation;
