@@ -128,8 +128,23 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
 
     public Iterator<T> iterator() {
         init();
-        // TODO: wrap the iterator to forbid calling remove
-        return set.iterator();
+        Iterator<T> it = set.iterator();
+        return new Iterator<T>() {
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public T next() {
+                return it.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     public Iterable<T> snapshot() {

@@ -20,6 +20,10 @@
 package com.github.veithen.jrel.transitive;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
@@ -73,5 +77,56 @@ public class TransitiveTest {
         assertThat(node1.descendants).isEmpty();
         node4.parent.set(node2);
         assertThat(node1.descendants).isEmpty();
+    }
+
+    @Test
+    public void testAdd() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new Node("1").descendants.add(new Node("2")));
+    }
+
+    @Test
+    public void testAddAll() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new Node("1").descendants.addAll(Arrays.asList(new Node("2"))));
+    }
+
+    @Test
+    public void testRemove() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new Node("1").descendants.remove(new Node("2")));
+    }
+
+    @Test
+    public void testRemoveAll() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new Node("1").descendants.removeAll(Arrays.asList(new Node("2"))));
+    }
+
+    @Test
+    public void testRetainAll() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> new Node("1").descendants.retainAll(Arrays.asList(new Node("2"))));
+    }
+
+    @Test
+    public void testClear() {
+        assertThrows(
+                UnsupportedOperationException.class,
+                new Node("1").descendants::clear);
+    }
+
+    @Test
+    public void testIteratorRemove() {
+        Node node1 = new Node("1");
+        node1.children.add(new Node("2"));
+        Iterator<Node> it = node1.descendants.iterator();
+        it.next();
+        assertThrows(UnsupportedOperationException.class, it::remove);
     }
 }
