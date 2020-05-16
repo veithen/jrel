@@ -40,14 +40,13 @@ public final class CollectionListenerList<T> {
     }
 
     public void fireAdded(T object) {
-        // TODO: find a smarter way to avoid concurrent modifications
-        for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
+        for (CollectionListener<? super T> listener : listeners) {
             listener.added(object);
         }
     }
 
     public void fireRemoved(T object) {
-        for (CollectionListener<? super T> listener : new ArrayList<>(listeners)) {
+        for (CollectionListener<? super T> listener : listeners) {
             listener.removed(object);
         }
     }
