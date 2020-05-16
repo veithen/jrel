@@ -19,29 +19,25 @@
  */
 package com.github.veithen.bidiref;
 
-public final class Relation<T,U> extends BinaryRelationship<T,U,MutableReferenceHolder<U>,MutableReferenceHolder<T>,Relation<T,U>,Relation<U,T>> {
-    private final Relation<U,T> reverse;
+public final class Relation<T,U> extends BinaryRelation<T,U,MutableReferenceHolder<U>,MutableReferenceHolder<T>,Relation<T,U>,Relation<U,T>> {
+    private final Relation<U,T> converse;
 
-    Relation(Relation<U,T> reverse) {
-        this.reverse = reverse;
+    Relation(Relation<U,T> converse) {
+        this.converse = converse;
     }
 
     public Relation() {
-        reverse = createReverse();
+        converse = new Relation<U,T>(this);
     }
 
-    Relation<U,T> createReverse() {
-        return new Relation<U,T>(this);
-    }
-
-    public Relation<U,T> getReverse() {
-        return reverse;
+    public Relation<U,T> getConverse() {
+        return converse;
     }
 
     private void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
         AbstractMutableReferenceHolder.validationDisabled.set(true);
         try {
-            referenceHolder.addListener(new ReverseRelationUpdater<T,U>(owner, reverse, referenceHolder));
+            referenceHolder.addListener(new ConverseRelationUpdater<T,U>(owner, converse, referenceHolder));
         } finally {
             AbstractMutableReferenceHolder.validationDisabled.set(false);
         }

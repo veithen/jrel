@@ -21,10 +21,10 @@ package com.github.veithen.bidiref;
 
 public class Parent {
     static {
-        Relations.PARENT.getReverse().bind(o -> o.children);
+        Relations.PARENT.getConverse().bind(o -> o.children);
     }
 
-    private final References<Child> children = Relations.PARENT.getReverse().newReferences(this);
+    private final References<Child> children = Relations.PARENT.getConverse().newReferences(this);
 
     public References<Child> getChildren() {
         return children;

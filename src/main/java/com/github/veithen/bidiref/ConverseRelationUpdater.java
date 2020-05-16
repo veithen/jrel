@@ -22,7 +22,7 @@ package com.github.veithen.bidiref;
 import java.util.Deque;
 import java.util.LinkedList;
 
-final class ReverseRelationUpdater<T,U> implements CollectionListener<U> {
+final class ConverseRelationUpdater<T,U> implements CollectionListener<U> {
     private interface Action {
         <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object);
     }
@@ -49,18 +49,18 @@ final class ReverseRelationUpdater<T,U> implements CollectionListener<U> {
     };
 
     private final T owner;
-    private final Relation<U,T> reverseRelation;
+    private final Relation<U,T> converseRelation;
     private final MutableReferenceHolder<U> referenceHolder;
 
-    ReverseRelationUpdater(T owner, Relation<U,T> reverseRelation, MutableReferenceHolder<U> referenceHolder) {
+    ConverseRelationUpdater(T owner, Relation<U,T> converseRelation, MutableReferenceHolder<U> referenceHolder) {
         this.owner = owner;
-        this.reverseRelation = reverseRelation;
+        this.converseRelation = converseRelation;
         this.referenceHolder = referenceHolder;
     }
 
     private void update(Action action, U object) {
-        MutableReferenceHolder<T> referenceHolderToUpdate = reverseRelation.getReferenceHolder(object);
-        Deque<MutableReferenceHolder<?>> firingReferenceHolders = ReverseRelationUpdater.firingReferenceHolders.get();
+        MutableReferenceHolder<T> referenceHolderToUpdate = converseRelation.getReferenceHolder(object);
+        Deque<MutableReferenceHolder<?>> firingReferenceHolders = ConverseRelationUpdater.firingReferenceHolders.get();
         if (firingReferenceHolders.peek() != referenceHolderToUpdate) {
             firingReferenceHolders.push(referenceHolder);
             try {

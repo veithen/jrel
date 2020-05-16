@@ -19,18 +19,18 @@
  */
 package com.github.veithen.bidiref;
 
-public final class TransitiveRelation<T> extends BinaryRelationship<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
+public final class TransitiveRelation<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>,TransitiveRelation<T>,TransitiveRelation<T>> {
     private final Relation<T,T> association;
-    private final TransitiveRelation<T> reverse;
+    private final TransitiveRelation<T> converse;
 
-    TransitiveRelation(Relation<T,T> association, TransitiveRelation<T> reverse) {
+    TransitiveRelation(Relation<T,T> association, TransitiveRelation<T> converse) {
         this.association = association;
-        this.reverse = reverse;
+        this.converse = converse;
     }
 
     public TransitiveRelation(Relation<T,T> association) {
         this.association = association;
-        reverse = new TransitiveRelation<T>(association.getReverse(), this);
+        converse = new TransitiveRelation<T>(association.getConverse(), this);
     }
 
     public Relation<T,T> getAssociation() {
@@ -38,8 +38,8 @@ public final class TransitiveRelation<T> extends BinaryRelationship<T,T,Transiti
     }
 
     @Override
-    public TransitiveRelation<T> getReverse() {
-        return reverse;
+    public TransitiveRelation<T> getConverse() {
+        return converse;
     }
 
     public TransitiveReferences<T> newTransitiveReferences(T owner) {

@@ -24,17 +24,15 @@ public class Node {
     private static final TransitiveRelation<Node> ANCESTOR = new TransitiveRelation<>(PARENT);
 
     static {
-        PARENT.bind(o -> o.parent);
-        PARENT.getReverse().bind(o -> o.children);
-        ANCESTOR.bind(o -> o.ancestors);
-        ANCESTOR.getReverse().bind(o -> o.descendants);
+        PARENT.bind(o -> o.parent, o -> o.children);
+        ANCESTOR.bind(o -> o.ancestors, o -> o.descendants);
     }
 
     private final String name;
     public final Reference<Node> parent = PARENT.newReference(this);
     public final TransitiveReferences<Node> ancestors = ANCESTOR.newTransitiveReferences(this);
-    public final References<Node> children = PARENT.getReverse().newReferences(this);
-    public final TransitiveReferences<Node> descendants = ANCESTOR.getReverse().newTransitiveReferences(this);
+    public final References<Node> children = PARENT.getConverse().newReferences(this);
+    public final TransitiveReferences<Node> descendants = ANCESTOR.getConverse().newTransitiveReferences(this);
 
     public Node(String name) {
         this.name = name;
