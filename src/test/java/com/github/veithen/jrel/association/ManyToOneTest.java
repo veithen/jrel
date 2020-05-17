@@ -20,9 +20,12 @@
 package com.github.veithen.jrel.association;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -148,5 +151,38 @@ public class ManyToOneTest {
         assertThat(Relations.PARENT.apply(child)).isNull();
         child.setParent(parent);
         assertThat(Relations.PARENT.apply(child)).isSameInstanceAs(parent);
+    }
+
+    @Test
+    public void testListener() {
+        Parent parent1 = new Parent();
+        Parent parent2 = new Parent();
+        Child child = new Child();
+        child.setParent(parent1);
+        List<String> events = new ArrayList<>();
+        parent1.getChildren().addListener(new CollectionListener<Child>() {
+            @Override
+            public void added(Child object) {
+                fail();
+            }
+
+            @Override
+            public void removed(Child object) {
+                events.add("removed from parent 1");
+            }
+        });
+        parent2.getChildren().addListener(new CollectionListener<Child>() {
+            @Override
+            public void added(Child object) {
+                events.add("added to parent 1");
+            }
+
+            @Override
+            public void removed(Child object) {
+                fail();
+            }
+        });
+        child.setParent(parent2);
+        assertThat(events).containsExactly("removed from parent 1", "added to parent 1").inOrder();
     }
 }

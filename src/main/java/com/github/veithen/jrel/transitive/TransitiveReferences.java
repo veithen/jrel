@@ -25,6 +25,7 @@ import java.util.Set;
 
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.association.MutableReferenceHolder;
+import com.github.veithen.jrel.association.Reference;
 import com.github.veithen.jrel.collection.CollectionListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableCollection;
@@ -79,12 +80,15 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
     }
 
     private void maybeRemove(T object) {
-        if (referenceHolder.contains(object)) {
-            return;
-        }
-        for (T reference : referenceHolder) {
-            if (relation.getReferenceHolder(reference).contains(object)) {
+        // Optimization if the underlying association is many-to-one.
+        if (!(referenceHolder instanceof Reference)) {
+            if (referenceHolder.contains(object)) {
                 return;
+            }
+            for (T reference : referenceHolder) {
+                if (relation.getReferenceHolder(reference).contains(object)) {
+                    return;
+                }
             }
         }
         set.remove(object);
