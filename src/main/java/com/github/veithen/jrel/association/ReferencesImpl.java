@@ -92,11 +92,6 @@ final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> impl
         set.clear();
     }
 
-    public Iterable<U> snapshot() {
-        validate();
-        return set.snapshot();
-    }
-
     public boolean containsAll(Collection<?> c) {
         validate();
         return set.containsAll(c);

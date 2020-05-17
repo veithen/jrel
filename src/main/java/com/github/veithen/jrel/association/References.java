@@ -22,8 +22,7 @@ package com.github.veithen.jrel.association;
 import java.util.Set;
 
 import com.github.veithen.jrel.collection.ListenableCollection;
-import com.github.veithen.jrel.collection.SnapshotableCollection;
 
-public interface References<T> extends MutableReferenceHolder<T>, Set<T>, ListenableCollection<T>, SnapshotableCollection<T> {
+public interface References<T> extends MutableReferenceHolder<T>, Set<T>, ListenableCollection<T> {
 
 }

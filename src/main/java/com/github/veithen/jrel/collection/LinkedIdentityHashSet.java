@@ -20,62 +20,98 @@
 package com.github.veithen.jrel.collection;
 
 import java.util.AbstractSet;
-import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements ListenableCollection<T>, SnapshotableCollection<T> {
-    private class It implements Iterator<T> {
-        private int currentIndex = -1;
-        private int nextIndex = firstIndex;
+/**
+ * 
+ * <p>
+ * Iterators returned by this implementation make additional guarantees:
+ * <ul>
+ * <li>They will not throw {@link ConcurrentModificationException}.
+ * <li>{@link Iterator#next()} will never return an element that is not contained in the set at the
+ * time the method is called. That means that elements removed from the set while iterating will not
+ * be visited (unless of course they had already been visited before being removed).
+ * <li>If {@link Iterator#hasNext()} returns {@code false}, then all elements contained in the set
+ * at the time that method is called have been visited. That means that elements added to the set
+ * while iterating will be visited.
+ * </ul>
+ * 
+ * @param <T> the type of elements in this set
+ */
+public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements ListenableCollection<T> {
+    private static class Node {
+        private Object element;
+        Node previous;
+        Node next;
 
-        @Override
-        public boolean hasNext() {
-            return nextIndex != -1;
+        Node(Object element) {
+            this.element = element;
+        }
+
+        void removed() {
+            element = null;
+        }
+
+        boolean isRemoved() {
+            return element == null;
         }
 
         @SuppressWarnings("unchecked")
+        <T> T getElement() {
+            return (T)element;
+        }
+    }
+
+    private class It implements Iterator<T> {
+        private Node currentNode;
+
+        private Node getNextNode() {
+            Node node = currentNode;
+            while (node != null && node.isRemoved()) {
+                node = node.previous;
+            }
+            return node == null ? firstNode : node.next;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return getNextNode() != null;
+        }
+
         @Override
         public T next() {
-            if (nextIndex == -1) {
+            Node nextNode = getNextNode();
+            if (nextNode == null) {
                 throw new NoSuchElementException();
             }
-            Object element = elements[nextIndex];
-            // TODO: check element != null and throw ConcurrentModificationException
-            nextIndex = nextIndexes[currentIndex = nextIndex];
-            return (T)element;
+            currentNode = nextNode;
+            return nextNode.getElement();
         }
 
         @Override
         public void remove() {
-            if (currentIndex == -1) {
+            if (currentNode == null) {
                 throw new IllegalStateException();
             }
-            Object element = elements[currentIndex];
-            removeElementAt(currentIndex);
-            currentIndex = -1;
+            if (!currentNode.isRemoved()) {
+                removeElement(currentNode);
+            }
         }
     }
-
-    private final static Object TOMBSTONE = new Object();
 
     private final CollectionListenerList<T> listeners = new CollectionListenerList<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
-    private Object[] elements;
-    private int[] prevIndexes;
-    private int[] nextIndexes;
-    private int firstIndex = -1;
-    private int lastIndex = -1;
+    private Node[] nodes;
+    private Node firstNode;
+    private Node lastNode;
 
     public LinkedIdentityHashSet(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
-        elements = new Object[initialCapacity];
-        prevIndexes = new int[initialCapacity];
-        Arrays.fill(prevIndexes, -1);
-        nextIndexes = new int[initialCapacity];
-        Arrays.fill(nextIndexes, -1);
+        nodes = new Node[initialCapacity];
     }
 
     public LinkedIdentityHashSet() {
@@ -92,7 +128,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
 
     @Override
     public boolean add(T object) {
-        int capacity = elements.length;
+        int capacity = nodes.length;
         if (size + tombstones >= capacity*loadFactor) {
             // We only take into account size here because we will remove the tombstones. Note that
             // this means that we don't necessarily increase the capacity (and just remove the
@@ -100,92 +136,67 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
             while (size >= capacity*loadFactor) {
                 capacity *= 2;
             }
-            Object[] newElements = new Object[capacity];
-            int[] indexMap = new int[elements.length];
-            for (int oldIndex = 0; oldIndex<elements.length; oldIndex++) {
-                Object element = elements[oldIndex];
-                if (element == null || element == TOMBSTONE) {
+            Node[] newNodes = new Node[capacity];
+            for (Node node : nodes) {
+                if (node == null || node.isRemoved()) {
                     continue;
                 }
-                int hash = System.identityHashCode(element);
+                int hash = System.identityHashCode(node.getElement());
                 int newIndex = hash % capacity;
-                while (newElements[newIndex] != null) {
+                while (newNodes[newIndex] != null) {
                     newIndex = (newIndex + 1) % capacity;
                 }
-                newElements[newIndex] = element;
-                indexMap[oldIndex] = newIndex;
-            }
-            int[] newPrevIndexes = new int[capacity];
-            Arrays.fill(newPrevIndexes, -1);
-            int[] newNextIndexes = new int[capacity];
-            Arrays.fill(newNextIndexes, -1);
-            for (int oldIndex = 0; oldIndex<elements.length; oldIndex++) {
-                Object element = elements[oldIndex];
-                if (element == null || element == TOMBSTONE) {
-                    continue;
-                }
-                if (prevIndexes[oldIndex] != -1) {
-                    newPrevIndexes[indexMap[oldIndex]] = indexMap[prevIndexes[oldIndex]];
-                }
-                if (nextIndexes[oldIndex] != -1) {
-                    newNextIndexes[indexMap[oldIndex]] = indexMap[nextIndexes[oldIndex]];
-                }
+                newNodes[newIndex] = node;
             }
             tombstones = 0;
-            elements = newElements;
-            prevIndexes = newPrevIndexes;
-            nextIndexes = newNextIndexes;
-            if (firstIndex != -1) {
-                firstIndex = indexMap[firstIndex];
-            }
-            if (lastIndex != -1) {
-                lastIndex = indexMap[lastIndex];
-            }
+            nodes = newNodes;
         }
         int hash = System.identityHashCode(object);
         int index = hash % capacity;
         while (true) {
-            Object element = elements[index];
-            if (element == null) {
+            Node node = nodes[index];
+            if (node == null) {
                 break;
             }
-            if (element == TOMBSTONE) {
+            if (node.isRemoved()) {
                 tombstones--;
                 break;
             }
-            if (element == object) {
+            if (node.getElement() == object) {
                 return false;
             }
             index = (index + 1) % capacity;
         }
-        elements[index] = object;
-        if (size == 0) {
-            firstIndex = index;
-        } else {
-            nextIndexes[lastIndex] = index;
-            prevIndexes[index] = lastIndex;
+        Node node = new Node(object);
+        nodes[index] = node;
+        if (firstNode == null) {
+            firstNode = node;
         }
-        lastIndex = index;
+        if (lastNode != null) {
+            node.previous = lastNode;
+            lastNode.next = node;
+        }
+        lastNode = node;
         size++;
         listeners.fireAdded(object);
         return true;
     }
 
-    private void removeElementAt(int index) {
-        T object = (T)elements[index];
-        elements[index] = TOMBSTONE;
-        if (nextIndexes[index] == -1) {
-            lastIndex = prevIndexes[index];
-        } else {
-            prevIndexes[nextIndexes[index]] = prevIndexes[index];
+    private void removeElement(Node node) {
+        T object = node.getElement();
+        node.removed();
+        if (node.previous != null) {
+            node.previous.next = node.next;
         }
-        if (prevIndexes[index] == -1) {
-            firstIndex = nextIndexes[index];
-        } else {
-            nextIndexes[prevIndexes[index]] = nextIndexes[index];
+        if (node.next != null) {
+            node.next.previous = node.previous;
         }
-        prevIndexes[index] = -1;
-        nextIndexes[index] = -1;
+        if (node == firstNode) {
+            firstNode = node.next;
+        }
+        if (node == lastNode) {
+            lastNode = node.previous;
+        }
         size--;
         tombstones++;
         listeners.fireRemoved(object);
@@ -194,20 +205,19 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
     @Override
     public boolean remove(Object object) {
         int hash = System.identityHashCode(object);
-        int capacity = elements.length;
+        int capacity = nodes.length;
         int index = hash % capacity;
         while (true) {
-            Object element = elements[index];
-            if (element == null) {
+            Node node = nodes[index];
+            if (node == null) {
                 return false;
             }
-            if (element == object) {
-                break;
+            if (node.getElement() == object) {
+                removeElement(node);
+                return true;
             }
             index = (index + 1) % capacity;
         }
-        removeElementAt(index);
-        return true;
     }
 
     @Override
@@ -218,14 +228,14 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
     @Override
     public boolean contains(Object object) {
         int hash = System.identityHashCode(object);
-        int capacity = elements.length;
+        int capacity = nodes.length;
         int index = hash % capacity;
         while (true) {
-            Object element = elements[index];
-            if (element == null) {
+            Node node = nodes[index];
+            if (node == null) {
                 return false;
             }
-            if (element == object) {
+            if (node.getElement() == object) {
                 return true;
             }
             index = (index + 1) % capacity;
@@ -242,34 +252,18 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         if (size == 0) {
             return;
         }
-        Object[] oldElements = elements;
-        elements = new Object[elements.length];
+        Node[] oldNodes = nodes;
+        nodes = new Node[nodes.length];
         size = 0;
         tombstones = 0;
-        Arrays.fill(elements, null);
-        Arrays.fill(prevIndexes, -1);
-        Arrays.fill(nextIndexes, -1);
-        firstIndex = -1;
-        lastIndex = -1;
-        for (int i=0; i<oldElements.length; i++) {
-            Object element = oldElements[i];
-            if (element != null && element != TOMBSTONE) {
-                listeners.fireRemoved((T)element);
+        firstNode = null;
+        lastNode = null;
+        for (int i=0; i<oldNodes.length; i++) {
+            Node node = oldNodes[i];
+            if (node != null && !node.isRemoved()) {
+                listeners.fireRemoved(node.getElement());
+                node.removed();
             }
         }
-    }
-
-    public Iterable<T> snapshot() {
-        final Object[] elements = new Object[this.elements.length];
-        System.arraycopy(this.elements, 0, elements, 0, elements.length);
-        final int[] nextIndexes = new int[this.nextIndexes.length];
-        System.arraycopy(this.nextIndexes, 0, nextIndexes, 0, nextIndexes.length);
-        final int firstIndex = this.firstIndex;
-        return new Iterable<T>() {
-            @Override
-            public Iterator<T> iterator() {
-                return new SnapshotIterator<>(elements, nextIndexes, firstIndex);
-            }
-        };
     }
 }

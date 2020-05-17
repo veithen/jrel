@@ -28,9 +28,8 @@ import com.github.veithen.jrel.association.MutableReferenceHolder;
 import com.github.veithen.jrel.collection.CollectionListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableCollection;
-import com.github.veithen.jrel.collection.SnapshotableCollection;
 
-public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, SnapshotableCollection<T>, ReferenceHolder<T> {
+public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, ReferenceHolder<T> {
     private final TransitiveRelation<T> relation;
     private final T owner;
     private MutableReferenceHolder<T> referenceHolder;
@@ -145,11 +144,6 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
                 throw new UnsupportedOperationException();
             }
         };
-    }
-
-    public Iterable<T> snapshot() {
-        init();
-        return set.snapshot();
     }
 
     public boolean containsAll(Collection<?> c) {

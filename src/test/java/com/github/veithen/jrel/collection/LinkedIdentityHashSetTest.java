@@ -22,9 +22,11 @@ package com.github.veithen.jrel.collection;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
@@ -161,29 +163,6 @@ public class LinkedIdentityHashSetTest {
     }
 
     @Test
-    public void testSnapshot() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
-        Object object1 = new Object();
-        Object object2 = new Object();
-        Object object3 = new Object();
-        set.add(object1);
-        set.add(object2);
-        set.add(object3);
-        Iterable<Object> snapshot = set.snapshot();
-        set.remove(object1);
-        set.add(new Object());
-        Iterator<Object> it = snapshot.iterator();
-        assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object1);
-        assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object2);
-        assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object3);
-        assertThat(it.hasNext()).isFalse();
-        assertThrows(NoSuchElementException.class, it::next);
-    }
-
-    @Test
     public void testToString() {
         LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
         Object object1 = new Object();
@@ -226,5 +205,84 @@ public class LinkedIdentityHashSetTest {
         LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
         set.clear();
         assertThat(set).isEmpty();
+    }
+
+    @Test
+    public void testAddWhileIterating() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        Object object1 = new Object();
+        Object object2 = new Object();
+        Object object3 = new Object();
+        set.add(object1);
+        List<Object> seen = new ArrayList<>();
+        for (Object o : set) {
+            if (o == object1) {
+                set.add(object2);
+                set.add(object3);
+            }
+            seen.add(o);
+        };
+        assertThat(set).containsExactly(object1, object2, object3);
+        assertThat(seen).containsExactly(object1, object2, object3).inOrder();
+    }
+
+    @Test
+    public void testRemoveCurrentWhileIterating() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        Object object1 = new Object();
+        Object object2 = new Object();
+        Object object3 = new Object();
+        set.add(object1);
+        set.add(object2);
+        set.add(object3);
+        List<Object> seen = new ArrayList<>();
+        for (Object o : set) {
+            if (o == object2) {
+                set.remove(o);
+            }
+            seen.add(o);
+        };
+        assertThat(set).containsExactly(object1, object3);
+        assertThat(seen).containsExactly(object1, object2, object3).inOrder();
+    }
+
+    @Test
+    public void testRemoveNextWhileIterating() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        Object object1 = new Object();
+        Object object2 = new Object();
+        Object object3 = new Object();
+        set.add(object1);
+        set.add(object2);
+        set.add(object3);
+        List<Object> seen = new ArrayList<>();
+        for (Object o : set) {
+            if (o == object1) {
+                set.remove(object2);
+            }
+            seen.add(o);
+        };
+        assertThat(set).containsExactly(object1, object3);
+        assertThat(seen).containsExactly(object1, object3).inOrder();
+    }
+
+    @Test
+    public void testClearWhileIterating() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        Object object1 = new Object();
+        Object object2 = new Object();
+        Object object3 = new Object();
+        set.add(object1);
+        set.add(object2);
+        set.add(object3);
+        List<Object> seen = new ArrayList<>();
+        for (Object o : set) {
+            if (o == object2) {
+                set.clear();
+            }
+            seen.add(o);
+        };
+        assertThat(set).isEmpty();
+        assertThat(seen).containsExactly(object1, object2).inOrder();
     }
 }
