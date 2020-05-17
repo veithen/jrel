@@ -104,6 +104,13 @@ public class LinkedIdentityHashSetTest {
     }
 
     @Test
+    public void testRemoveNotContained() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        set.add(new Object());
+        assertThat(set.remove(new Object())).isFalse();
+    }
+
+    @Test
     public void testAddRemoveRandom() {
         Object[] allObjects = new Object[1000];
         for (int i=0; i<allObjects.length; i++) {
@@ -160,6 +167,26 @@ public class LinkedIdentityHashSetTest {
         assertThat(it.hasNext()).isTrue();
         assertThat(it.next()).isSameInstanceAs(object3);
         assertThat(set).containsExactly(object1, object3);
+    }
+
+    @Test
+    public void testIteratorRemoveWithoutNext() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        set.add(new Object());
+        Iterator<Object> it = set.iterator();
+        assertThrows(IllegalStateException.class, it::remove);
+    }
+
+    @Test
+    public void testIteratorRemoveTwice() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        set.add(new Object());
+        set.add(new Object());
+        Iterator<Object> it = set.iterator();
+        it.next();
+        it.remove();
+        it.remove();
+        assertThat(set).hasSize(1);
     }
 
     @Test
