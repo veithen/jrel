@@ -19,15 +19,15 @@
  */
 package com.github.veithen.jrel.association;
 
-/**
- * A 1:N association. Note that this type of association can't be created directly. It exists as the
- * converse of a {@link ManyToOneAssociation}.
- */
 public final class OneToManyAssociation<T,U> extends ToManyAssociation<T,U,Reference<T>> {
     private final ManyToOneAssociation<U,T> converse;
 
     OneToManyAssociation(ManyToOneAssociation<U,T> converse) {
         this.converse = converse;
+    }
+
+    public OneToManyAssociation() {
+        converse = new ManyToOneAssociation<U,T>(this);
     }
 
     public ManyToOneAssociation<U,T> getConverse() {
