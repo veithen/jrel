@@ -24,12 +24,18 @@ import java.util.Iterator;
 
 import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
+import com.github.veithen.jrel.collection.ListenableSet;
 
 final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
     ReferencesImpl(ToManyAssociation<T,U,?> association, T owner) {
         super(association, owner);
+    }
+
+    @Override
+    public ListenableSet<U> asSet() {
+        return this;
     }
 
     public void addListener(SetListener<? super U> listener) {

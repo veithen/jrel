@@ -19,9 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-import java.util.Iterator;
-
-import com.github.veithen.jrel.collection.SetListener;
+import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SingletonIdentitySet;
 
 final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
@@ -31,14 +29,10 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
         super(association, owner);
     }
 
-    public void addListener(SetListener<? super U> listener) {
+    @Override
+    public ListenableSet<U> asSet() {
         validate();
-        set.addListener(listener);
-    }
-
-    public void removeListener(SetListener<? super U> listener) {
-        validate();
-        set.addListener(listener);
+        return set;
     }
 
     public U get() {
@@ -66,15 +60,5 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
     public boolean remove(Object object) {
         validate();
         return set.remove(object);
-    }
-
-    @Override
-    public Iterator<U> iterator() {
-        return set.iterator();
-    }
-
-    @Override
-    public boolean contains(Object object) {
-        return set.contains(object);
     }
 }

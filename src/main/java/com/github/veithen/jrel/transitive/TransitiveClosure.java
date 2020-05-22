@@ -66,9 +66,9 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveRef
      */
     public void reduce(T x) {
         ReferenceHolder<T> refs = relation.getReferenceHolder(x);
-        for (Iterator<T> it = refs.iterator(); it.hasNext(); ) {
+        for (Iterator<T> it = refs.asSet().iterator(); it.hasNext(); ) {
             T y = it.next();
-            for (T z : refs) {
+            for (T z : refs.asSet()) {
                 if (z != y && getReferenceHolder(z).contains(y)) {
                     it.remove();
                     break;

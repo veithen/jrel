@@ -74,23 +74,29 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, 
                 transitiveReferences.removeListener(transitiveReferencesListener);
             }
         };
-        referenceHolder.addListener(directReferenceListener);
-        referenceHolder.forEach(directReferenceListener::added);
+        referenceHolder.asSet().addListener(directReferenceListener);
+        referenceHolder.asSet().forEach(directReferenceListener::added);
     }
 
     private void maybeRemove(T object) {
         // Optimization if the underlying association is many-to-one.
         if (!(referenceHolder instanceof Reference)) {
-            if (referenceHolder.contains(object)) {
+            if (referenceHolder.asSet().contains(object)) {
                 return;
             }
-            for (T reference : referenceHolder) {
+            for (T reference : referenceHolder.asSet()) {
                 if (relation.getReferenceHolder(reference).contains(object)) {
                     return;
                 }
             }
         }
         set.remove(object);
+    }
+
+    @Override
+    public ListenableSet<T> asSet() {
+        init();
+        return set;
     }
 
     public void addListener(SetListener<? super T> listener) {

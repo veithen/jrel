@@ -57,6 +57,6 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
 
     @Override
     public final boolean test(Type1 o1, Type2 o2) {
-        return getReferenceHolder(o1).contains(o2);
+        return getReferenceHolder(o1).asSet().contains(o2);
     }
 }

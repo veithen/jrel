@@ -19,10 +19,8 @@
  */
 package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.collection.SetListener;
+import com.github.veithen.jrel.collection.ListenableSet;
 
-public interface ReferenceHolder<T> extends Iterable<T> {
-    boolean contains(Object object);
-    void addListener(SetListener<? super T> listener);
-    void removeListener(SetListener<? super T> listener);
+public interface ReferenceHolder<T> {
+    ListenableSet<T> asSet();
 }

@@ -27,7 +27,7 @@ public abstract class Association<T,U,ReferenceHolder1 extends MutableReferenceH
     final void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
         AbstractMutableReferenceHolder.validationDisabled.set(true);
         try {
-            referenceHolder.addListener(new ConverseAssociationUpdater<T,U>(owner, getConverse(), referenceHolder));
+            referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T,U>(owner, getConverse(), referenceHolder));
         } finally {
             AbstractMutableReferenceHolder.validationDisabled.set(false);
         }

@@ -113,7 +113,7 @@ public class ManyToOneTest {
                 removedFired[0] = true;
             }
         });
-        child.getParentReference().addListener(new SetListener<Parent>() {
+        child.getParentReference().asSet().addListener(new SetListener<Parent>() {
             @Override
             public void added(Parent object) {
                 assertThat(object).isSameInstanceAs(parent);
