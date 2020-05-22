@@ -25,7 +25,7 @@ import com.github.veithen.jrel.association.References;
 
 public class Node {
     private static final ManyToOneAssociation<Node,Node> PARENT = new ManyToOneAssociation<>();
-    private static final TransitiveRelation<Node> ANCESTOR = new TransitiveRelation<>(PARENT);
+    private static final TransitiveClosure<Node> ANCESTOR = new TransitiveClosure<>(PARENT);
 
     static {
         PARENT.bind(o -> o.parent, o -> o.children);

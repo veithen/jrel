@@ -31,12 +31,12 @@ import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableCollection;
 
 public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, ReferenceHolder<T> {
-    private final TransitiveRelation<T> relation;
+    private final TransitiveClosure<T> relation;
     private final T owner;
     private MutableReferenceHolder<T> referenceHolder;
     private LinkedIdentityHashSet<T> set;
 
-    TransitiveReferences(TransitiveRelation<T> relation, T owner) {
+    TransitiveReferences(TransitiveClosure<T> relation, T owner) {
         this.relation = relation;
         this.owner = owner;
     }

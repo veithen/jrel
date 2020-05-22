@@ -27,7 +27,7 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
-public class TransitiveTest {
+public class TransitiveClosureTest {
     @Test
     public void test1() {
         Node node1 = new Node("1");
