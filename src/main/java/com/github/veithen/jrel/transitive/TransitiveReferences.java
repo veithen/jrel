@@ -25,11 +25,11 @@ import java.util.Set;
 
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.association.Reference;
-import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
-import com.github.veithen.jrel.collection.ListenableCollection;
+import com.github.veithen.jrel.collection.ListenableSet;
 
-public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, ReferenceHolder<T> {
+public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, ReferenceHolder<T> {
     private final TransitiveClosure<T> relation;
     private final T owner;
     private ReferenceHolder<T> referenceHolder;
@@ -45,7 +45,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
             return;
         }
         set = new LinkedIdentityHashSet<>();
-        CollectionListener<T> transitiveReferencesListener = new CollectionListener<T>() {
+        SetListener<T> transitiveReferencesListener = new SetListener<T>() {
             @Override
             public void added(T object) {
                 set.add(object);
@@ -57,7 +57,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
             }
         };
         referenceHolder = relation.getRelation().getReferenceHolder(owner);
-        CollectionListener<T> directReferenceListener = new CollectionListener<T>() {
+        SetListener<T> directReferenceListener = new SetListener<T>() {
             @Override
             public void added(T object) {
                 set.add(object);
@@ -93,12 +93,12 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
         set.remove(object);
     }
 
-    public void addListener(CollectionListener<? super T> listener) {
+    public void addListener(SetListener<? super T> listener) {
         init();
         set.addListener(listener);
     }
 
-    public void removeListener(CollectionListener<? super T> listener) {
+    public void removeListener(SetListener<? super T> listener) {
         init();
         set.removeListener(listener);
     }

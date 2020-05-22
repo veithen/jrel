@@ -22,9 +22,9 @@ package com.github.veithen.jrel.association;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.SetListener;
 
-final class ConverseAssociationUpdater<T,U> implements CollectionListener<U> {
+final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
     private interface Action {
         <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object);
     }

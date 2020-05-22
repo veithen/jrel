@@ -22,7 +22,7 @@ package com.github.veithen.jrel.association;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 
 final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
@@ -32,12 +32,12 @@ final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> impl
         super(association, owner);
     }
 
-    public void addListener(CollectionListener<? super U> listener) {
+    public void addListener(SetListener<? super U> listener) {
         validate();
         set.addListener(listener);
     }
 
-    public void removeListener(CollectionListener<? super U> listener) {
+    public void removeListener(SetListener<? super U> listener) {
         validate();
         set.removeListener(listener);
     }

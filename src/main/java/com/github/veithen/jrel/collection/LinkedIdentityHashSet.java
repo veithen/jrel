@@ -40,7 +40,7 @@ import java.util.NoSuchElementException;
  * 
  * @param <T> the type of elements in this set
  */
-public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements ListenableCollection<T> {
+public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements ListenableSet<T> {
     private static class Node {
         private Object element;
         Node previous;
@@ -101,7 +101,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         }
     }
 
-    private final CollectionListenerList<T> listeners = new CollectionListenerList<>();
+    private final SetListenerList<T> listeners = new SetListenerList<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
@@ -118,11 +118,11 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         this(16, 0.5f);
     }
 
-    public void addListener(CollectionListener<? super T> listener) {
+    public void addListener(SetListener<? super T> listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(CollectionListener<? super T> listener) {
+    public void removeListener(SetListener<? super T> listener) {
         listeners.remove(listener);
     }
 

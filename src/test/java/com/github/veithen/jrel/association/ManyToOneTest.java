@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.veithen.jrel.collection.CollectionListener;
+import com.github.veithen.jrel.collection.SetListener;
 
 public class ManyToOneTest {
     @Test
@@ -100,7 +100,7 @@ public class ManyToOneTest {
         boolean[] removedFired = new boolean[2];
         Parent parent = new Parent();
         Child child = new Child();
-        parent.getChildren().addListener(new CollectionListener<Child>() {
+        parent.getChildren().addListener(new SetListener<Child>() {
             @Override
             public void added(Child object) {
                 assertThat(object).isSameInstanceAs(child);
@@ -113,7 +113,7 @@ public class ManyToOneTest {
                 removedFired[0] = true;
             }
         });
-        child.getParentReference().addListener(new CollectionListener<Parent>() {
+        child.getParentReference().addListener(new SetListener<Parent>() {
             @Override
             public void added(Parent object) {
                 assertThat(object).isSameInstanceAs(parent);
@@ -160,7 +160,7 @@ public class ManyToOneTest {
         Child child = new Child();
         child.setParent(parent1);
         List<String> events = new ArrayList<>();
-        parent1.getChildren().addListener(new CollectionListener<Child>() {
+        parent1.getChildren().addListener(new SetListener<Child>() {
             @Override
             public void added(Child object) {
                 fail();
@@ -171,7 +171,7 @@ public class ManyToOneTest {
                 events.add("removed from parent 1");
             }
         });
-        parent2.getChildren().addListener(new CollectionListener<Child>() {
+        parent2.getChildren().addListener(new SetListener<Child>() {
             @Override
             public void added(Child object) {
                 events.add("added to parent 1");

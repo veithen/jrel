@@ -23,30 +23,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Maintains a list of {@link CollectionListener} instances for use by {@link ListenableCollection}
- * instances.
+ * Maintains a list of {@link SetListener} instances for use by {@link ListenableSet} instances.
  * 
- * @param <T> the type of elements in the collection
+ * @param <T> the type of elements in the set
  */
-public final class CollectionListenerList<T> {
-    private final List<CollectionListener<? super T>> listeners = new ArrayList<>();
+public final class SetListenerList<T> {
+    private final List<SetListener<? super T>> listeners = new ArrayList<>();
 
-    public void add(CollectionListener<? super T> listener) {
+    public void add(SetListener<? super T> listener) {
         listeners.add(listener);
     }
 
-    public void remove(CollectionListener<? super T> listener) {
+    public void remove(SetListener<? super T> listener) {
         listeners.remove(listener);
     }
 
     public void fireAdded(T object) {
-        for (CollectionListener<? super T> listener : listeners) {
+        for (SetListener<? super T> listener : listeners) {
             listener.added(object);
         }
     }
 
     public void fireRemoved(T object) {
-        for (CollectionListener<? super T> listener : listeners) {
+        for (SetListener<? super T> listener : listeners) {
             listener.removed(object);
         }
     }

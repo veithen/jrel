@@ -22,23 +22,23 @@ package com.github.veithen.jrel.association;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.github.veithen.jrel.collection.CollectionListener;
-import com.github.veithen.jrel.collection.CollectionListenerList;
+import com.github.veithen.jrel.collection.SetListener;
+import com.github.veithen.jrel.collection.SetListenerList;
 
 final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
-    private final CollectionListenerList<U> listeners = new CollectionListenerList<>();
+    private final SetListenerList<U> listeners = new SetListenerList<>();
     private U target;
 
     ReferenceImpl(ToOneAssociation<T,U,?> association, T owner) {
         super(association, owner);
     }
 
-    public void addListener(CollectionListener<? super U> listener) {
+    public void addListener(SetListener<? super U> listener) {
         validate();
         listeners.add(listener);
     }
 
-    public void removeListener(CollectionListener<? super U> listener) {
+    public void removeListener(SetListener<? super U> listener) {
         validate();
         listeners.add(listener);
     }
