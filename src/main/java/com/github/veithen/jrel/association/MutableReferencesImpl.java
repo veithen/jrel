@@ -26,10 +26,10 @@ import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 
-final class ReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements References<U> {
+final class MutableReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements MutableReferences<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
-    ReferencesImpl(ToManyAssociation<T,U,?> association, T owner) {
+    MutableReferencesImpl(ToManyAssociation<T,U,?> association, T owner) {
         super(association, owner);
     }
 

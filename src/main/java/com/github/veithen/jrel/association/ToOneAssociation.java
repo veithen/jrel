@@ -23,9 +23,9 @@ import java.util.function.Function;
 
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends ReferenceHolder<T>> extends Association<T,U,Reference<U>,ReferenceHolder2> implements Function<T,U> {
-    public final Reference<U> newReferenceHolder(T owner) {
-        Reference<U> reference = new ReferenceImpl<>(this, owner);
+public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends ReferenceHolder<T>> extends Association<T,U,MutableReference<U>,ReferenceHolder2> implements Function<T,U> {
+    public final MutableReference<U> newReferenceHolder(T owner) {
+        MutableReference<U> reference = new MutableReferenceImpl<>(this, owner);
         addListener(reference, owner);
         return reference;
     }

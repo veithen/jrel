@@ -24,9 +24,9 @@ public class Parent {
         Relations.PARENT.getConverse().bind(o -> o.children);
     }
 
-    private final References<Child> children = Relations.PARENT.getConverse().newReferenceHolder(this);
+    private final MutableReferences<Child> children = Relations.PARENT.getConverse().newReferenceHolder(this);
 
-    public References<Child> getChildren() {
+    public MutableReferences<Child> getChildren() {
         return children;
     }
 }

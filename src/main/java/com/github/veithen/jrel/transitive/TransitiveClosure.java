@@ -23,8 +23,9 @@ import java.util.Iterator;
 
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
+import com.github.veithen.jrel.References;
 
-public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>> {
+public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>> {
     private final BinaryRelation<T,T,?,?> relation;
     private final TransitiveClosure<T> converse;
 
@@ -52,7 +53,7 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveRef
         return converse;
     }
 
-    public TransitiveReferences<T> newReferenceHolder(T owner) {
+    public References<T> newReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
     }
 

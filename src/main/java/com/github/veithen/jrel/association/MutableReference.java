@@ -19,29 +19,8 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.collection.ListenableSet;
-import com.github.veithen.jrel.collection.SingletonIdentitySet;
+import com.github.veithen.jrel.Reference;
 
-final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
-    private final SingletonIdentitySet<U> set = new SingletonIdentitySet<>();
-
-    ReferenceImpl(ToOneAssociation<T,U,?> association, T owner) {
-        super(association, owner);
-    }
-
-    @Override
-    public ListenableSet<U> asSet() {
-        validate();
-        return set;
-    }
-
-    public U get() {
-        validate();
-        return set.get();
-    }
-
-    public void set(U target) {
-        validate();
-        set.set(target);
-    }
+public interface MutableReference<T> extends Reference<T> {
+    void set(T target);
 }

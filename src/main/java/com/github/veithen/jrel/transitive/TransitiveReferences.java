@@ -24,12 +24,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.association.Reference;
+import com.github.veithen.jrel.References;
+import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 
-public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, ReferenceHolder<T> {
+final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, References<T> {
     private final TransitiveClosure<T> relation;
     private final T owner;
     private ReferenceHolder<T> referenceHolder;
@@ -61,7 +62,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, 
             @Override
             public void added(T object) {
                 set.add(object);
-                TransitiveReferences<T> transitiveReferences = relation.getReferenceHolder(object);
+                ListenableSet<T> transitiveReferences = relation.getReferenceHolder(object).asSet();
                 set.addAll(transitiveReferences);
                 transitiveReferences.addListener(transitiveReferencesListener);
             }
@@ -69,7 +70,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, 
             @Override
             public void removed(T object) {
                 maybeRemove(object);
-                TransitiveReferences<T> transitiveReferences = relation.getReferenceHolder(object);
+                ListenableSet<T> transitiveReferences = relation.getReferenceHolder(object).asSet();
                 transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
                 transitiveReferences.removeListener(transitiveReferencesListener);
             }
@@ -80,7 +81,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, 
 
     private void maybeRemove(T object) {
         // Optimization if the underlying association is many-to-one.
-        if (!(referenceHolder instanceof Reference)) {
+        if (!(referenceHolder instanceof MutableReference)) {
             if (referenceHolder.asSet().contains(object)) {
                 return;
             }
@@ -95,8 +96,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, 
 
     @Override
     public ListenableSet<T> asSet() {
-        init();
-        return set;
+        return this;
     }
 
     public void addListener(SetListener<? super T> listener) {

@@ -17,15 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-public class LinkedListNode {
-    private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
-
-    static {
-        PREVIOUS.bind(o -> o.previous, o -> o.next);
-    }
-
-    public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
-    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().newReferenceHolder(this);
+public interface References<T> extends ReferenceHolder<T>, Iterable<T> {
+    boolean contains(Object o);
+    boolean isEmpty();
+    int size();
 }

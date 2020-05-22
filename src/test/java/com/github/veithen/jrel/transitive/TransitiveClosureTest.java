@@ -83,42 +83,42 @@ public class TransitiveClosureTest {
     public void testAdd() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.add(new TreeNode("2")));
+                () -> new TreeNode("1").descendants.asSet().add(new TreeNode("2")));
     }
 
     @Test
     public void testAddAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.addAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().addAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRemove() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.remove(new TreeNode("2")));
+                () -> new TreeNode("1").descendants.asSet().remove(new TreeNode("2")));
     }
 
     @Test
     public void testRemoveAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.removeAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().removeAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRetainAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.retainAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().retainAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testClear() {
         assertThrows(
                 UnsupportedOperationException.class,
-                new TreeNode("1").descendants::clear);
+                () -> new TreeNode("1").descendants.asSet().clear());
     }
 
     @Test

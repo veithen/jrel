@@ -17,11 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.collection.ListenableSet;
+import java.util.function.Supplier;
 
-public interface References<T> extends ReferenceHolder<T>, ListenableSet<T> {
+public interface Reference<T> extends ReferenceHolder<T>, Supplier<T> {
 
 }

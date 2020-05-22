@@ -19,9 +19,10 @@
  */
 package com.github.veithen.jrel.transitive;
 
+import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToOneAssociation;
-import com.github.veithen.jrel.association.Reference;
-import com.github.veithen.jrel.association.References;
+import com.github.veithen.jrel.association.MutableReference;
+import com.github.veithen.jrel.association.MutableReferences;
 
 public class TreeNode {
     private static final ManyToOneAssociation<TreeNode,TreeNode> PARENT = new ManyToOneAssociation<>();
@@ -33,10 +34,10 @@ public class TreeNode {
     }
 
     private final String name;
-    public final Reference<TreeNode> parent = PARENT.newReferenceHolder(this);
-    public final TransitiveReferences<TreeNode> ancestors = ANCESTOR.newReferenceHolder(this);
-    public final References<TreeNode> children = PARENT.getConverse().newReferenceHolder(this);
-    public final TransitiveReferences<TreeNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final MutableReference<TreeNode> parent = PARENT.newReferenceHolder(this);
+    public final References<TreeNode> ancestors = ANCESTOR.newReferenceHolder(this);
+    public final MutableReferences<TreeNode> children = PARENT.getConverse().newReferenceHolder(this);
+    public final References<TreeNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
 
     public TreeNode(String name) {
         this.name = name;

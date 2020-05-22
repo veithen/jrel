@@ -19,8 +19,9 @@
  */
 package com.github.veithen.jrel.transitive;
 
+import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToManyAssociation;
-import com.github.veithen.jrel.association.References;
+import com.github.veithen.jrel.association.MutableReferences;
 
 public class GraphNode {
     public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>();
@@ -32,10 +33,10 @@ public class GraphNode {
     }
 
     private final String name;
-    public final References<GraphNode> parents = PARENT.newReferenceHolder(this);
-    public final TransitiveReferences<GraphNode> ancestors = ANCESTOR.newReferenceHolder(this);
-    public final References<GraphNode> children = PARENT.getConverse().newReferenceHolder(this);
-    public final TransitiveReferences<GraphNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final MutableReferences<GraphNode> parents = PARENT.newReferenceHolder(this);
+    public final References<GraphNode> ancestors = ANCESTOR.newReferenceHolder(this);
+    public final MutableReferences<GraphNode> children = PARENT.getConverse().newReferenceHolder(this);
+    public final References<GraphNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
 
     public GraphNode(String name) {
         this.name = name;

@@ -26,6 +26,6 @@ public class Interface {
         SUPER.bind(o -> o.superInterfaces, o -> o.childInterfaces);
     }
 
-    public final References<Interface> superInterfaces = SUPER.newReferenceHolder(this);
-    public final References<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);
+    public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);
+    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);
 }

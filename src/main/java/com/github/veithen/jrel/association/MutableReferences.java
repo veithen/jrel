@@ -19,13 +19,9 @@
  */
 package com.github.veithen.jrel.association;
 
-public class LinkedListNode {
-    private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
+import com.github.veithen.jrel.References;
+import com.github.veithen.jrel.collection.ListenableSet;
 
-    static {
-        PREVIOUS.bind(o -> o.previous, o -> o.next);
-    }
+public interface MutableReferences<T> extends References<T>, ListenableSet<T> {
 
-    public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
-    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().newReferenceHolder(this);
 }
