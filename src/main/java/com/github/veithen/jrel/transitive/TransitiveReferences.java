@@ -31,13 +31,13 @@ import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 
 final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, References<T> {
-    private final TransitiveClosure<T> relation;
+    private final TransitiveClosure<T> closure;
     private final T owner;
     private ReferenceHolder<T> referenceHolder;
     private LinkedIdentityHashSet<T> set;
 
-    TransitiveReferences(TransitiveClosure<T> relation, T owner) {
-        this.relation = relation;
+    TransitiveReferences(TransitiveClosure<T> closure, T owner) {
+        this.closure = closure;
         this.owner = owner;
     }
 
@@ -57,12 +57,12 @@ final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, Referen
                 maybeRemove(object);
             }
         };
-        referenceHolder = relation.getRelation().getReferenceHolder(owner);
+        referenceHolder = closure.getRelation().getReferenceHolder(owner);
         SetListener<T> directReferenceListener = new SetListener<T>() {
             @Override
             public void added(T object) {
                 set.add(object);
-                ListenableSet<T> transitiveReferences = relation.getReferenceHolder(object).asSet();
+                ListenableSet<T> transitiveReferences = closure.getReferenceHolder(object).asSet();
                 set.addAll(transitiveReferences);
                 transitiveReferences.addListener(transitiveReferencesListener);
             }
@@ -70,7 +70,7 @@ final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, Referen
             @Override
             public void removed(T object) {
                 maybeRemove(object);
-                ListenableSet<T> transitiveReferences = relation.getReferenceHolder(object).asSet();
+                ListenableSet<T> transitiveReferences = closure.getReferenceHolder(object).asSet();
                 transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
                 transitiveReferences.removeListener(transitiveReferencesListener);
             }
@@ -86,7 +86,7 @@ final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, Referen
                 return;
             }
             for (T reference : referenceHolder.asSet()) {
-                if (relation.getReferenceHolder(reference).contains(object)) {
+                if (closure.getReferenceHolder(reference).contains(object)) {
                     return;
                 }
             }
