@@ -19,26 +19,25 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import com.github.veithen.jrel.association.ManyToOneAssociation;
-import com.github.veithen.jrel.association.Reference;
+import com.github.veithen.jrel.association.ManyToManyAssociation;
 import com.github.veithen.jrel.association.References;
 
-public class Node {
-    private static final ManyToOneAssociation<Node,Node> PARENT = new ManyToOneAssociation<>();
-    private static final TransitiveClosure<Node> ANCESTOR = new TransitiveClosure<>(PARENT);
+public class GraphNode {
+    public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>();
+    public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT);
 
     static {
-        PARENT.bind(o -> o.parent, o -> o.children);
+        PARENT.bind(o -> o.parents, o -> o.children);
         ANCESTOR.bind(o -> o.ancestors, o -> o.descendants);
     }
 
     private final String name;
-    public final Reference<Node> parent = PARENT.newReferenceHolder(this);
-    public final TransitiveReferences<Node> ancestors = ANCESTOR.newReferenceHolder(this);
-    public final References<Node> children = PARENT.getConverse().newReferenceHolder(this);
-    public final TransitiveReferences<Node> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final References<GraphNode> parents = PARENT.newReferenceHolder(this);
+    public final TransitiveReferences<GraphNode> ancestors = ANCESTOR.newReferenceHolder(this);
+    public final References<GraphNode> children = PARENT.getConverse().newReferenceHolder(this);
+    public final TransitiveReferences<GraphNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
 
-    public Node(String name) {
+    public GraphNode(String name) {
         this.name = name;
     }
 

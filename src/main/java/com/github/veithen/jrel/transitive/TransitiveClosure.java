@@ -19,7 +19,10 @@
  */
 package com.github.veithen.jrel.transitive;
 
+import java.util.Iterator;
+
 import com.github.veithen.jrel.BinaryRelation;
+import com.github.veithen.jrel.ReferenceHolder;
 
 public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>> {
     private final BinaryRelation<T,T,?,?> relation;
@@ -51,5 +54,26 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveRef
 
     public TransitiveReferences<T> newReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
+    }
+
+    /**
+     * Apply transitive reduction. Let <i>R</i> be the binary relation from which this transitive
+     * closure (denoted by <i>R<sup>+</sup></i>) is constructed. This will remove <i>(x,&nbsp;y)</i>
+     * from <i>R</i> if there is a <i>z&nbsp;&#8800;&nbsp;y</i> such that <i>x&nbsp;R&nbsp;z</i> and
+     * <i>z&nbsp;R<sup>+</sup>&nbsp;y</i>.
+     * 
+     * @param x
+     */
+    public void reduce(T x) {
+        ReferenceHolder<T> refs = relation.getReferenceHolder(x);
+        for (Iterator<T> it = refs.iterator(); it.hasNext(); ) {
+            T y = it.next();
+            for (T z : refs) {
+                if (z != y && getReferenceHolder(z).contains(y)) {
+                    it.remove();
+                    break;
+                }
+            }
+        }
     }
 }

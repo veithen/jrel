@@ -30,12 +30,12 @@ import org.junit.jupiter.api.Test;
 public class TransitiveClosureTest {
     @Test
     public void test1() {
-        Node node1 = new Node("1");
-        Node node2 = new Node("2");
-        Node node3 = new Node("3");
-        Node node4 = new Node("4");
-        Node node5 = new Node("5");
-        Node node6 = new Node("6");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
+        TreeNode node5 = new TreeNode("5");
+        TreeNode node6 = new TreeNode("6");
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
@@ -51,10 +51,10 @@ public class TransitiveClosureTest {
 
     @Test
     public void test2() {
-        Node node1 = new Node("1");
-        Node node2 = new Node("2");
-        Node node3 = new Node("3");
-        Node node4 = new Node("4");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
         node3.parent.set(node2);
         node4.parent.set(node2);
         assertThat(node1.descendants).isEmpty();
@@ -66,10 +66,10 @@ public class TransitiveClosureTest {
 
     @Test
     public void test3() {
-        Node node1 = new Node("1");
-        Node node2 = new Node("2");
-        Node node3 = new Node("3");
-        Node node4 = new Node("4");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
@@ -83,50 +83,62 @@ public class TransitiveClosureTest {
     public void testAdd() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new Node("1").descendants.add(new Node("2")));
+                () -> new TreeNode("1").descendants.add(new TreeNode("2")));
     }
 
     @Test
     public void testAddAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new Node("1").descendants.addAll(Arrays.asList(new Node("2"))));
+                () -> new TreeNode("1").descendants.addAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRemove() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new Node("1").descendants.remove(new Node("2")));
+                () -> new TreeNode("1").descendants.remove(new TreeNode("2")));
     }
 
     @Test
     public void testRemoveAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new Node("1").descendants.removeAll(Arrays.asList(new Node("2"))));
+                () -> new TreeNode("1").descendants.removeAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRetainAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new Node("1").descendants.retainAll(Arrays.asList(new Node("2"))));
+                () -> new TreeNode("1").descendants.retainAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testClear() {
         assertThrows(
                 UnsupportedOperationException.class,
-                new Node("1").descendants::clear);
+                new TreeNode("1").descendants::clear);
     }
 
     @Test
     public void testIteratorRemove() {
-        Node node1 = new Node("1");
-        node1.children.add(new Node("2"));
-        Iterator<Node> it = node1.descendants.iterator();
+        TreeNode node1 = new TreeNode("1");
+        node1.children.add(new TreeNode("2"));
+        Iterator<TreeNode> it = node1.descendants.iterator();
         it.next();
         assertThrows(UnsupportedOperationException.class, it::remove);
+    }
+
+    @Test
+    public void testReduce() {
+        GraphNode node1 = new GraphNode("1");
+        GraphNode node2 = new GraphNode("1");
+        GraphNode node3 = new GraphNode("1");
+        node2.parents.add(node1);
+        node3.parents.add(node1);
+        node3.parents.add(node2);
+        GraphNode.ANCESTOR.reduce(node3);
+        assertThat(node3.parents).containsExactly(node2);
     }
 }
