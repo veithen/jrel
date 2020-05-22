@@ -19,12 +19,10 @@
  */
 package com.github.veithen.jrel;
 
-import java.util.Objects;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
 
 public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends ReferenceHolder<Type2>,ReferenceHolder2 extends ReferenceHolder<Type1>> implements BiPredicate<Type1,Type2> {
-    private Function<Type1,ReferenceHolder1> referenceHolderFunction;
+    private Binding<Type1,ReferenceHolder1> binding;
 
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
@@ -33,26 +31,25 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
      */
     public abstract BinaryRelation<Type2,Type1,ReferenceHolder2,ReferenceHolder1> getConverse();
 
-    public final synchronized void bind(Function<Type1,ReferenceHolder1> referenceHolderFunction) {
-        Objects.requireNonNull(referenceHolderFunction);
-        if (this.referenceHolderFunction != null) {
+    public final synchronized void bind(Binder<Type1,ReferenceHolder1> binder) {
+        if (this.binding != null) {
             throw new IllegalStateException("Already bound");
         }
-        this.referenceHolderFunction = referenceHolderFunction;
+        this.binding = binder.createBinding(this::newReferenceHolder);
     }
 
-    public final void bind(Function<Type1,ReferenceHolder1> referenceHolderFunction1, Function<Type2,ReferenceHolder2> referenceHolderFunction2) {
-        bind(referenceHolderFunction1);
-        getConverse().bind(referenceHolderFunction2);
+    public final void bind(Binder<Type1,ReferenceHolder1> binder1, Binder<Type2,ReferenceHolder2> binder2) {
+        bind(binder1);
+        getConverse().bind(binder2);
     }
 
     public abstract ReferenceHolder1 newReferenceHolder(Type1 owner);
 
     public final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
-        if (referenceHolderFunction == null) {
+        if (binding == null) {
             throw new IllegalStateException("Not bound");
         }
-        return referenceHolderFunction.apply(owner);
+        return binding.getReferenceHolder(owner);
     }
 
     @Override

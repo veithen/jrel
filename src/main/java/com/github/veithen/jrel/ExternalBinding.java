@@ -17,26 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.InternalBinder;
+import java.util.WeakHashMap;
 
-public class Child {
-    static {
-        Relations.PARENT.bind(new InternalBinder<>(o -> o.parent));
+final class ExternalBinding<T,R extends ReferenceHolder<?>> implements Binding<T,R> {
+    private final ReferenceHolderFactory<T,R> referenceHolderFactory;
+    private final WeakHashMap<T,R> map = new WeakHashMap<>();
+
+    ExternalBinding(ReferenceHolderFactory<T,R> referenceHolderFactory) {
+        this.referenceHolderFactory = referenceHolderFactory;
     }
 
-    private final MutableReference<Parent> parent = Relations.PARENT.newReferenceHolder(this);
-
-    public MutableReference<Parent> getParentReference() {
-        return parent;
-    }
-
-    public Parent getParent() {
-        return parent.get();
-    }
-
-    public void setParent(Parent parent) {
-        this.parent.set(parent);
+    @Override
+    public R getReferenceHolder(T owner) {
+        return map.computeIfAbsent(owner, referenceHolderFactory::create);
     }
 }

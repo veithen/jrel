@@ -17,26 +17,24 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.InternalBinder;
+import java.util.function.Function;
 
-public class Child {
-    static {
-        Relations.PARENT.bind(new InternalBinder<>(o -> o.parent));
+public final class InternalBinder<T,R extends ReferenceHolder<?>> implements Binder<T,R>, Binding<T,R> {
+    private Function<T,R> referenceHolderFunction;
+
+    public InternalBinder(Function<T,R> referenceHolderFunction) {
+        this.referenceHolderFunction = referenceHolderFunction;
     }
 
-    private final MutableReference<Parent> parent = Relations.PARENT.newReferenceHolder(this);
-
-    public MutableReference<Parent> getParentReference() {
-        return parent;
+    @Override
+    public Binding<T,R> createBinding(ReferenceHolderFactory<T,R> referenceHolderFactory) {
+        return this;
     }
 
-    public Parent getParent() {
-        return parent.get();
-    }
-
-    public void setParent(Parent parent) {
-        this.parent.set(parent);
+    @Override
+    public R getReferenceHolder(T owner) {
+        return referenceHolderFunction.apply(owner);
     }
 }

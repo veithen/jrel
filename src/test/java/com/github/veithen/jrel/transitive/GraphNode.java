@@ -19,6 +19,7 @@
  */
 package com.github.veithen.jrel.transitive;
 
+import com.github.veithen.jrel.InternalBinder;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToManyAssociation;
 import com.github.veithen.jrel.association.MutableReferences;
@@ -28,8 +29,8 @@ public class GraphNode {
     public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT);
 
     static {
-        PARENT.bind(o -> o.parents, o -> o.children);
-        ANCESTOR.bind(o -> o.ancestors, o -> o.descendants);
+        PARENT.bind(new InternalBinder<>(o -> o.parents), new InternalBinder<>(o -> o.children));
+        ANCESTOR.bind(new InternalBinder<>(o -> o.ancestors), new InternalBinder<>(o -> o.descendants));
     }
 
     private final String name;

@@ -19,9 +19,11 @@
  */
 package com.github.veithen.jrel.association;
 
+import com.github.veithen.jrel.InternalBinder;
+
 public class Parent {
     static {
-        Relations.PARENT.getConverse().bind(o -> o.children);
+        Relations.PARENT.getConverse().bind(new InternalBinder<>(o -> o.children));
     }
 
     private final MutableReferences<Child> children = Relations.PARENT.getConverse().newReferenceHolder(this);

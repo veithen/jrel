@@ -19,11 +19,13 @@
  */
 package com.github.veithen.jrel.association;
 
+import com.github.veithen.jrel.InternalBinder;
+
 public class Interface {
     private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>();
 
     static {
-        SUPER.bind(o -> o.superInterfaces, o -> o.childInterfaces);
+        SUPER.bind(new InternalBinder<>(o -> o.superInterfaces), new InternalBinder<>(o -> o.childInterfaces));
     }
 
     public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);

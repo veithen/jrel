@@ -19,11 +19,13 @@
  */
 package com.github.veithen.jrel.association;
 
+import com.github.veithen.jrel.InternalBinder;
+
 public class LinkedListNode {
     private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
 
     static {
-        PREVIOUS.bind(o -> o.previous, o -> o.next);
+        PREVIOUS.bind(new InternalBinder<>(o -> o.previous), new InternalBinder<>(o -> o.next));
     }
 
     public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
