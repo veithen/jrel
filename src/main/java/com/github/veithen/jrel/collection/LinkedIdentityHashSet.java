@@ -19,7 +19,6 @@
  */
 package com.github.veithen.jrel.collection;
 
-import java.util.AbstractSet;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -40,7 +39,7 @@ import java.util.NoSuchElementException;
  * 
  * @param <T> the type of elements in this set
  */
-public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements ListenableSet<T> {
+public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
     private static class Node {
         private Object element;
         Node previous;
@@ -101,7 +100,6 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         }
     }
 
-    private final SetListenerList<T> listeners = new SetListenerList<>();
     private final float loadFactor;
     private int size;
     private int tombstones;
@@ -116,14 +114,6 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
 
     public LinkedIdentityHashSet() {
         this(16, 0.5f);
-    }
-
-    public void addListener(SetListener<? super T> listener) {
-        listeners.add(listener);
-    }
-
-    public void removeListener(SetListener<? super T> listener) {
-        listeners.remove(listener);
     }
 
     @Override
@@ -178,7 +168,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         }
         lastNode = node;
         size++;
-        listeners.fireAdded(object);
+        fireAdded(object);
         return true;
     }
 
@@ -199,7 +189,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         }
         size--;
         tombstones++;
-        listeners.fireRemoved(object);
+        fireRemoved(object);
     }
 
     @Override
@@ -261,7 +251,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractSet<T> implements Li
         for (int i=0; i<oldNodes.length; i++) {
             Node node = oldNodes[i];
             if (node != null && !node.isRemoved()) {
-                listeners.fireRemoved(node.getElement());
+                fireRemoved(node.getElement());
                 node.removed();
             }
         }

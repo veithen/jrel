@@ -19,15 +19,13 @@
  */
 package com.github.veithen.jrel.association;
 
-import java.util.Collections;
 import java.util.Iterator;
 
 import com.github.veithen.jrel.collection.SetListener;
-import com.github.veithen.jrel.collection.SetListenerList;
+import com.github.veithen.jrel.collection.SingletonIdentitySet;
 
 final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements Reference<U> {
-    private final SetListenerList<U> listeners = new SetListenerList<>();
-    private U target;
+    private final SingletonIdentitySet<U> set = new SingletonIdentitySet<>();
 
     ReferenceImpl(ToOneAssociation<T,U,?> association, T owner) {
         super(association, owner);
@@ -35,69 +33,48 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
 
     public void addListener(SetListener<? super U> listener) {
         validate();
-        listeners.add(listener);
+        set.addListener(listener);
     }
 
     public void removeListener(SetListener<? super U> listener) {
         validate();
-        listeners.add(listener);
+        set.addListener(listener);
     }
 
     public U get() {
         validate();
-        return target;
+        return set.get();
     }
 
     public void set(U target) {
         validate();
-        if (this.target == target) {
-            return;
-        }
-        clear();
-        this.target = target;
-        if (target != null) {
-            listeners.fireAdded(target);
-        }
+        set.set(target);
     }
 
     public void clear() {
         validate();
-        if (target != null) {
-            listeners.fireRemoved(target);
-            target = null;
-        }
+        set.clear();
     }
 
     @Override
     public boolean add(U object) {
         validate();
-        if (object == target) {
-            return false;
-        }
-        clear();
-        target = object;
-        listeners.fireAdded(object);
-        return true;
+        return set.add(object);
     }
 
     @Override
     public boolean remove(Object object) {
         validate();
-        // TODO: missing listere invocation here
-        if (object != target) {
-            return false;
-        }
-        target = null;
-        return true;
+        return set.remove(object);
     }
 
     @Override
     public Iterator<U> iterator() {
-        return target == null ? Collections.emptyIterator() : Collections.singleton(target).iterator();
+        return set.iterator();
     }
 
     @Override
     public boolean contains(Object object) {
-        return object != null && target == object;
+        return set.contains(object);
     }
 }
