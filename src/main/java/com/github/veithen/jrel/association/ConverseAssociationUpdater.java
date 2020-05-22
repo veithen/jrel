@@ -22,47 +22,48 @@ package com.github.veithen.jrel.association;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.collection.SetListener;
 
 final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
     private interface Action {
-        <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object);
+        <T> boolean execute(ReferenceHolder<T> referenceHolder, T object);
     }
 
-    private static final ThreadLocal<Deque<MutableReferenceHolder<?>>> firingReferenceHolders = new ThreadLocal<Deque<MutableReferenceHolder<?>>>() {
+    private static final ThreadLocal<Deque<ReferenceHolder<?>>> firingReferenceHolders = new ThreadLocal<Deque<ReferenceHolder<?>>>() {
         @Override
-        protected LinkedList<MutableReferenceHolder<?>> initialValue() {
+        protected LinkedList<ReferenceHolder<?>> initialValue() {
             return new LinkedList<>();
         }
     };
 
     private static final Action ADD = new Action() {
         @Override
-        public <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object) {
-            return referenceHolder.add(object);
+        public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
+            return referenceHolder.asSet().add(object);
         }
     };
 
     private static final Action REMOVE = new Action() {
         @Override
-        public <T> boolean execute(MutableReferenceHolder<T> referenceHolder, T object) {
-            return referenceHolder.remove(object);
+        public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
+            return referenceHolder.asSet().remove(object);
         }
     };
 
     private final T owner;
     private final Association<U,T,?,?> converseAssociation;
-    private final MutableReferenceHolder<U> referenceHolder;
+    private final ReferenceHolder<U> referenceHolder;
 
-    ConverseAssociationUpdater(T owner, Association<U,T,?,?> converseAssociation, MutableReferenceHolder<U> referenceHolder) {
+    ConverseAssociationUpdater(T owner, Association<U,T,?,?> converseAssociation, ReferenceHolder<U> referenceHolder) {
         this.owner = owner;
         this.converseAssociation = converseAssociation;
         this.referenceHolder = referenceHolder;
     }
 
     private void update(Action action, U object) {
-        MutableReferenceHolder<T> referenceHolderToUpdate = converseAssociation.getReferenceHolder(object);
-        Deque<MutableReferenceHolder<?>> firingReferenceHolders = ConverseAssociationUpdater.firingReferenceHolders.get();
+        ReferenceHolder<T> referenceHolderToUpdate = converseAssociation.getReferenceHolder(object);
+        Deque<ReferenceHolder<?>> firingReferenceHolders = ConverseAssociationUpdater.firingReferenceHolders.get();
         if (firingReferenceHolders.peek() != referenceHolderToUpdate) {
             firingReferenceHolders.push(referenceHolder);
             try {

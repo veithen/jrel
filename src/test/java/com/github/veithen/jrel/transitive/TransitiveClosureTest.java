@@ -60,7 +60,7 @@ public class TransitiveClosureTest {
         assertThat(node1.descendants).isEmpty();
         node2.parent.set(node1);
         assertThat(node1.descendants).containsExactly(node2, node3, node4);
-        node4.parent.clear();
+        node4.parent.set(null);
         assertThat(node1.descendants).containsExactly(node2, node3);
     }
 
@@ -73,7 +73,7 @@ public class TransitiveClosureTest {
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
-        node2.parent.clear();
+        node2.parent.set(null);
         assertThat(node1.descendants).isEmpty();
         node4.parent.set(node2);
         assertThat(node1.descendants).isEmpty();

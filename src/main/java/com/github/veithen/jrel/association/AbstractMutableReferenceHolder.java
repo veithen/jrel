@@ -19,7 +19,9 @@
  */
 package com.github.veithen.jrel.association;
 
-public abstract class AbstractMutableReferenceHolder<T,U> implements MutableReferenceHolder<U> {
+import com.github.veithen.jrel.ReferenceHolder;
+
+public abstract class AbstractMutableReferenceHolder<T,U> implements ReferenceHolder<U> {
     static final ThreadLocal<Boolean> validationDisabled = new ThreadLocal<Boolean>() {
         @Override
         protected Boolean initialValue() {

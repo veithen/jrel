@@ -44,21 +44,4 @@ final class ReferenceImpl<T,U> extends AbstractMutableReferenceHolder<T,U> imple
         validate();
         set.set(target);
     }
-
-    public void clear() {
-        validate();
-        set.clear();
-    }
-
-    @Override
-    public boolean add(U object) {
-        validate();
-        return set.add(object);
-    }
-
-    @Override
-    public boolean remove(Object object) {
-        validate();
-        return set.remove(object);
-    }
 }

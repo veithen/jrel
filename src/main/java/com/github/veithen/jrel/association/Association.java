@@ -20,11 +20,12 @@
 package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.BinaryRelation;
+import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class Association<T,U,ReferenceHolder1 extends MutableReferenceHolder<U>,ReferenceHolder2 extends MutableReferenceHolder<T>> extends BinaryRelation<T,U,ReferenceHolder1,ReferenceHolder2> {
+public abstract class Association<T,U,ReferenceHolder1 extends ReferenceHolder<U>,ReferenceHolder2 extends ReferenceHolder<T>> extends BinaryRelation<T,U,ReferenceHolder1,ReferenceHolder2> {
     public abstract Association<U,T,ReferenceHolder2,ReferenceHolder1> getConverse();
 
-    final void addListener(MutableReferenceHolder<U> referenceHolder, T owner) {
+    final void addListener(ReferenceHolder<U> referenceHolder, T owner) {
         AbstractMutableReferenceHolder.validationDisabled.set(true);
         try {
             referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T,U>(owner, getConverse(), referenceHolder));

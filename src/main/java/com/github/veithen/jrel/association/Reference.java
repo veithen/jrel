@@ -21,6 +21,8 @@ package com.github.veithen.jrel.association;
 
 import java.util.function.Supplier;
 
-public interface Reference<T> extends MutableReferenceHolder<T>, Supplier<T> {
+import com.github.veithen.jrel.ReferenceHolder;
+
+public interface Reference<T> extends ReferenceHolder<T>, Supplier<T> {
     void set(T target);
 }
