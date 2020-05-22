@@ -20,24 +20,28 @@
 package com.github.veithen.jrel.transitive;
 
 import com.github.veithen.jrel.BinaryRelation;
-import com.github.veithen.jrel.association.Association;
 
 public final class TransitiveClosure<T> extends BinaryRelation<T,T,TransitiveReferences<T>,TransitiveReferences<T>> {
-    private final Association<T,T,?,?> association;
+    private final BinaryRelation<T,T,?,?> relation;
     private final TransitiveClosure<T> converse;
 
-    TransitiveClosure(Association<T,T,?,?> association, TransitiveClosure<T> converse) {
-        this.association = association;
+    TransitiveClosure(BinaryRelation<T,T,?,?> relation, TransitiveClosure<T> converse) {
+        this.relation = relation;
         this.converse = converse;
     }
 
-    public TransitiveClosure(Association<T,T,?,?> association) {
-        this.association = association;
-        converse = new TransitiveClosure<T>(association.getConverse(), this);
+    public TransitiveClosure(BinaryRelation<T,T,?,?> relation) {
+        this.relation = relation;
+        converse = new TransitiveClosure<T>(relation.getConverse(), this);
     }
 
-    public Association<T,T,?,?> getAssociation() {
-        return association;
+    /**
+     * Get the binary relation from which this transitive closure was constructed.
+     * 
+     * @return
+     */
+    public BinaryRelation<T,T,?,?> getRelation() {
+        return relation;
     }
 
     @Override

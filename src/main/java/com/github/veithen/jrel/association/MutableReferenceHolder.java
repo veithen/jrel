@@ -20,11 +20,8 @@
 package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.collection.CollectionListener;
 
 public interface MutableReferenceHolder<T> extends ReferenceHolder<T> {
-    void addListener(CollectionListener<? super T> listener);
-    void removeListener(CollectionListener<? super T> listener);
     void clear();
     boolean add(T object);
     boolean remove(Object object);

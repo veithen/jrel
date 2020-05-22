@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.association.MutableReferenceHolder;
 import com.github.veithen.jrel.association.Reference;
 import com.github.veithen.jrel.collection.CollectionListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
@@ -33,7 +32,7 @@ import com.github.veithen.jrel.collection.ListenableCollection;
 public final class TransitiveReferences<T> implements Set<T>, ListenableCollection<T>, ReferenceHolder<T> {
     private final TransitiveClosure<T> relation;
     private final T owner;
-    private MutableReferenceHolder<T> referenceHolder;
+    private ReferenceHolder<T> referenceHolder;
     private LinkedIdentityHashSet<T> set;
 
     TransitiveReferences(TransitiveClosure<T> relation, T owner) {
@@ -57,7 +56,7 @@ public final class TransitiveReferences<T> implements Set<T>, ListenableCollecti
                 maybeRemove(object);
             }
         };
-        referenceHolder = relation.getAssociation().getReferenceHolder(owner);
+        referenceHolder = relation.getRelation().getReferenceHolder(owner);
         CollectionListener<T> directReferenceListener = new CollectionListener<T>() {
             @Override
             public void added(T object) {
