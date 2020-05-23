@@ -26,7 +26,12 @@ import com.github.veithen.jrel.ReferenceHolder;
 public abstract class Association<T1 extends DomainObject,T2 extends DomainObject,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> extends BinaryRelation<T1,T2,R1,R2> {
     public abstract Association<T2,T1,R2,R1> getConverse();
 
-    final void addListener(ReferenceHolder<T2> referenceHolder, T1 owner) {
+    @Override
+    protected final R1 newReferenceHolder(T1 owner) {
+        R1 referenceHolder = doNewReferenceHolder(owner);
         referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
+        return referenceHolder;
     }
+
+    protected abstract R1 doNewReferenceHolder(T1 owner);
 }

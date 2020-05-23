@@ -26,10 +26,8 @@ import com.github.veithen.jrel.ReferenceHolder;
 
 public abstract class ToOneAssociation<T1 extends DomainObject,T2 extends DomainObject,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReference<T2>,R2> implements Function<T1,T2> {
     @Override
-    protected final MutableReference<T2> newReferenceHolder(T1 owner) {
-        MutableReference<T2> reference = new MutableReferenceImpl<>();
-        addListener(reference, owner);
-        return reference;
+    protected final MutableReference<T2> doNewReferenceHolder(T1 owner) {
+        return new MutableReferenceImpl<>();
     }
 
     @Override
