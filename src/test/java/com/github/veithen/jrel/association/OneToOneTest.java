@@ -23,12 +23,15 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.veithen.jrel.Domain;
+
 public class OneToOneTest {
     @Test
     public void test() {
-        LinkedListNode node1 = new LinkedListNode();
-        LinkedListNode node2 = new LinkedListNode();
-        LinkedListNode node3 = new LinkedListNode();
+        Domain domain = new Domain();
+        LinkedListNode node1 = new LinkedListNode(domain);
+        LinkedListNode node2 = new LinkedListNode(domain);
+        LinkedListNode node3 = new LinkedListNode(domain);
         node1.next.set(node2);
         assertThat(node2.previous.get()).isSameInstanceAs(node1);
         node2.next.set(node3);

@@ -19,28 +19,25 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import com.github.veithen.jrel.InternalBinder;
+import com.github.veithen.jrel.AbstractDomainObject;
+import com.github.veithen.jrel.Domain;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToOneAssociation;
 import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.association.MutableReferences;
 
-public class TreeNode {
+public class TreeNode extends AbstractDomainObject {
     private static final ManyToOneAssociation<TreeNode,TreeNode> PARENT = new ManyToOneAssociation<>();
     private static final TransitiveClosure<TreeNode> ANCESTOR = new TransitiveClosure<>(PARENT);
 
-    static {
-        PARENT.bind(new InternalBinder<>(o -> o.parent), new InternalBinder<>(o -> o.children));
-        ANCESTOR.bind(new InternalBinder<>(o -> o.ancestors), new InternalBinder<>(o -> o.descendants));
-    }
-
     private final String name;
-    public final MutableReference<TreeNode> parent = PARENT.newReferenceHolder(this);
-    public final References<TreeNode> ancestors = ANCESTOR.newReferenceHolder(this);
-    public final MutableReferences<TreeNode> children = PARENT.getConverse().newReferenceHolder(this);
-    public final References<TreeNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final MutableReference<TreeNode> parent = PARENT.getReferenceHolder(this);
+    public final References<TreeNode> ancestors = ANCESTOR.getReferenceHolder(this);
+    public final MutableReferences<TreeNode> children = PARENT.getConverse().getReferenceHolder(this);
+    public final References<TreeNode> descendants = ANCESTOR.getConverse().getReferenceHolder(this);
 
-    public TreeNode(String name) {
+    public TreeNode(Domain domain, String name) {
+        super(domain);
         this.name = name;
     }
 

@@ -23,15 +23,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.github.veithen.jrel.collection.SetListener;
+import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 
-final class MutableReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,U> implements MutableReferences<U> {
+final class MutableReferencesImpl<T extends DomainObject,U extends DomainObject> implements MutableReferences<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
-
-    MutableReferencesImpl(ToManyAssociation<T,U,?> association, T owner) {
-        super(association, owner);
-    }
 
     @Override
     public ListenableSet<U> asSet() {
@@ -39,82 +36,66 @@ final class MutableReferencesImpl<T,U> extends AbstractMutableReferenceHolder<T,
     }
 
     public void addListener(SetListener<? super U> listener) {
-        validate();
         set.addListener(listener);
     }
 
     public void removeListener(SetListener<? super U> listener) {
-        validate();
         set.removeListener(listener);
     }
 
     public boolean isEmpty() {
-        validate();
         return set.isEmpty();
     }
 
     public boolean add(U object) {
-        validate();
         return set.add(object);
     }
 
     public Object[] toArray() {
-        validate();
         return set.toArray();
     }
 
     public boolean removeAll(Collection<?> c) {
-        validate();
         return set.removeAll(c);
     }
 
     public <V> V[] toArray(V[] a) {
-        validate();
         return set.toArray(a);
     }
 
     public boolean remove(Object object) {
-        validate();
         return set.remove(object);
     }
 
     public int size() {
-        validate();
         return set.size();
     }
 
     public boolean contains(Object object) {
-        validate();
         return set.contains(object);
     }
 
     public Iterator<U> iterator() {
-        validate();
         return set.iterator();
     }
 
     public void clear() {
-        validate();
         set.clear();
     }
 
     public boolean containsAll(Collection<?> c) {
-        validate();
         return set.containsAll(c);
     }
 
     public boolean addAll(Collection<? extends U> c) {
-        validate();
         return set.addAll(c);
     }
 
     public boolean retainAll(Collection<?> c) {
-        validate();
         return set.retainAll(c);
     }
 
     public String toString() {
-        validate();
         return set.toString();
     }
 }

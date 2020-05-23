@@ -22,10 +22,11 @@ package com.github.veithen.jrel.transitive;
 import java.util.Iterator;
 
 import com.github.veithen.jrel.BinaryRelation;
+import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.References;
 
-public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>> {
+public final class TransitiveClosure<T extends DomainObject> extends BinaryRelation<T,T,References<T>,References<T>> {
     private final BinaryRelation<T,T,?,?> relation;
     private final TransitiveClosure<T> converse;
 
@@ -53,7 +54,8 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
         return converse;
     }
 
-    public References<T> newReferenceHolder(T owner) {
+    @Override
+    protected References<T> newReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
     }
 

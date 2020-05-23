@@ -19,14 +19,15 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.InternalBinder;
+import com.github.veithen.jrel.AbstractDomainObject;
+import com.github.veithen.jrel.Domain;
 
-public class Child {
-    static {
-        Relations.PARENT.bind(new InternalBinder<>(o -> o.parent));
+public class Child extends AbstractDomainObject {
+    private final MutableReference<Parent> parent = Relations.PARENT.getReferenceHolder(this);
+
+    public Child(Domain domain) {
+        super(domain);
     }
-
-    private final MutableReference<Parent> parent = Relations.PARENT.newReferenceHolder(this);
 
     public MutableReference<Parent> getParentReference() {
         return parent;

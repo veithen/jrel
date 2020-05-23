@@ -19,27 +19,24 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import com.github.veithen.jrel.InternalBinder;
+import com.github.veithen.jrel.AbstractDomainObject;
+import com.github.veithen.jrel.Domain;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToManyAssociation;
 import com.github.veithen.jrel.association.MutableReferences;
 
-public class GraphNode {
+public class GraphNode extends AbstractDomainObject {
     public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>();
     public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT);
 
-    static {
-        PARENT.bind(new InternalBinder<>(o -> o.parents), new InternalBinder<>(o -> o.children));
-        ANCESTOR.bind(new InternalBinder<>(o -> o.ancestors), new InternalBinder<>(o -> o.descendants));
-    }
-
     private final String name;
-    public final MutableReferences<GraphNode> parents = PARENT.newReferenceHolder(this);
-    public final References<GraphNode> ancestors = ANCESTOR.newReferenceHolder(this);
-    public final MutableReferences<GraphNode> children = PARENT.getConverse().newReferenceHolder(this);
-    public final References<GraphNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final MutableReferences<GraphNode> parents = PARENT.getReferenceHolder(this);
+    public final References<GraphNode> ancestors = ANCESTOR.getReferenceHolder(this);
+    public final MutableReferences<GraphNode> children = PARENT.getConverse().getReferenceHolder(this);
+    public final References<GraphNode> descendants = ANCESTOR.getConverse().getReferenceHolder(this);
 
-    public GraphNode(String name) {
+    public GraphNode(Domain domain, String name) {
+        super(domain);
         this.name = name;
     }
 

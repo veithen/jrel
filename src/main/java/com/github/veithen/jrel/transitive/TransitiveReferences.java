@@ -23,14 +23,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.MutableReference;
-import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
+import com.github.veithen.jrel.collection.SetListener;
 
-final class TransitiveReferences<T> implements Set<T>, ListenableSet<T>, References<T> {
+final class TransitiveReferences<T extends DomainObject> implements Set<T>, ListenableSet<T>, References<T> {
     private final TransitiveClosure<T> closure;
     private final T owner;
     private ReferenceHolder<T> referenceHolder;

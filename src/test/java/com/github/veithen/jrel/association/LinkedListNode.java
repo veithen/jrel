@@ -19,15 +19,16 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.InternalBinder;
+import com.github.veithen.jrel.AbstractDomainObject;
+import com.github.veithen.jrel.Domain;
 
-public class LinkedListNode {
+public class LinkedListNode extends AbstractDomainObject {
     private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
 
-    static {
-        PREVIOUS.bind(new InternalBinder<>(o -> o.previous), new InternalBinder<>(o -> o.next));
-    }
+    public final MutableReference<LinkedListNode> previous = PREVIOUS.getReferenceHolder(this);
+    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().getReferenceHolder(this);
 
-    public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
-    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().newReferenceHolder(this);
+    public LinkedListNode(Domain domain) {
+        super(domain);
+    }
 }

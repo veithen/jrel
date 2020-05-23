@@ -29,14 +29,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.github.veithen.jrel.Domain;
 import com.github.veithen.jrel.collection.SetListener;
 
 public class ManyToOneTest {
     @Test
     public void testSetParent() {
-        Parent parent = new Parent();
-        Child child1 = new Child();
-        Child child2 = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child1 = new Child(domain);
+        Child child2 = new Child(domain);
         child1.setParent(parent);
         child2.setParent(parent);
         assertThat(parent.getChildren()).containsExactly(child1, child2).inOrder();
@@ -44,17 +46,19 @@ public class ManyToOneTest {
 
     @Test
     public void testAddChild() {
-        Parent parent = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         parent.getChildren().add(child);
         assertThat(child.getParent()).isSameInstanceAs(parent);
     }
 
     @Test
     public void testAddChildToOtherParent() {
-        Parent parent1 = new Parent();
-        Parent parent2 = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent1 = new Parent(domain);
+        Parent parent2 = new Parent(domain);
+        Child child = new Child(domain);
         parent1.getChildren().add(child);
         assertThat(child.getParent()).isSameInstanceAs(parent1);
         parent2.getChildren().add(child);
@@ -64,8 +68,9 @@ public class ManyToOneTest {
 
     @Test
     public void testRemoveChild() {
-        Parent parent = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         child.setParent(parent);
         assertThat(parent.getChildren().remove(child)).isTrue();
         assertThat(child.getParent()).isNull();
@@ -73,8 +78,9 @@ public class ManyToOneTest {
 
     @Test
     public void testRemoveChildUsingIterator() {
-        Parent parent = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         child.setParent(parent);
         Iterator<Child> it = parent.getChildren().iterator();
         it.next();
@@ -84,9 +90,10 @@ public class ManyToOneTest {
 
     @Test
     public void testClearChildren() {
-        Parent parent = new Parent();
-        Child child1 = new Child();
-        Child child2 = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child1 = new Child(domain);
+        Child child2 = new Child(domain);
         child1.setParent(parent);
         child2.setParent(parent);
         parent.getChildren().clear();
@@ -96,10 +103,11 @@ public class ManyToOneTest {
 
     @Test
     public void testListeners() {
+        Domain domain = new Domain();
         boolean[] addedFired = new boolean[2];
         boolean[] removedFired = new boolean[2];
-        Parent parent = new Parent();
-        Child child = new Child();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         parent.getChildren().addListener(new SetListener<Child>() {
             @Override
             public void added(Child object) {
@@ -137,8 +145,9 @@ public class ManyToOneTest {
 
     @Test
     public void testBiPredicate() {
-        Parent parent = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         assertThat(Relations.PARENT.test(child, parent)).isFalse();
         child.setParent(parent);
         assertThat(Relations.PARENT.test(child, parent)).isTrue();
@@ -146,8 +155,9 @@ public class ManyToOneTest {
 
     @Test
     public void testFunction() {
-        Parent parent = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent = new Parent(domain);
+        Child child = new Child(domain);
         assertThat(Relations.PARENT.apply(child)).isNull();
         child.setParent(parent);
         assertThat(Relations.PARENT.apply(child)).isSameInstanceAs(parent);
@@ -155,9 +165,10 @@ public class ManyToOneTest {
 
     @Test
     public void testListener() {
-        Parent parent1 = new Parent();
-        Parent parent2 = new Parent();
-        Child child = new Child();
+        Domain domain = new Domain();
+        Parent parent1 = new Parent(domain);
+        Parent parent2 = new Parent(domain);
+        Child child = new Child(domain);
         child.setParent(parent1);
         List<String> events = new ArrayList<>();
         parent1.getChildren().addListener(new SetListener<Child>() {

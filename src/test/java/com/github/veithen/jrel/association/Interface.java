@@ -19,15 +19,16 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.InternalBinder;
+import com.github.veithen.jrel.AbstractDomainObject;
+import com.github.veithen.jrel.Domain;
 
-public class Interface {
+public class Interface extends AbstractDomainObject {
     private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>();
 
-    static {
-        SUPER.bind(new InternalBinder<>(o -> o.superInterfaces), new InternalBinder<>(o -> o.childInterfaces));
-    }
+    public final MutableReferences<Interface> superInterfaces = SUPER.getReferenceHolder(this);
+    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().getReferenceHolder(this);
 
-    public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);
-    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);
+    public Interface(Domain domain) {
+        super(domain);
+    }
 }

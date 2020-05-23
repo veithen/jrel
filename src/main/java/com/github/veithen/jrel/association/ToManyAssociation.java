@@ -19,11 +19,13 @@
  */
 package com.github.veithen.jrel.association;
 
+import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReferences<T2>,R2> {
-    public final MutableReferences<T2> newReferenceHolder(T1 owner) {
-        MutableReferences<T2> references = new MutableReferencesImpl<>(this, owner);
+public abstract class ToManyAssociation<T1 extends DomainObject,T2 extends DomainObject,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReferences<T2>,R2> {
+    @Override
+    protected final MutableReferences<T2> newReferenceHolder(T1 owner) {
+        MutableReferences<T2> references = new MutableReferencesImpl<>();
         addListener(references, owner);
         return references;
     }
