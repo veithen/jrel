@@ -19,9 +19,7 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
@@ -30,23 +28,16 @@ import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SetListener;
+import com.github.veithen.jrel.collection.UnmodifiableListenableSet;
 
-final class TransitiveReferences<T extends DomainObject> implements Set<T>, ListenableSet<T>, References<T> {
+final class TransitiveReferences<T extends DomainObject> implements References<T> {
     private final TransitiveClosure<T> closure;
-    private final T owner;
     private ReferenceHolder<T> referenceHolder;
-    private LinkedIdentityHashSet<T> set;
+    private final ListenableSet<T> set = new LinkedIdentityHashSet<>();
+    private final ListenableSet<T> unmodifiableSet = new UnmodifiableListenableSet<>(set);
 
     TransitiveReferences(TransitiveClosure<T> closure, T owner) {
         this.closure = closure;
-        this.owner = owner;
-    }
-
-    void init() {
-        if (set != null) {
-            return;
-        }
-        set = new LinkedIdentityHashSet<>();
         SetListener<T> transitiveReferencesListener = new SetListener<T>() {
             @Override
             public void added(T object) {
@@ -97,102 +88,26 @@ final class TransitiveReferences<T extends DomainObject> implements Set<T>, List
 
     @Override
     public ListenableSet<T> asSet() {
-        return this;
+        return unmodifiableSet;
     }
 
-    public void addListener(SetListener<? super T> listener) {
-        init();
-        set.addListener(listener);
+    @Override
+    public Iterator<T> iterator() {
+        return unmodifiableSet.iterator();
     }
 
-    public void removeListener(SetListener<? super T> listener) {
-        init();
-        set.removeListener(listener);
+    @Override
+    public boolean contains(Object o) {
+        return set.contains(o);
     }
 
-    public boolean contains(Object object) {
-        init();
-        return set.contains(object);
-    }
-
+    @Override
     public boolean isEmpty() {
-        init();
         return set.isEmpty();
     }
 
-    public Object[] toArray() {
-        init();
-        return set.toArray();
-    }
-
-    public <V> V[] toArray(V[] a) {
-        init();
-        return set.toArray(a);
-    }
-
+    @Override
     public int size() {
-        init();
         return set.size();
-    }
-
-    public Iterator<T> iterator() {
-        init();
-        Iterator<T> it = set.iterator();
-        return new Iterator<T>() {
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-
-            @Override
-            public T next() {
-                return it.next();
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
-
-    public boolean containsAll(Collection<?> c) {
-        init();
-        return set.containsAll(c);
-    }
-
-    public String toString() {
-        init();
-        return set.toString();
-    }
-
-    @Override
-    public boolean add(T e) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean addAll(Collection<? extends T> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean retainAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean removeAll(Collection<?> c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException();
     }
 }
