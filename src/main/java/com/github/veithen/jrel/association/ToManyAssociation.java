@@ -21,9 +21,9 @@ package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToManyAssociation<T,U,ReferenceHolder2 extends ReferenceHolder<T>> extends Association<T,U,MutableReferences<U>,ReferenceHolder2> {
-    public final MutableReferences<U> newReferenceHolder(T owner) {
-        MutableReferences<U> references = new MutableReferencesImpl<>(this, owner);
+public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReferences<T2>,R2> {
+    public final MutableReferences<T2> newReferenceHolder(T1 owner) {
+        MutableReferences<T2> references = new MutableReferencesImpl<>(this, owner);
         addListener(references, owner);
         return references;
     }

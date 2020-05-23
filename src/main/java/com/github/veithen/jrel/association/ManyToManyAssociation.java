@@ -19,18 +19,18 @@
  */
 package com.github.veithen.jrel.association;
 
-public final class ManyToManyAssociation<T,U> extends ToManyAssociation<T,U,MutableReferences<T>> {
-    private final ManyToManyAssociation<U,T> converse;
+public final class ManyToManyAssociation<T1,T2> extends ToManyAssociation<T1,T2,MutableReferences<T1>> {
+    private final ManyToManyAssociation<T2,T1> converse;
 
-    ManyToManyAssociation(ManyToManyAssociation<U,T> converse) {
+    ManyToManyAssociation(ManyToManyAssociation<T2,T1> converse) {
         this.converse = converse;
     }
 
     public ManyToManyAssociation() {
-        converse = new ManyToManyAssociation<U,T>(this);
+        converse = new ManyToManyAssociation<T2,T1>(this);
     }
 
-    public ManyToManyAssociation<U,T> getConverse() {
+    public ManyToManyAssociation<T2,T1> getConverse() {
         return converse;
     }
 }

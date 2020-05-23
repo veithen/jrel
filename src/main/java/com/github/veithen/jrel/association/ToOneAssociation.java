@@ -23,15 +23,15 @@ import java.util.function.Function;
 
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToOneAssociation<T,U,ReferenceHolder2 extends ReferenceHolder<T>> extends Association<T,U,MutableReference<U>,ReferenceHolder2> implements Function<T,U> {
-    public final MutableReference<U> newReferenceHolder(T owner) {
-        MutableReference<U> reference = new MutableReferenceImpl<>(this, owner);
+public abstract class ToOneAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReference<T2>,R2> implements Function<T1,T2> {
+    public final MutableReference<T2> newReferenceHolder(T1 owner) {
+        MutableReference<T2> reference = new MutableReferenceImpl<>(this, owner);
         addListener(reference, owner);
         return reference;
     }
 
     @Override
-    public final U apply(T o) {
+    public final T2 apply(T1 o) {
         return getReferenceHolder(o).get();
     }
 }
