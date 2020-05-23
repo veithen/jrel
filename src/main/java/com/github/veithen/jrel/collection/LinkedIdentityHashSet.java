@@ -131,8 +131,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
                 if (node == null || node.isRemoved()) {
                     continue;
                 }
-                int hash = System.identityHashCode(node.getElement());
-                int newIndex = hash % capacity;
+                int newIndex = System.identityHashCode(node.getElement()) % capacity;
                 while (newNodes[newIndex] != null) {
                     newIndex = (newIndex + 1) % capacity;
                 }
@@ -141,8 +140,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
             tombstones = 0;
             nodes = newNodes;
         }
-        int hash = System.identityHashCode(object);
-        int index = hash % capacity;
+        int index = System.identityHashCode(object) % capacity;
         while (true) {
             Node node = nodes[index];
             if (node == null) {
@@ -194,9 +192,8 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
 
     @Override
     public boolean remove(Object object) {
-        int hash = System.identityHashCode(object);
         int capacity = nodes.length;
-        int index = hash % capacity;
+        int index = System.identityHashCode(object) % capacity;
         while (true) {
             Node node = nodes[index];
             if (node == null) {
@@ -217,9 +214,8 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
 
     @Override
     public boolean contains(Object object) {
-        int hash = System.identityHashCode(object);
         int capacity = nodes.length;
-        int index = hash % capacity;
+        int index = System.identityHashCode(object) % capacity;
         while (true) {
             Node node = nodes[index];
             if (node == null) {
