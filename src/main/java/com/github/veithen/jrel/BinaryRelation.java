@@ -21,31 +21,31 @@ package com.github.veithen.jrel;
 
 import java.util.function.BiPredicate;
 
-public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends ReferenceHolder<Type2>,ReferenceHolder2 extends ReferenceHolder<Type1>> implements BiPredicate<Type1,Type2> {
-    private Binding<Type1,ReferenceHolder1> binding;
+public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
+    private Binding<T1,R1> binding;
 
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
      * 
      * @return the converse relation
      */
-    public abstract BinaryRelation<Type2,Type1,ReferenceHolder2,ReferenceHolder1> getConverse();
+    public abstract BinaryRelation<T2,T1,R2,R1> getConverse();
 
-    public final synchronized void bind(Binder<Type1,ReferenceHolder1> binder) {
+    public final synchronized void bind(Binder<T1,R1> binder) {
         if (this.binding != null) {
             throw new IllegalStateException("Already bound");
         }
         this.binding = binder.createBinding(this::newReferenceHolder);
     }
 
-    public final void bind(Binder<Type1,ReferenceHolder1> binder1, Binder<Type2,ReferenceHolder2> binder2) {
+    public final void bind(Binder<T1,R1> binder1, Binder<T2,R2> binder2) {
         bind(binder1);
         getConverse().bind(binder2);
     }
 
-    public abstract ReferenceHolder1 newReferenceHolder(Type1 owner);
+    public abstract R1 newReferenceHolder(T1 owner);
 
-    public final synchronized ReferenceHolder1 getReferenceHolder(Type1 owner) {
+    public final synchronized R1 getReferenceHolder(T1 owner) {
         if (binding == null) {
             throw new IllegalStateException("Not bound");
         }
@@ -53,7 +53,7 @@ public abstract class BinaryRelation<Type1,Type2,ReferenceHolder1 extends Refere
     }
 
     @Override
-    public final boolean test(Type1 o1, Type2 o2) {
+    public final boolean test(T1 o1, T2 o2) {
         return getReferenceHolder(o1).asSet().contains(o2);
     }
 }
