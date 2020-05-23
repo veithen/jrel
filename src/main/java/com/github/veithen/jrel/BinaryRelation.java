@@ -21,9 +21,7 @@ package com.github.veithen.jrel;
 
 import java.util.function.BiPredicate;
 
-public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
-    private Binding<T1,R1> binding;
-
+public abstract class BinaryRelation<T1 extends DomainObject,T2 extends DomainObject,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
      * 
@@ -31,25 +29,10 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
      */
     public abstract BinaryRelation<T2,T1,R2,R1> getConverse();
 
-    public final synchronized void bind(Binder<T1,R1> binder) {
-        if (this.binding != null) {
-            throw new IllegalStateException("Already bound");
-        }
-        this.binding = binder.createBinding(this::newReferenceHolder);
-    }
+    protected abstract R1 newReferenceHolder(T1 owner);
 
-    public final void bind(Binder<T1,R1> binder1, Binder<T2,R2> binder2) {
-        bind(binder1);
-        getConverse().bind(binder2);
-    }
-
-    public abstract R1 newReferenceHolder(T1 owner);
-
-    public final synchronized R1 getReferenceHolder(T1 owner) {
-        if (binding == null) {
-            throw new IllegalStateException("Not bound");
-        }
-        return binding.getReferenceHolder(owner);
+    public final R1 getReferenceHolder(T1 owner) {
+        return owner.getDomain().getBinaryRelationInstance(this).getReferenceHolder(owner);
     }
 
     @Override
