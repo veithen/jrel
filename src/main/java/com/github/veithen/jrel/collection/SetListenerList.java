@@ -25,27 +25,27 @@ import java.util.List;
 /**
  * Maintains a list of {@link SetListener} instances for use by {@link ListenableSet} instances.
  * 
- * @param <T> the type of elements in the set
+ * @param <E> the type of elements in the set
  */
-public final class SetListenerList<T> {
-    private final List<SetListener<? super T>> listeners = new ArrayList<>();
+public final class SetListenerList<E> {
+    private final List<SetListener<? super E>> listeners = new ArrayList<>();
 
-    public void add(SetListener<? super T> listener) {
+    public void add(SetListener<? super E> listener) {
         listeners.add(listener);
     }
 
-    public void remove(SetListener<? super T> listener) {
+    public void remove(SetListener<? super E> listener) {
         listeners.remove(listener);
     }
 
-    public void fireAdded(T object) {
-        for (SetListener<? super T> listener : listeners) {
+    public void fireAdded(E object) {
+        for (SetListener<? super E> listener : listeners) {
             listener.added(object);
         }
     }
 
-    public void fireRemoved(T object) {
-        for (SetListener<? super T> listener : listeners) {
+    public void fireRemoved(E object) {
+        for (SetListener<? super E> listener : listeners) {
             listener.removed(object);
         }
     }

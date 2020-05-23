@@ -21,22 +21,22 @@ package com.github.veithen.jrel.collection;
 
 import java.util.AbstractSet;
 
-public abstract class AbstractListenableSet<T> extends AbstractSet<T> implements ListenableSet<T> {
-    private final SetListenerList<T> listeners = new SetListenerList<>();
+public abstract class AbstractListenableSet<E> extends AbstractSet<E> implements ListenableSet<E> {
+    private final SetListenerList<E> listeners = new SetListenerList<>();
 
-    public final void addListener(SetListener<? super T> listener) {
+    public final void addListener(SetListener<? super E> listener) {
         listeners.add(listener);
     }
 
-    public final void removeListener(SetListener<? super T> listener) {
+    public final void removeListener(SetListener<? super E> listener) {
         listeners.remove(listener);
     }
 
-    protected final void fireAdded(T object) {
+    protected final void fireAdded(E object) {
         listeners.fireAdded(object);
     }
 
-    protected final void fireRemoved(T object) {
+    protected final void fireRemoved(E object) {
         listeners.fireRemoved(object);
     }
 }

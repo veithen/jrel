@@ -37,9 +37,9 @@ import java.util.NoSuchElementException;
  * while iterating will be visited.
  * </ul>
  * 
- * @param <T> the type of elements in this set
+ * @param <E> the type of elements in this set
  */
-public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
+public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     private static class Node {
         private Object element;
         Node previous;
@@ -63,7 +63,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
         }
     }
 
-    private class It implements Iterator<T> {
+    private class It implements Iterator<E> {
         private Node currentNode;
 
         private Node getNextNode() {
@@ -80,7 +80,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
         }
 
         @Override
-        public T next() {
+        public E next() {
             Node nextNode = getNextNode();
             if (nextNode == null) {
                 throw new NoSuchElementException();
@@ -117,7 +117,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
     }
 
     @Override
-    public boolean add(T object) {
+    public boolean add(E object) {
         int capacity = nodes.length;
         if (size + tombstones >= capacity*loadFactor) {
             // We only take into account size here because we will remove the tombstones. Note that
@@ -171,7 +171,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
     }
 
     private void removeElement(Node node) {
-        T object = node.getElement();
+        E object = node.getElement();
         node.removed();
         if (node.previous != null) {
             node.previous.next = node.next;
@@ -229,7 +229,7 @@ public final class LinkedIdentityHashSet<T> extends AbstractListenableSet<T> {
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<E> iterator() {
         return new It();
     }
 

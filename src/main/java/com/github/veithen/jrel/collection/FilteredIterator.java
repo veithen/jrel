@@ -23,13 +23,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-public final class FilteredIterator<T> implements Iterator<T> {
-    private final Iterator<T> parent;
-    private final Predicate<? super T> predicate;
+public final class FilteredIterator<E> implements Iterator<E> {
+    private final Iterator<E> parent;
+    private final Predicate<? super E> predicate;
     private Boolean hasNext;
-    private T next;
+    private E next;
 
-    public FilteredIterator(Iterator<T> parent, Predicate<? super T> predicate) {
+    public FilteredIterator(Iterator<E> parent, Predicate<? super E> predicate) {
         this.parent = parent;
         this.predicate = predicate;
     }
@@ -42,7 +42,7 @@ public final class FilteredIterator<T> implements Iterator<T> {
                     hasNext = false;
                     break;
                 }
-                T next = parent.next();
+                E next = parent.next();
                 if (predicate.test(next)) {
                     hasNext = true;
                     this.next = next;
@@ -54,11 +54,11 @@ public final class FilteredIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public T next() {
+    public E next() {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        T next = this.next;
+        E next = this.next;
         this.hasNext = null;
         this.next = null;
         return next;

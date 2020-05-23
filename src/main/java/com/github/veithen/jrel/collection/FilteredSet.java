@@ -24,18 +24,18 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public final class FilteredSet<T> extends AbstractSet<T> {
-    private final Set<T> parent;
-    private final Predicate<? super T> predicate;
+public final class FilteredSet<E> extends AbstractSet<E> {
+    private final Set<E> parent;
+    private final Predicate<? super E> predicate;
 
-    public FilteredSet(Set<T> parent, Predicate<? super T> predicate) {
+    public FilteredSet(Set<E> parent, Predicate<? super E> predicate) {
         this.parent = parent;
         this.predicate = predicate;
     }
 
     @Override
-    public Iterator<T> iterator() {
-        return new FilteredIterator<T>(parent.iterator(), predicate);
+    public Iterator<E> iterator() {
+        return new FilteredIterator<E>(parent.iterator(), predicate);
     }
 
     @Override
@@ -44,7 +44,7 @@ public final class FilteredSet<T> extends AbstractSet<T> {
             return 0;
         }
         int size = 0;
-        for (T element : parent) {
+        for (E element : parent) {
             if (predicate.test(element)) {
                 size++;
             }

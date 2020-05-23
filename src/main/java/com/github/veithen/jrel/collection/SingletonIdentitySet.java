@@ -22,10 +22,10 @@ package com.github.veithen.jrel.collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-public final class SingletonIdentitySet<T> extends AbstractListenableSet<T> {
-    private T element;
+public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
+    private E element;
 
-    public void set(T element) {
+    public void set(E element) {
         if (this.element == element) {
             return;
         }
@@ -36,7 +36,7 @@ public final class SingletonIdentitySet<T> extends AbstractListenableSet<T> {
         }
     }
 
-    public T get() {
+    public E get() {
         return element;
     }
 
@@ -49,7 +49,7 @@ public final class SingletonIdentitySet<T> extends AbstractListenableSet<T> {
     }
 
     @Override
-    public boolean add(T element) {
+    public boolean add(E element) {
         if (this.element == element) {
             return false;
         }
@@ -70,7 +70,7 @@ public final class SingletonIdentitySet<T> extends AbstractListenableSet<T> {
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<E> iterator() {
         return element == null ? Collections.emptyIterator() : Collections.singleton(element).iterator();
     }
 

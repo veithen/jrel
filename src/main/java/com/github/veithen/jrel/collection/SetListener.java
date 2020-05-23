@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.collection;
 
-public interface SetListener<T> {
-    void added(T object);
-    void removed(T object);
+public interface SetListener<E> {
+    void added(E object);
+    void removed(E object);
 }

@@ -21,7 +21,7 @@ package com.github.veithen.jrel.collection;
 
 import java.util.Set;
 
-public interface ListenableSet<T> extends Set<T> {
-    void addListener(SetListener<? super T> listener);
-    void removeListener(SetListener<? super T> listener);
+public interface ListenableSet<E> extends Set<E> {
+    void addListener(SetListener<? super E> listener);
+    void removeListener(SetListener<? super E> listener);
 }
