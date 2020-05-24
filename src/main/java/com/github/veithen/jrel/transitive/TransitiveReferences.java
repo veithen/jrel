@@ -19,24 +19,19 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import java.util.Iterator;
-
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.References;
+import com.github.veithen.jrel.UnmodifiableReferences;
 import com.github.veithen.jrel.association.MutableReference;
-import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SetListener;
-import com.github.veithen.jrel.collection.UnmodifiableListenableSet;
 
-final class TransitiveReferences<T> implements References<T> {
+final class TransitiveReferences<T> extends UnmodifiableReferences<T> {
     private final TransitiveClosure<T> closure;
-    private ReferenceHolder<T> referenceHolder;
-    private final ListenableSet<T> set = new LinkedIdentityHashSet<>();
-    private final ListenableSet<T> unmodifiableSet = new UnmodifiableListenableSet<>(set);
+    private final ReferenceHolder<T> referenceHolder;
 
     TransitiveReferences(TransitiveClosure<T> closure, T owner) {
         this.closure = closure;
+        referenceHolder = closure.getRelation().getReferenceHolder(owner);
         if (closure.isIncludeSelf()) {
             set.add(owner);
         }
@@ -51,7 +46,6 @@ final class TransitiveReferences<T> implements References<T> {
                 maybeRemove(object);
             }
         };
-        referenceHolder = closure.getRelation().getReferenceHolder(owner);
         SetListener<T> directReferenceListener = new SetListener<T>() {
             @Override
             public void added(T object) {
@@ -86,30 +80,5 @@ final class TransitiveReferences<T> implements References<T> {
             }
         }
         set.remove(object);
-    }
-
-    @Override
-    public ListenableSet<T> asSet() {
-        return unmodifiableSet;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return unmodifiableSet.iterator();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return set.contains(o);
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return set.isEmpty();
-    }
-
-    @Override
-    public int size() {
-        return set.size();
     }
 }
