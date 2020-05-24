@@ -19,15 +19,8 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.AbstractDomainObject;
-import com.github.veithen.jrel.Domain;
-
-public class Child extends AbstractDomainObject {
-    private final MutableReference<Parent> parent = Relations.PARENT.getReferenceHolder(this);
-
-    public Child(Domain domain) {
-        super(domain);
-    }
+public class Child {
+    private final MutableReference<Parent> parent = Relations.PARENT.newReferenceHolder(this);
 
     public MutableReference<Parent> getParentReference() {
         return parent;

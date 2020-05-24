@@ -19,16 +19,9 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.AbstractDomainObject;
-import com.github.veithen.jrel.Domain;
-
-public class Interface extends AbstractDomainObject {
+public class Interface {
     private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>();
 
-    public final MutableReferences<Interface> superInterfaces = SUPER.getReferenceHolder(this);
-    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().getReferenceHolder(this);
-
-    public Interface(Domain domain) {
-        super(domain);
-    }
+    public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);
+    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);
 }

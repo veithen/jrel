@@ -32,9 +32,6 @@ import com.github.veithen.jrel.collection.ListenableSet;
  * method. Some specific relations are functions and the size of that set is at most one.
  * Subinterfaces provide more convenient APIs for that case and the more general case where the set
  * can have more than one element.
- * <p>
- * The way reference holders are stored and linked to owners is defined by the {@link Binder}
- * instance passed to {@link BinaryRelation#bind(Binder)}.
  * 
  * @param <T> the type of reference stored by this holder
  */

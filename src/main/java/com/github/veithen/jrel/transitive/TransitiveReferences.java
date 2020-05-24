@@ -21,7 +21,6 @@ package com.github.veithen.jrel.transitive;
 
 import java.util.Iterator;
 
-import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.MutableReference;
@@ -30,7 +29,7 @@ import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SetListener;
 import com.github.veithen.jrel.collection.UnmodifiableListenableSet;
 
-final class TransitiveReferences<T extends DomainObject> implements References<T> {
+final class TransitiveReferences<T> implements References<T> {
     private final TransitiveClosure<T> closure;
     private ReferenceHolder<T> referenceHolder;
     private final ListenableSet<T> set = new LinkedIdentityHashSet<>();

@@ -22,12 +22,11 @@ package com.github.veithen.jrel.association;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.github.veithen.jrel.collection.SetListener;
-import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
+import com.github.veithen.jrel.collection.SetListener;
 
-final class MutableReferencesImpl<T extends DomainObject,U extends DomainObject> implements MutableReferences<U> {
+final class MutableReferencesImpl<T,U> implements MutableReferences<U> {
     private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
 
     @Override

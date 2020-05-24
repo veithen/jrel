@@ -19,11 +19,10 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SingletonIdentitySet;
 
-final class MutableReferenceImpl<T extends DomainObject,U extends DomainObject> implements MutableReference<U> {
+final class MutableReferenceImpl<T,U> implements MutableReference<U> {
     private final SingletonIdentitySet<U> set = new SingletonIdentitySet<>();
 
     @Override

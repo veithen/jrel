@@ -19,9 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.DomainObject;
-
-public final class OneToOneAssociation<T1 extends DomainObject,T2 extends DomainObject> extends ToOneAssociation<T1,T2,MutableReference<T1>> {
+public final class OneToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReference<T1>> {
     private final OneToOneAssociation<T2,T1> converse;
 
     OneToOneAssociation(OneToOneAssociation<T2,T1> converse) {

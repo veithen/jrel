@@ -19,18 +19,26 @@
  */
 package com.github.veithen.jrel;
 
-import java.util.IdentityHashMap;
+import java.lang.reflect.Field;
 import java.util.Map;
 
-final class BinaryRelationInstance<T extends DomainObject,R extends ReferenceHolder<?>> {
-    private final BinaryRelation<T,?,R,?> relation;
-    private final Map<T,R> referenceHolders = new IdentityHashMap<>();
+final class Descriptor {
+    private final Descriptor parent;
+    private final Map<BinaryRelation<?,?,?,?>,Field> fieldMap;
 
-    BinaryRelationInstance(BinaryRelation<T,?,R,?> relation) {
-        this.relation = relation;
+    Descriptor(Descriptor parent, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
+        this.parent = parent;
+        this.fieldMap = fieldMap;
     }
 
-    R getReferenceHolder(T owner) {
-        return referenceHolders.computeIfAbsent(owner, relation::newReferenceHolder);
+    Field lookup(BinaryRelation<?,?,?,?> relation) {
+        Field field = fieldMap.get(relation);
+        if (field != null) {
+            return field;
+        }
+        if (parent == null) {
+            throw new IllegalStateException("No acccessor found for relation " + relation);
+        }
+        return parent.lookup(relation);
     }
 }

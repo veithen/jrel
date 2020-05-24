@@ -19,16 +19,9 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.AbstractDomainObject;
-import com.github.veithen.jrel.Domain;
-
-public class LinkedListNode extends AbstractDomainObject {
+public class LinkedListNode {
     private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
 
-    public final MutableReference<LinkedListNode> previous = PREVIOUS.getReferenceHolder(this);
-    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().getReferenceHolder(this);
-
-    public LinkedListNode(Domain domain) {
-        super(domain);
-    }
+    public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
+    public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().newReferenceHolder(this);
 }

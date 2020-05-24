@@ -19,9 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.DomainObject;
-
-public final class ManyToManyAssociation<T1 extends DomainObject,T2 extends DomainObject> extends ToManyAssociation<T1,T2,MutableReferences<T1>> {
+public final class ManyToManyAssociation<T1,T2> extends ToManyAssociation<T1,T2,MutableReferences<T1>> {
     private final ManyToManyAssociation<T2,T1> converse;
 
     ManyToManyAssociation(ManyToManyAssociation<T2,T1> converse) {

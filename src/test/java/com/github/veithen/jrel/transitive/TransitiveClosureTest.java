@@ -27,18 +27,15 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.veithen.jrel.Domain;
-
 public class TransitiveClosureTest {
     @Test
     public void test1() {
-        Domain domain = new Domain();
-        TreeNode node1 = new TreeNode(domain, "1");
-        TreeNode node2 = new TreeNode(domain, "2");
-        TreeNode node3 = new TreeNode(domain, "3");
-        TreeNode node4 = new TreeNode(domain, "4");
-        TreeNode node5 = new TreeNode(domain, "5");
-        TreeNode node6 = new TreeNode(domain, "6");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
+        TreeNode node5 = new TreeNode("5");
+        TreeNode node6 = new TreeNode("6");
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
@@ -54,11 +51,10 @@ public class TransitiveClosureTest {
 
     @Test
     public void test2() {
-        Domain domain = new Domain();
-        TreeNode node1 = new TreeNode(domain, "1");
-        TreeNode node2 = new TreeNode(domain, "2");
-        TreeNode node3 = new TreeNode(domain, "3");
-        TreeNode node4 = new TreeNode(domain, "4");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
         node3.parent.set(node2);
         node4.parent.set(node2);
         assertThat(node1.descendants).isEmpty();
@@ -70,11 +66,10 @@ public class TransitiveClosureTest {
 
     @Test
     public void test3() {
-        Domain domain = new Domain();
-        TreeNode node1 = new TreeNode(domain, "1");
-        TreeNode node2 = new TreeNode(domain, "2");
-        TreeNode node3 = new TreeNode(domain, "3");
-        TreeNode node4 = new TreeNode(domain, "4");
+        TreeNode node1 = new TreeNode("1");
+        TreeNode node2 = new TreeNode("2");
+        TreeNode node3 = new TreeNode("3");
+        TreeNode node4 = new TreeNode("4");
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
@@ -86,57 +81,50 @@ public class TransitiveClosureTest {
 
     @Test
     public void testAdd() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().add(new TreeNode(domain, "2")));
+                () -> new TreeNode("1").descendants.asSet().add(new TreeNode("2")));
     }
 
     @Test
     public void testAddAll() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().addAll(Arrays.asList(new TreeNode(domain, "2"))));
+                () -> new TreeNode("1").descendants.asSet().addAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRemove() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().remove(new TreeNode(domain, "2")));
+                () -> new TreeNode("1").descendants.asSet().remove(new TreeNode("2")));
     }
 
     @Test
     public void testRemoveAll() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().removeAll(Arrays.asList(new TreeNode(domain, "2"))));
+                () -> new TreeNode("1").descendants.asSet().removeAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRetainAll() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().retainAll(Arrays.asList(new TreeNode(domain, "2"))));
+                () -> new TreeNode("1").descendants.asSet().retainAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testClear() {
-        Domain domain = new Domain();
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode(domain, "1").descendants.asSet().clear());
+                () -> new TreeNode("1").descendants.asSet().clear());
     }
 
     @Test
     public void testIteratorRemove() {
-        Domain domain = new Domain();
-        TreeNode node1 = new TreeNode(domain, "1");
-        node1.children.add(new TreeNode(domain, "2"));
+        TreeNode node1 = new TreeNode("1");
+        node1.children.add(new TreeNode("2"));
         Iterator<TreeNode> it = node1.descendants.iterator();
         it.next();
         assertThrows(UnsupportedOperationException.class, it::remove);
@@ -144,10 +132,9 @@ public class TransitiveClosureTest {
 
     @Test
     public void testReduce() {
-        Domain domain = new Domain();
-        GraphNode node1 = new GraphNode(domain, "1");
-        GraphNode node2 = new GraphNode(domain, "1");
-        GraphNode node3 = new GraphNode(domain, "1");
+        GraphNode node1 = new GraphNode("1");
+        GraphNode node2 = new GraphNode("1");
+        GraphNode node3 = new GraphNode("1");
         node2.parents.add(node1);
         node3.parents.add(node1);
         node3.parents.add(node2);

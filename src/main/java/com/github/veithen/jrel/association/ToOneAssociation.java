@@ -21,10 +21,9 @@ package com.github.veithen.jrel.association;
 
 import java.util.function.Function;
 
-import com.github.veithen.jrel.DomainObject;
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToOneAssociation<T1 extends DomainObject,T2 extends DomainObject,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReference<T2>,R2> implements Function<T1,T2> {
+public abstract class ToOneAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReference<T2>,R2> implements Function<T1,T2> {
     @Override
     protected final MutableReference<T2> doNewReferenceHolder(T1 owner) {
         return new MutableReferenceImpl<>();

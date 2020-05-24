@@ -19,6 +19,18 @@
  */
 package com.github.veithen.jrel;
 
-public interface ReferenceHolderFactory<T,R extends ReferenceHolder<?>> {
-    R create(T owner);
+final class AnalyzerException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    public AnalyzerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AnalyzerException(String message) {
+        super(message);
+    }
+
+    public AnalyzerException(Throwable cause) {
+        super(cause);
+    }
 }

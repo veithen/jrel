@@ -23,17 +23,14 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.veithen.jrel.Domain;
-
 public class ManyToManyTest {
     @Test
     public void test() {
-        Domain domain = new Domain();
-        Interface i1 = new Interface(domain);
-        Interface i2 = new Interface(domain);
-        Interface i3 = new Interface(domain);
-        Interface i4 = new Interface(domain);
-        Interface i5 = new Interface(domain);
+        Interface i1 = new Interface();
+        Interface i2 = new Interface();
+        Interface i3 = new Interface();
+        Interface i4 = new Interface();
+        Interface i5 = new Interface();
         i3.superInterfaces.add(i1);
         i3.superInterfaces.add(i2);
         i4.superInterfaces.add(i3);
