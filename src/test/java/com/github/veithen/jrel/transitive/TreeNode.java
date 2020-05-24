@@ -26,13 +26,16 @@ import com.github.veithen.jrel.association.MutableReferences;
 
 public class TreeNode {
     private static final ManyToOneAssociation<TreeNode,TreeNode> PARENT = new ManyToOneAssociation<>();
-    private static final TransitiveClosure<TreeNode> ANCESTOR = new TransitiveClosure<>(PARENT);
+    private static final TransitiveClosure<TreeNode> ANCESTOR = new TransitiveClosure<>(PARENT, false);
+    private static final TransitiveClosure<TreeNode> ANCESTOR_OR_SELF = new TransitiveClosure<>(PARENT, true);
 
     private final String name;
     public final MutableReference<TreeNode> parent = PARENT.newReferenceHolder(this);
     public final References<TreeNode> ancestors = ANCESTOR.newReferenceHolder(this);
+    public final References<TreeNode> ancestorsOrSelf = ANCESTOR_OR_SELF.newReferenceHolder(this);
     public final MutableReferences<TreeNode> children = PARENT.getConverse().newReferenceHolder(this);
     public final References<TreeNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final References<TreeNode> descendantsOrSelf = ANCESTOR_OR_SELF.getConverse().newReferenceHolder(this);
 
     public TreeNode(String name) {
         this.name = name;

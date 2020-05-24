@@ -27,16 +27,19 @@ import com.github.veithen.jrel.References;
 
 public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>> {
     private final BinaryRelation<T,T,?,?> relation;
+    private final boolean includeSelf;
     private final TransitiveClosure<T> converse;
 
-    TransitiveClosure(BinaryRelation<T,T,?,?> relation, TransitiveClosure<T> converse) {
+    TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf, TransitiveClosure<T> converse) {
         this.relation = relation;
+        this.includeSelf = includeSelf;
         this.converse = converse;
     }
 
-    public TransitiveClosure(BinaryRelation<T,T,?,?> relation) {
+    public TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf) {
         this.relation = relation;
-        converse = new TransitiveClosure<T>(relation.getConverse(), this);
+        this.includeSelf = includeSelf;
+        converse = new TransitiveClosure<T>(relation.getConverse(), includeSelf, this);
     }
 
     /**
@@ -46,6 +49,10 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
      */
     public BinaryRelation<T,T,?,?> getRelation() {
         return relation;
+    }
+
+    public boolean isIncludeSelf() {
+        return includeSelf;
     }
 
     @Override

@@ -25,13 +25,16 @@ import com.github.veithen.jrel.association.MutableReferences;
 
 public class GraphNode {
     public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>();
-    public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT);
+    public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT, false);
+    public static final TransitiveClosure<GraphNode> ANCESTOR_OR_SELF = new TransitiveClosure<>(PARENT, true);
 
     private final String name;
     public final MutableReferences<GraphNode> parents = PARENT.newReferenceHolder(this);
     public final References<GraphNode> ancestors = ANCESTOR.newReferenceHolder(this);
+    public final References<GraphNode> ancestorsOrSelf = ANCESTOR_OR_SELF.newReferenceHolder(this);
     public final MutableReferences<GraphNode> children = PARENT.getConverse().newReferenceHolder(this);
     public final References<GraphNode> descendants = ANCESTOR.getConverse().newReferenceHolder(this);
+    public final References<GraphNode> descendantsOrSelf = ANCESTOR_OR_SELF.getConverse().newReferenceHolder(this);
 
     public GraphNode(String name) {
         this.name = name;

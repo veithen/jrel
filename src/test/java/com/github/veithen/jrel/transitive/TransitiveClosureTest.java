@@ -39,14 +39,19 @@ public class TransitiveClosureTest {
         node2.parent.set(node1);
         node3.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3);
+        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3);
         assertThat(node3.ancestors).containsExactly(node1, node2);
+        assertThat(node3.ancestorsOrSelf).containsExactly(node1, node2, node3);
         node4.parent.set(node1);
         node5.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3, node4, node5);
+        assertThat(node1.descendantsOrSelf).containsExactly(node1,node2, node3, node4, node5);
         node6.parent.set(node4);
         assertThat(node1.descendants).containsExactly(node2, node3, node4, node5, node6);
+        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3, node4, node5, node6);
         node2.children.clear();
         assertThat(node1.descendants).containsExactly(node2, node4, node6);
+        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node4, node6);
     }
 
     @Test

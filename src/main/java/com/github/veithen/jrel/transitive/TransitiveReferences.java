@@ -37,6 +37,9 @@ final class TransitiveReferences<T> implements References<T> {
 
     TransitiveReferences(TransitiveClosure<T> closure, T owner) {
         this.closure = closure;
+        if (closure.isIncludeSelf()) {
+            set.add(owner);
+        }
         SetListener<T> transitiveReferencesListener = new SetListener<T>() {
             @Override
             public void added(T object) {
