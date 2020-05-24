@@ -17,25 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.Reference;
-import com.github.veithen.jrel.collection.ListenableSet;
-import com.github.veithen.jrel.collection.SingletonIdentitySet;
-
-public final class MutableReference<T> extends Reference<T> {
-    private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
-
-    @Override
-    public ListenableSet<T> asSet() {
-        return set;
-    }
-
-    public T get() {
-        return set.get();
-    }
-
-    public void set(T target) {
-        set.set(target);
-    }
+abstract class ReferenceHolderAccessor {
+    abstract ReferenceHolder<?> get(Object owner);
 }

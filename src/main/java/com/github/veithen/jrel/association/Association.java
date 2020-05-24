@@ -31,11 +31,11 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     }
 
     @Override
-    public final R1 newReferenceHolder(T1 owner) {
-        R1 referenceHolder = doNewReferenceHolder(owner);
+    protected final R1 createReferenceHolder(T1 owner) {
+        R1 referenceHolder = doCreateReferenceHolder(owner);
         referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
         return referenceHolder;
     }
 
-    protected abstract R1 doNewReferenceHolder(T1 owner);
+    protected abstract R1 doCreateReferenceHolder(T1 owner);
 }

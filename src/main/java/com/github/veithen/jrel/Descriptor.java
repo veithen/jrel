@@ -20,25 +20,44 @@
 package com.github.veithen.jrel;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 final class Descriptor {
     private final Descriptor parent;
-    private final Map<BinaryRelation<?,?,?,?>,Field> fieldMap;
+    private final Map<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
 
     Descriptor(Descriptor parent, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
         this.parent = parent;
-        this.fieldMap = fieldMap;
+        for (Map.Entry<BinaryRelation<?,?,?,?>,Field> entry : fieldMap.entrySet()) {
+            accessorMap.put(entry.getKey(), new FieldAccessor(entry.getKey(), entry.getValue()));
+        }
+        outer: while (true) {
+            for (Map.Entry<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> entry : accessorMap.entrySet()) {
+                boolean modified = false;
+                // TODO: this is not entirely correct because the dependencies may be relations between unrelated types
+                for (BinaryRelation<?,?,?,?> dependency : entry.getKey().getDependencies()) {
+                    if (getReferenceHolderAccessor(dependency) == null) {
+                        accessorMap.put(dependency, new PiggybackAccessor(entry.getValue(), dependency));
+                        modified = true;
+                    }
+                }
+                if (modified) {
+                    continue outer;
+                }
+            }
+            break;
+        }
     }
 
-    Field lookup(BinaryRelation<?,?,?,?> relation) {
-        Field field = fieldMap.get(relation);
-        if (field != null) {
-            return field;
+    ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?,?,?> relation) {
+        ReferenceHolderAccessor accessor = accessorMap.get(relation);
+        if (accessor != null) {
+            return accessor;
         }
         if (parent == null) {
             return null;
         }
-        return parent.lookup(relation);
+        return parent.getReferenceHolderAccessor(relation);
     }
 }

@@ -17,25 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.Reference;
-import com.github.veithen.jrel.collection.ListenableSet;
-import com.github.veithen.jrel.collection.SingletonIdentitySet;
+final class PiggybackAccessor extends ReferenceHolderAccessor {
+    private final ReferenceHolderAccessor parent;
+    private final BinaryRelation<?,?,?,?> relation;
 
-public final class MutableReference<T> extends Reference<T> {
-    private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
+    PiggybackAccessor(ReferenceHolderAccessor parent, BinaryRelation<?,?,?,?> relation) {
+        this.parent = parent;
+        this.relation = relation;
+    }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public ListenableSet<T> asSet() {
-        return set;
-    }
-
-    public T get() {
-        return set.get();
-    }
-
-    public void set(T target) {
-        set.set(target);
+    ReferenceHolder<?> get(Object owner) {
+        return parent.get(owner).getPiggybackedReferenceHolder((BinaryRelation)relation, owner);
     }
 }

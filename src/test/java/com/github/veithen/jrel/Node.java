@@ -17,25 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.Reference;
-import com.github.veithen.jrel.collection.ListenableSet;
-import com.github.veithen.jrel.collection.SingletonIdentitySet;
+import com.github.veithen.jrel.association.ManyToOneAssociation;
+import com.github.veithen.jrel.association.MutableReference;
+import com.github.veithen.jrel.transitive.TransitiveClosure;
 
-public final class MutableReference<T> extends Reference<T> {
-    private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
+public class Node {
+    private static final ManyToOneAssociation<Node,Node> PARENT = new ManyToOneAssociation<>();
+    private static final TransitiveClosure<Node> DESCENDANTS = new TransitiveClosure<>(PARENT.getConverse(), false);
 
-    @Override
-    public ListenableSet<T> asSet() {
-        return set;
-    }
-
-    public T get() {
-        return set.get();
-    }
-
-    public void set(T target) {
-        set.set(target);
-    }
+    public final MutableReference<Node> parent = PARENT.newReferenceHolder(this);
+    public final References<Node> descendants = DESCENDANTS.newReferenceHolder(this);
 }

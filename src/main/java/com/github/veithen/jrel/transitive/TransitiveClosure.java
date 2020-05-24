@@ -66,7 +66,7 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     }
 
     @Override
-    public References<T> newReferenceHolder(T owner) {
+    protected References<T> createReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
     }
 

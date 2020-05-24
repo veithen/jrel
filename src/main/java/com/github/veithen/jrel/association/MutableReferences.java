@@ -19,9 +19,83 @@
  */
 package com.github.veithen.jrel.association;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import com.github.veithen.jrel.References;
+import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
+import com.github.veithen.jrel.collection.SetListener;
 
-public interface MutableReferences<T> extends References<T>, ListenableSet<T> {
+public final class MutableReferences<T> extends References<T> implements ListenableSet<T> {
+    private final LinkedIdentityHashSet<T> set = new LinkedIdentityHashSet<T>();
 
+    @Override
+    public ListenableSet<T> asSet() {
+        return this;
+    }
+
+    public void addListener(SetListener<? super T> listener) {
+        set.addListener(listener);
+    }
+
+    public void removeListener(SetListener<? super T> listener) {
+        set.removeListener(listener);
+    }
+
+    public boolean isEmpty() {
+        return set.isEmpty();
+    }
+
+    public boolean add(T object) {
+        return set.add(object);
+    }
+
+    public Object[] toArray() {
+        return set.toArray();
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        return set.removeAll(c);
+    }
+
+    public <V> V[] toArray(V[] a) {
+        return set.toArray(a);
+    }
+
+    public boolean remove(Object object) {
+        return set.remove(object);
+    }
+
+    public int size() {
+        return set.size();
+    }
+
+    public boolean contains(Object object) {
+        return set.contains(object);
+    }
+
+    public Iterator<T> iterator() {
+        return set.iterator();
+    }
+
+    public void clear() {
+        set.clear();
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        return set.containsAll(c);
+    }
+
+    public boolean addAll(Collection<? extends T> c) {
+        return set.addAll(c);
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        return set.retainAll(c);
+    }
+
+    public String toString() {
+        return set.toString();
+    }
 }

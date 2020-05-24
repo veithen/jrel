@@ -19,6 +19,9 @@
  */
 package com.github.veithen.jrel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.github.veithen.jrel.collection.ListenableSet;
 
 /**
@@ -35,6 +38,25 @@ import com.github.veithen.jrel.collection.ListenableSet;
  * 
  * @param <T> the type of reference stored by this holder
  */
-public interface ReferenceHolder<T> {
-    ListenableSet<T> asSet();
+public abstract class ReferenceHolder<T> {
+    private Map<BinaryRelation<?,?,?,?>,ReferenceHolder<?>> piggybackedReferenceHolders;
+
+    public ReferenceHolder() {
+        NewReferenceHolderTracker.created(this);
+    }
+
+    public abstract ListenableSet<T> asSet();
+
+    final <T1,T2> ReferenceHolder<T2> getPiggybackedReferenceHolder(BinaryRelation<T1,T2,?,?> relation, T1 owner) {
+        if (piggybackedReferenceHolders == null) {
+            piggybackedReferenceHolders = new HashMap<>();
+        }
+        @SuppressWarnings("unchecked")
+        ReferenceHolder<T2> referenceHolder = (ReferenceHolder<T2>)piggybackedReferenceHolders.get(relation);
+        if (referenceHolder == null) {
+            referenceHolder = relation.newReferenceHolder(owner);
+            piggybackedReferenceHolders.put(relation, referenceHolder);
+        }
+        return referenceHolder;
+    }
 }

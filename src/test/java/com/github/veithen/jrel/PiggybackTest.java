@@ -17,24 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.association;
+package com.github.veithen.jrel;
 
-import com.github.veithen.jrel.collection.ListenableSet;
-import com.github.veithen.jrel.collection.SingletonIdentitySet;
+import static com.google.common.truth.Truth.assertThat;
 
-final class MutableReferenceImpl<T> implements MutableReference<T> {
-    private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
+import org.junit.jupiter.api.Test;
 
-    @Override
-    public ListenableSet<T> asSet() {
-        return set;
-    }
-
-    public T get() {
-        return set.get();
-    }
-
-    public void set(T target) {
-        set.set(target);
+public class PiggybackTest {
+    @Test
+    public void test() {
+        Node node1 = new Node();
+        Node node2 = new Node();
+        node2.parent.set(node1);
+        assertThat(node1.descendants).containsExactly(node2);
     }
 }

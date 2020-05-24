@@ -63,19 +63,21 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
      */
     public abstract BinaryRelation<?,?,?,?>[] getDependencies();
 
-    public abstract R1 newReferenceHolder(T1 owner);
+    public final R1 newReferenceHolder(T1 owner) {
+        NewReferenceHolderTracker.push(this, owner);
+        try {
+            return createReferenceHolder(owner);
+        } finally {
+            NewReferenceHolderTracker.pop();
+        }
+    }
+
+    protected abstract R1 createReferenceHolder(T1 owner);
 
     @SuppressWarnings("unchecked")
     public final Optional<R1> getOptionalReferenceHolder(T1 owner) {
-        Field field = getDescriptor(owner.getClass()).lookup(this);
-        if (field == null) {
-            return Optional.empty();
-        }
-        try {
-            return Optional.of((R1)field.get(owner));
-        } catch (IllegalAccessException ex) {
-            throw new IllegalAccessError(ex.getMessage());
-        }
+        ReferenceHolderAccessor accessor = getDescriptor(owner.getClass()).getReferenceHolderAccessor(this);
+        return accessor == null ? Optional.empty() : Optional.of((R1)accessor.get(owner));
     }
 
     public final R1 getReferenceHolder(T1 owner) {

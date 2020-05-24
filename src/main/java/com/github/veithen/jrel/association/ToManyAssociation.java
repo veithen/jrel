@@ -23,7 +23,7 @@ import com.github.veithen.jrel.ReferenceHolder;
 
 public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReferences<T2>,R2> {
     @Override
-    protected final MutableReferences<T2> doNewReferenceHolder(T1 owner) {
-        return new MutableReferencesImpl<>();
+    protected final MutableReferences<T2> doCreateReferenceHolder(T1 owner) {
+        return new MutableReferences<>();
     }
 }

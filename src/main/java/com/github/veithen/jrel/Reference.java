@@ -21,6 +21,6 @@ package com.github.veithen.jrel;
 
 import java.util.function.Supplier;
 
-public interface Reference<T> extends ReferenceHolder<T>, Supplier<T> {
+public abstract class Reference<T> extends ReferenceHolder<T> implements Supplier<T> {
 
 }

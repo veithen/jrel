@@ -25,7 +25,7 @@ import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.UnmodifiableListenableSet;
 
-public abstract class UnmodifiableReferences<T> implements References<T> {
+public abstract class UnmodifiableReferences<T> extends References<T> {
     protected final ListenableSet<T> set = new LinkedIdentityHashSet<>();
     private final ListenableSet<T> unmodifiableSet = new UnmodifiableListenableSet<>(set);
 

@@ -19,8 +19,8 @@
  */
 package com.github.veithen.jrel;
 
-public interface References<T> extends ReferenceHolder<T>, Iterable<T> {
-    boolean contains(Object o);
-    boolean isEmpty();
-    int size();
+public abstract class References<T> extends ReferenceHolder<T> implements Iterable<T> {
+    public abstract boolean contains(Object o);
+    public abstract boolean isEmpty();
+    public abstract int size();
 }
