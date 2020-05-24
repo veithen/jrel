@@ -26,19 +26,19 @@ import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SetListener;
 
-final class MutableReferencesImpl<T,U> implements MutableReferences<U> {
-    private final LinkedIdentityHashSet<U> set = new LinkedIdentityHashSet<U>();
+final class MutableReferencesImpl<T> implements MutableReferences<T> {
+    private final LinkedIdentityHashSet<T> set = new LinkedIdentityHashSet<T>();
 
     @Override
-    public ListenableSet<U> asSet() {
+    public ListenableSet<T> asSet() {
         return this;
     }
 
-    public void addListener(SetListener<? super U> listener) {
+    public void addListener(SetListener<? super T> listener) {
         set.addListener(listener);
     }
 
-    public void removeListener(SetListener<? super U> listener) {
+    public void removeListener(SetListener<? super T> listener) {
         set.removeListener(listener);
     }
 
@@ -46,7 +46,7 @@ final class MutableReferencesImpl<T,U> implements MutableReferences<U> {
         return set.isEmpty();
     }
 
-    public boolean add(U object) {
+    public boolean add(T object) {
         return set.add(object);
     }
 
@@ -74,7 +74,7 @@ final class MutableReferencesImpl<T,U> implements MutableReferences<U> {
         return set.contains(object);
     }
 
-    public Iterator<U> iterator() {
+    public Iterator<T> iterator() {
         return set.iterator();
     }
 
@@ -86,7 +86,7 @@ final class MutableReferencesImpl<T,U> implements MutableReferences<U> {
         return set.containsAll(c);
     }
 
-    public boolean addAll(Collection<? extends U> c) {
+    public boolean addAll(Collection<? extends T> c) {
         return set.addAll(c);
     }
 

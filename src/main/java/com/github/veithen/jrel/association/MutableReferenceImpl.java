@@ -22,19 +22,19 @@ package com.github.veithen.jrel.association;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SingletonIdentitySet;
 
-final class MutableReferenceImpl<T,U> implements MutableReference<U> {
-    private final SingletonIdentitySet<U> set = new SingletonIdentitySet<>();
+final class MutableReferenceImpl<T> implements MutableReference<T> {
+    private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
 
     @Override
-    public ListenableSet<U> asSet() {
+    public ListenableSet<T> asSet() {
         return set;
     }
 
-    public U get() {
+    public T get() {
         return set.get();
     }
 
-    public void set(U target) {
+    public void set(T target) {
         set.set(target);
     }
 }
