@@ -34,9 +34,15 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class LinkedIdentityHashSetTest {
+    private static LinkedIdentityHashSet<Object> createTestSet() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        ValidatingListener.addTo(set);
+        return set;
+    }
+
     @Test
     public void testGetSize() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.add(new Object());
         set.add(new Object());
         assertThat(set).hasSize(2);
@@ -44,7 +50,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testIsEmpty() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         assertThat(set.isEmpty()).isTrue();
         set.add(new Object());
         assertThat(set.isEmpty()).isFalse();
@@ -52,7 +58,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testAddExisting() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object = new Object();
         assertThat(set.add(object)).isTrue();
         assertThat(set.add(object)).isFalse();
@@ -60,7 +66,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testAddMany() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object[] expectedObjects = new Object[1000];
         for (int i=0; i<expectedObjects.length; i++) {
             Object object = new Object();
@@ -72,7 +78,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testContains() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         for (int i=0; i<10; i++) {
             set.add(new Object());
         }
@@ -88,7 +94,7 @@ public class LinkedIdentityHashSetTest {
         for (int i=0; i<10; i++) {
             allObjects[i] = new Object();
         }
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         for (int i=0; i<10; i++) {
             set.add(allObjects[i]);
         }
@@ -105,7 +111,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testRemoveNotContained() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.add(new Object());
         assertThat(set.remove(new Object())).isFalse();
     }
@@ -116,7 +122,7 @@ public class LinkedIdentityHashSetTest {
         for (int i=0; i<allObjects.length; i++) {
             allObjects[i] = new Object();
         }
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Random random = new Random(0);
         Set<Object> expectedObjects = new LinkedHashSet<>();
         for (int i=0; i<allObjects.length*10; i++) {
@@ -132,7 +138,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testIteratorAfterRemove() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();
@@ -151,7 +157,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testIteratorRemove() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();
@@ -169,7 +175,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testIteratorRemoveWithoutNext() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.add(new Object());
         Iterator<Object> it = set.iterator();
         assertThrows(IllegalStateException.class, it::remove);
@@ -177,7 +183,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testIteratorRemoveTwice() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.add(new Object());
         set.add(new Object());
         Iterator<Object> it = set.iterator();
@@ -189,7 +195,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testToString() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         set.add(object1);
@@ -199,13 +205,13 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testToStringEmpty() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         assertThat(set.toString()).isEqualTo("[]");
     }
 
     @Test
     public void testClear() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.add(new Object());
         set.clear();
         assertThat(set.size()).isEqualTo(0);
@@ -214,7 +220,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testClearAfterRemove() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         for (int i=0; i<10; i++) {
             set.add(new Object());
         }
@@ -227,14 +233,14 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testClearEmpty() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         set.clear();
         assertThat(set).isEmpty();
     }
 
     @Test
     public void testAddWhileIterating() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();
@@ -253,7 +259,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testRemoveCurrentWhileIterating() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();
@@ -273,7 +279,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testRemoveNextWhileIterating() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();
@@ -293,7 +299,7 @@ public class LinkedIdentityHashSetTest {
 
     @Test
     public void testClearWhileIterating() {
-        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        LinkedIdentityHashSet<Object> set = createTestSet();
         Object object1 = new Object();
         Object object2 = new Object();
         Object object3 = new Object();

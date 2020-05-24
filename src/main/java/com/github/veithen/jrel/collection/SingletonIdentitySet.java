@@ -43,13 +43,17 @@ public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
     @Override
     public void clear() {
         if (element != null) {
-            fireRemoved(element);
+            E orgElement = element;
             element = null;
+            fireRemoved(orgElement);
         }
     }
 
     @Override
     public boolean add(E element) {
+        if (element == null) {
+            throw new NullPointerException("This set does not permit null elements");
+        }
         if (this.element == element) {
             return false;
         }
@@ -61,11 +65,12 @@ public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
 
     @Override
     public boolean remove(Object element) {
-        // TODO: missing listere invocation here
-        if (this.element != element) {
+        if (element == null || this.element != element) {
             return false;
         }
+        E orgElement = this.element;
         this.element = null;
+        fireRemoved(orgElement);
         return true;
     }
 
