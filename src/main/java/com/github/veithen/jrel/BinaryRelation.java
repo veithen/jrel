@@ -56,6 +56,13 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
      */
     public abstract BinaryRelation<T2,T1,R2,R1> getConverse();
 
+    /**
+     * If this is a derived relation, returns the binary relations used to compute the derived relation.
+     * 
+     * @return the dependencies or an empty array if this is not a derived relation
+     */
+    public abstract BinaryRelation<?,?,?,?>[] getDependencies();
+
     public abstract R1 newReferenceHolder(T1 owner);
 
     @SuppressWarnings("unchecked")

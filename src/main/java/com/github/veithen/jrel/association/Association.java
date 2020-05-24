@@ -26,6 +26,11 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     public abstract Association<T2,T1,R2,R1> getConverse();
 
     @Override
+    public final BinaryRelation<?,?,?,?>[] getDependencies() {
+        return new BinaryRelation<?,?,?,?>[0];
+    }
+
+    @Override
     public final R1 newReferenceHolder(T1 owner) {
         R1 referenceHolder = doNewReferenceHolder(owner);
         referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));

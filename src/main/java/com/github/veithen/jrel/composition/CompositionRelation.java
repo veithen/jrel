@@ -52,6 +52,11 @@ public final class CompositionRelation<T1,T2,T3> extends BinaryRelation<T1,T3,Re
     }
 
     @Override
+    public BinaryRelation<?,?,?,?>[] getDependencies() {
+        return new BinaryRelation<?,?,?,?>[] { relation1, relation2 };
+    }
+
+    @Override
     public References<T3> newReferenceHolder(T1 owner) {
         return new CompositeReferences<>(this, owner);
     }

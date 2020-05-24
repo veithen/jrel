@@ -61,6 +61,11 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     }
 
     @Override
+    public BinaryRelation<?,?,?,?>[] getDependencies() {
+        return new BinaryRelation<?,?,?,?>[] { relation };
+    }
+
+    @Override
     public References<T> newReferenceHolder(T owner) {
         return new TransitiveReferences<>(this, owner);
     }
