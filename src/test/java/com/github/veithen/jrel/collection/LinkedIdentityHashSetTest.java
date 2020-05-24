@@ -121,12 +121,10 @@ public class LinkedIdentityHashSetTest {
         Set<Object> expectedObjects = new LinkedHashSet<>();
         for (int i=0; i<allObjects.length*10; i++) {
             Object object = allObjects[random.nextInt(allObjects.length)];
-            if (expectedObjects.contains(object)) {
-                expectedObjects.remove(object);
-                set.remove(object);
+            if (random.nextBoolean()) {
+                assertThat(set.remove(object)).isEqualTo(expectedObjects.remove(object));
             } else {
-                expectedObjects.add(object);
-                set.add(object);
+                assertThat(set.add(object)).isEqualTo(expectedObjects.add(object));
             }
             assertThat(set).containsExactlyElementsIn(expectedObjects).inOrder();
         }

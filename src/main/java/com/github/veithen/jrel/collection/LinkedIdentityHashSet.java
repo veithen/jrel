@@ -141,19 +141,26 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             nodes = newNodes;
         }
         int index = System.identityHashCode(object) % capacity;
+        int tombstoneIndex = -1;
         while (true) {
             Node node = nodes[index];
             if (node == null) {
                 break;
             }
             if (node.isRemoved()) {
-                tombstones--;
-                break;
-            }
-            if (node.getElement() == object) {
+                // If we encounter a tombstone, remember its index so that we can replace it. Note
+                // that we still need to continue because we may find the element later.
+                if (tombstoneIndex == -1) {
+                    tombstoneIndex = index;
+                }
+            } else if (node.getElement() == object) {
                 return false;
             }
             index = (index + 1) % capacity;
+        }
+        if (tombstoneIndex != -1) {
+            index = tombstoneIndex;
+            tombstones--;
         }
         Node node = new Node(object);
         nodes[index] = node;
