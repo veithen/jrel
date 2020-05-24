@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import org.objectweb.asm.ClassReader;
@@ -58,12 +59,20 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
     public abstract R1 newReferenceHolder(T1 owner);
 
     @SuppressWarnings("unchecked")
-    public final R1 getReferenceHolder(T1 owner) {
+    public final Optional<R1> getOptionalReferenceHolder(T1 owner) {
+        Field field = getDescriptor(owner.getClass()).lookup(this);
+        if (field == null) {
+            return Optional.empty();
+        }
         try {
-            return (R1)getDescriptor(owner.getClass()).lookup(this).get(owner);
+            return Optional.of((R1)field.get(owner));
         } catch (IllegalAccessException ex) {
             throw new IllegalAccessError(ex.getMessage());
         }
+    }
+
+    public final R1 getReferenceHolder(T1 owner) {
+        return getOptionalReferenceHolder(owner).orElseThrow(() -> new IllegalStateException("Not bound"));
     }
 
     @Override

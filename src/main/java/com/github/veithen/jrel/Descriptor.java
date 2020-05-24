@@ -37,7 +37,7 @@ final class Descriptor {
             return field;
         }
         if (parent == null) {
-            throw new IllegalStateException("No acccessor found for relation " + relation);
+            return null;
         }
         return parent.lookup(relation);
     }

@@ -22,6 +22,5 @@ package com.github.veithen.jrel.composition;
 import com.github.veithen.jrel.association.MutableReferences;
 
 public class B {
-    public final MutableReferences<A> a = Relations.AB.getConverse().newReferenceHolder(this);
     public final MutableReferences<C> c = Relations.BC.newReferenceHolder(this);
 }
