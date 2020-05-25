@@ -23,6 +23,17 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
+    private final Class<T1> type;
+
+    public BinaryRelation(Class<T1> type) {
+        this.type = type;
+        Descriptor.registerRelation(type, this);
+    }
+
+    public final Class<T1> getType() {
+        return type;
+    }
+
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
      * 

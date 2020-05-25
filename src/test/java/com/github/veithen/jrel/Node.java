@@ -24,7 +24,7 @@ import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.transitive.TransitiveClosure;
 
 public class Node {
-    private static final ManyToOneAssociation<Node,Node> PARENT = new ManyToOneAssociation<>();
+    private static final ManyToOneAssociation<Node,Node> PARENT = new ManyToOneAssociation<>(Node.class, Node.class);
     private static final TransitiveClosure<Node> DESCENDANTS = new TransitiveClosure<>(PARENT.getConverse(), false);
 
     public final MutableReference<Node> parent = PARENT.newReferenceHolder(this);

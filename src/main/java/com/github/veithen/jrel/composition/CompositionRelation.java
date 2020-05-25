@@ -28,12 +28,14 @@ public final class CompositionRelation<T1,T2,T3> extends BinaryRelation<T1,T3,Re
     private final CompositionRelation<T3,T2,T1> converse;
 
     CompositionRelation(BinaryRelation<T1,T2,?,?> relation1, BinaryRelation<T2,T3,?,?> relation2, CompositionRelation<T3,T2,T1> converse) {
+        super(relation1.getType());
         this.relation1 = relation1;
         this.relation2 = relation2;
         this.converse = converse;
     }
 
     public CompositionRelation(BinaryRelation<T1,T2,?,?> relation1, BinaryRelation<T2,T3,?,?> relation2) {
+        super(relation1.getType());
         this.relation1 = relation1;
         this.relation2 = relation2;
         converse = new CompositionRelation<T3,T2,T1>(relation2.getConverse(), relation1.getConverse(), this);

@@ -22,12 +22,14 @@ package com.github.veithen.jrel.association;
 public final class ManyToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReferences<T1>> {
     private final OneToManyAssociation<T2,T1> converse;
 
-    ManyToOneAssociation(OneToManyAssociation<T2,T1> converse) {
+    ManyToOneAssociation(Class<T1> type, OneToManyAssociation<T2,T1> converse) {
+        super(type);
         this.converse = converse;
     }
 
-    public ManyToOneAssociation() {
-        converse = new OneToManyAssociation<T2,T1>(this);
+    public ManyToOneAssociation(Class<T1> type1, Class<T2> type2) {
+        super(type1);
+        converse = new OneToManyAssociation<T2,T1>(type2, this);
     }
 
     public OneToManyAssociation<T2,T1> getConverse() {

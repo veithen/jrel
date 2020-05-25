@@ -20,7 +20,7 @@
 package com.github.veithen.jrel.association;
 
 public class LinkedListNode {
-    private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>();
+    private static final OneToOneAssociation<LinkedListNode,LinkedListNode> PREVIOUS = new OneToOneAssociation<>(LinkedListNode.class, LinkedListNode.class);
 
     public final MutableReference<LinkedListNode> previous = PREVIOUS.newReferenceHolder(this);
     public final MutableReference<LinkedListNode> next = PREVIOUS.getConverse().newReferenceHolder(this);

@@ -31,12 +31,14 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     private final TransitiveClosure<T> converse;
 
     TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf, TransitiveClosure<T> converse) {
+        super(relation.getType());
         this.relation = relation;
         this.includeSelf = includeSelf;
         this.converse = converse;
     }
 
     public TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf) {
+        super(relation.getType());
         this.relation = relation;
         this.includeSelf = includeSelf;
         converse = new TransitiveClosure<T>(relation.getConverse(), includeSelf, this);

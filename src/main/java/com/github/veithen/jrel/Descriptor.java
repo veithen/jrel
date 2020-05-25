@@ -23,64 +23,67 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.ClassReader;
 
 final class Descriptor {
+    private static final Map<Class<?>,List<BinaryRelation<?,?,?,?>>> registeredRelationsByClass = new HashMap<>();
     private static final Map<Class<?>,Descriptor> instances = new HashMap<>();
 
-    private final Descriptor parent;
     private final Map<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
 
-    private Descriptor(Descriptor parent, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
-        this.parent = parent;
-        for (Map.Entry<BinaryRelation<?,?,?,?>,Field> entry : fieldMap.entrySet()) {
-            accessorMap.put(entry.getKey(), new FieldAccessor(entry.getKey(), entry.getValue()));
+    private Descriptor(Class<?> clazz, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass != Object.class) {
+            accessorMap.putAll(getInstance(superClass).accessorMap);
         }
-        outer: while (true) {
-            for (Map.Entry<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> entry : accessorMap.entrySet()) {
-                boolean modified = false;
-                // TODO: this is not entirely correct because the dependencies may be relations between unrelated types
-                for (BinaryRelation<?,?,?,?> dependency : entry.getKey().getDependencies()) {
-                    if (getReferenceHolderAccessor(dependency) == null) {
-                        accessorMap.put(dependency, new PiggybackAccessor(entry.getValue(), dependency));
-                        modified = true;
+        FieldAccessor piggybackParentAccessor = null;
+        for (Map.Entry<BinaryRelation<?,?,?,?>,Field> entry : fieldMap.entrySet()) {
+            FieldAccessor fieldAccessor = new FieldAccessor(entry.getKey(), entry.getValue());
+            accessorMap.put(entry.getKey(), fieldAccessor);
+            if (piggybackParentAccessor == null) {
+                piggybackParentAccessor = fieldAccessor;
+            }
+        }
+        if (piggybackParentAccessor != null) {
+            List<BinaryRelation<?,?,?,?>> registeredRelations = registeredRelationsByClass.get(clazz);
+            if (registeredRelations != null) {
+                for (BinaryRelation<?,?,?,?> relation : registeredRelations) {
+                    if (!accessorMap.containsKey(relation)) {
+                        accessorMap.put(relation, new PiggybackAccessor(piggybackParentAccessor, relation));
                     }
                 }
-                if (modified) {
-                    continue outer;
-                }
             }
-            break;
         }
+    }
+
+    static synchronized <T> void registerRelation(Class<T> type, BinaryRelation<T,?,?,?> relation) {
+        if (instances.containsKey(type)) {
+            throw new IllegalStateException();
+        }
+        registeredRelationsByClass.computeIfAbsent(type, k -> new LinkedList<>()).add(relation);
     }
 
     static synchronized Descriptor getInstance(Class<?> clazz) {
         Descriptor descriptor = instances.get(clazz);
         if (descriptor == null) {
-            Class<?> superClass = clazz.getSuperclass();
-            Descriptor parent = superClass == Object.class ? null : getInstance(superClass);
-            Map<BinaryRelation<?,?,?,?>,Field> fieldMap = new HashMap<>();
+            Map<BinaryRelation<?,?,?,?>,Field> fieldMap = new LinkedHashMap<>();
             try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
                 new ClassReader(in).accept(new ClassAnalyzer(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
             } catch (IOException ex) {
                 throw new AnalyzerException(ex);
             }
-            descriptor = new Descriptor(parent, fieldMap);
+            descriptor = new Descriptor(clazz, fieldMap);
             instances.put(clazz, descriptor);
         }
         return descriptor;
     }
 
     ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?,?,?> relation) {
-        ReferenceHolderAccessor accessor = accessorMap.get(relation);
-        if (accessor != null) {
-            return accessor;
-        }
-        if (parent == null) {
-            return null;
-        }
-        return parent.getReferenceHolderAccessor(relation);
+        return accessorMap.get(relation);
     }
 }

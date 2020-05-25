@@ -24,7 +24,7 @@ import com.github.veithen.jrel.association.ManyToManyAssociation;
 import com.github.veithen.jrel.association.MutableReferences;
 
 public class GraphNode {
-    public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>();
+    public static final ManyToManyAssociation<GraphNode,GraphNode> PARENT = new ManyToManyAssociation<>(GraphNode.class, GraphNode.class);
     public static final TransitiveClosure<GraphNode> ANCESTOR = new TransitiveClosure<>(PARENT, false);
     public static final TransitiveClosure<GraphNode> ANCESTOR_OR_SELF = new TransitiveClosure<>(PARENT, true);
 
