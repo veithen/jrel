@@ -19,19 +19,64 @@
  */
 package com.github.veithen.jrel;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
     private final Class<T1> type;
+    private final Class<?> declaringClass;
+    private String name;
 
     public BinaryRelation(Class<T1> type) {
         this.type = type;
+        Class<?> declaringClass = null;
+        for (StackTraceElement frame : Thread.currentThread().getStackTrace()) {
+            if (frame.getMethodName().equals("<clinit>")) {
+                try {
+                    declaringClass = type.getClassLoader().loadClass(frame.getClassName());
+                } catch (ClassNotFoundException ex) {
+                    // Just continue
+                }
+                break;
+            }
+        }
+        this.declaringClass = declaringClass;
         Descriptor.registerRelation(type, this);
     }
 
     public final Class<T1> getType() {
         return type;
+    }
+
+    public synchronized final String getName() {
+        if (name == null) {
+            if (declaringClass != null) {
+                for (Field field : declaringClass.getDeclaredFields()) {
+                    if (Modifier.isStatic(field.getModifiers())) {
+                        field.setAccessible(true);
+                        try {
+                            if (field.get(null) == this) {
+                                name = declaringClass.getName() + "." + field.getName();
+                                break;
+                            }
+                        } catch (IllegalAccessException ex) {
+                            // Ignore and continue
+                        }
+                    }
+                }
+            }
+            if (name == null) {
+                name = "<anonymous>";
+            }
+        }
+        return name;
+    }
+
+    @Override
+    public final String toString() {
+        return getName();
     }
 
     /**
