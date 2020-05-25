@@ -97,7 +97,14 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
     public abstract BinaryRelation<?,?,?,?>[] getDependencies();
 
     public final R1 newReferenceHolder(T1 owner) {
-        ReferenceHolderCreationContext context = new ReferenceHolderCreationContext(this, owner);
+        ReferenceHolderSet referenceHolderSet = ReferenceHolderCreationContext.getReferenceHolderSet(owner);
+        if (referenceHolderSet == null) {
+            referenceHolderSet = Descriptor.getInstance(owner.getClass()).getReferenceHolderSetAccessor().get(owner);
+        }
+        if (referenceHolderSet == null) {
+            referenceHolderSet = new ReferenceHolderSet();
+        }
+        ReferenceHolderCreationContext context = new ReferenceHolderCreationContext(this, owner, referenceHolderSet);
         context.push();
         try {
             return createReferenceHolder(context, owner);

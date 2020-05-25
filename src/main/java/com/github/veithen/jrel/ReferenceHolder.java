@@ -40,9 +40,7 @@ public abstract class ReferenceHolder<T> {
 
     protected ReferenceHolder(ReferenceHolderCreationContext context) {
         context.setReferenceHolder(this);
-        Object owner = context.getOwner();
-        ReferenceHolderSet referenceHolderSet = Descriptor.getInstance(owner.getClass()).getReferenceHolderSetAccessor().get(owner);
-        this.referenceHolderSet = referenceHolderSet != null ? referenceHolderSet : new ReferenceHolderSet();
+        this.referenceHolderSet = context.getReferenceHolderSet();
     }
 
     public abstract ListenableSet<T> asSet();

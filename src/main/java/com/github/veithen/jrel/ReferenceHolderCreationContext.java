@@ -38,15 +38,17 @@ public final class ReferenceHolderCreationContext {
 
     private final BinaryRelation<?,?,?,?> relation;
     private final Object owner;
+    private final ReferenceHolderSet referenceHolderSet;
     private ReferenceHolder<?> referenceHolder;
 
-    ReferenceHolderCreationContext(BinaryRelation<?,?,?,?> relation, Object owner) {
+    ReferenceHolderCreationContext(BinaryRelation<?,?,?,?> relation, Object owner, ReferenceHolderSet referenceHolderSet) {
         this.relation = relation;
         this.owner = owner;
+        this.referenceHolderSet = referenceHolderSet;
     }
 
-    Object getOwner() {
-        return owner;
+    ReferenceHolderSet getReferenceHolderSet() {
+        return referenceHolderSet;
     }
 
     void setReferenceHolder(ReferenceHolder<?> referenceHolder) {
@@ -60,10 +62,19 @@ public final class ReferenceHolderCreationContext {
         stack.get().push(this);
     }
 
+    static ReferenceHolderSet getReferenceHolderSet(Object owner) {
+        for (ReferenceHolderCreationContext context : stack.get()) {
+            if (context.owner == owner) {
+                return context.referenceHolderSet;
+            }
+        }
+        return null;
+    }
+
     static ReferenceHolder<?> match(BinaryRelation<?,?,?,?> relation, Object owner) {
-        for (ReferenceHolderCreationContext tracker : stack.get()) {
-            if (tracker.relation == relation && tracker.owner == owner) {
-                return tracker.referenceHolder;
+        for (ReferenceHolderCreationContext context : stack.get()) {
+            if (context.relation == relation && context.owner == owner) {
+                return context.referenceHolder;
             }
         }
         return null;
