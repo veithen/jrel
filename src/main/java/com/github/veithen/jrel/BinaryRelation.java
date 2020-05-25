@@ -57,11 +57,14 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
                     if (Modifier.isStatic(field.getModifiers())) {
                         field.setAccessible(true);
                         try {
-                            if (field.get(null) == this) {
+                            BinaryRelation<?,?,?,?> relation = (BinaryRelation<?,?,?,?>)field.get(null);
+                            if (relation == this) {
                                 name = declaringClass.getName() + "." + field.getName();
                                 break;
+                            } else if (relation.getConverse() == this) {
+                                name = declaringClass.getName() + "." + field.getName() + "(^T)";
                             }
-                        } catch (IllegalAccessException ex) {
+                        } catch (ClassCastException | IllegalAccessException ex) {
                             // Ignore and continue
                         }
                     }

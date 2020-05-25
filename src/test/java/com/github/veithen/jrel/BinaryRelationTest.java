@@ -31,5 +31,6 @@ public class BinaryRelationTest {
     @Test
     public void testGetName() {
         assertThat(TEST.getName()).isEqualTo("com.github.veithen.jrel.BinaryRelationTest.TEST");
+        assertThat(TEST.getConverse().getName()).isEqualTo("com.github.veithen.jrel.BinaryRelationTest.TEST(^T)");
     }
 }
