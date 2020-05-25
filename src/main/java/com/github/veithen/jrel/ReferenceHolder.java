@@ -38,8 +38,9 @@ import com.github.veithen.jrel.collection.ListenableSet;
 public abstract class ReferenceHolder<T> {
     private final ReferenceHolderSet referenceHolderSet;
 
-    protected ReferenceHolder(Object owner) {
-        NewReferenceHolderTracker.created(this, owner);
+    protected ReferenceHolder(ReferenceHolderCreationContext context) {
+        context.setReferenceHolder(this);
+        Object owner = context.getOwner();
         ReferenceHolderSet referenceHolderSet = Descriptor.getInstance(owner.getClass()).getReferenceHolderSetAccessor().get(owner);
         this.referenceHolderSet = referenceHolderSet != null ? referenceHolderSet : new ReferenceHolderSet();
     }

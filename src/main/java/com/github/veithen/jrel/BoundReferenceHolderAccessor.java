@@ -32,7 +32,7 @@ final class BoundReferenceHolderAccessor extends ReferenceHolderAccessor {
 
     @Override
     ReferenceHolder<?> get(Object owner) {
-        ReferenceHolder<?> newlyCreated = NewReferenceHolderTracker.match(relation, owner);
+        ReferenceHolder<?> newlyCreated = ReferenceHolderCreationContext.match(relation, owner);
         if (newlyCreated != null) {
             return newlyCreated;
         }

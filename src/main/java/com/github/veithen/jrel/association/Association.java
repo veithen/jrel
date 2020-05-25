@@ -21,6 +21,7 @@ package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
+import com.github.veithen.jrel.ReferenceHolderCreationContext;
 
 public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> extends BinaryRelation<T1,T2,R1,R2> {
     public Association(Class<T1> type) {
@@ -35,11 +36,11 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     }
 
     @Override
-    protected final R1 createReferenceHolder(T1 owner) {
-        R1 referenceHolder = doCreateReferenceHolder(owner);
+    protected final R1 createReferenceHolder(ReferenceHolderCreationContext context, T1 owner) {
+        R1 referenceHolder = doCreateReferenceHolder(context);
         referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
         return referenceHolder;
     }
 
-    protected abstract R1 doCreateReferenceHolder(T1 owner);
+    protected abstract R1 doCreateReferenceHolder(ReferenceHolderCreationContext context);
 }

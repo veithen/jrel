@@ -22,7 +22,7 @@ package com.github.veithen.jrel;
 import java.util.function.Supplier;
 
 public abstract class Reference<T> extends ReferenceHolder<T> implements Supplier<T> {
-    protected Reference(Object owner) {
-        super(owner);
+    protected Reference(ReferenceHolderCreationContext context) {
+        super(context);
     }
 }

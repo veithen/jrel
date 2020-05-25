@@ -29,8 +29,8 @@ public abstract class UnmodifiableReferences<T> extends References<T> {
     protected final ListenableSet<T> set = new LinkedIdentityHashSet<>();
     private final ListenableSet<T> unmodifiableSet = new UnmodifiableListenableSet<>(set);
 
-    protected UnmodifiableReferences(Object owner) {
-        super(owner);
+    protected UnmodifiableReferences(ReferenceHolderCreationContext context) {
+        super(context);
     }
 
     @Override

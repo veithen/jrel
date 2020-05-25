@@ -20,8 +20,8 @@
 package com.github.veithen.jrel;
 
 public abstract class References<T> extends ReferenceHolder<T> implements Iterable<T> {
-    protected References(Object owner) {
-        super(owner);
+    protected References(ReferenceHolderCreationContext context) {
+        super(context);
     }
 
     public abstract boolean contains(Object o);

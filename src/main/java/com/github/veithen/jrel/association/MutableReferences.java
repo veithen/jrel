@@ -22,6 +22,7 @@ package com.github.veithen.jrel.association;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.github.veithen.jrel.ReferenceHolderCreationContext;
 import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.collection.LinkedIdentityHashSet;
 import com.github.veithen.jrel.collection.ListenableSet;
@@ -30,8 +31,8 @@ import com.github.veithen.jrel.collection.SetListener;
 public final class MutableReferences<T> extends References<T> implements ListenableSet<T> {
     private final LinkedIdentityHashSet<T> set = new LinkedIdentityHashSet<T>();
 
-    MutableReferences(Object owner) {
-        super(owner);
+    MutableReferences(ReferenceHolderCreationContext context) {
+        super(context);
     }
 
     @Override

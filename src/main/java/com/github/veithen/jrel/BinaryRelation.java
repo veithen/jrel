@@ -97,15 +97,16 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
     public abstract BinaryRelation<?,?,?,?>[] getDependencies();
 
     public final R1 newReferenceHolder(T1 owner) {
-        NewReferenceHolderTracker.push(this, owner);
+        ReferenceHolderCreationContext context = new ReferenceHolderCreationContext(this, owner);
+        context.push();
         try {
-            return createReferenceHolder(owner);
+            return createReferenceHolder(context, owner);
         } finally {
-            NewReferenceHolderTracker.pop();
+            context.pop();
         }
     }
 
-    protected abstract R1 createReferenceHolder(T1 owner);
+    protected abstract R1 createReferenceHolder(ReferenceHolderCreationContext context, T1 owner);
 
     @SuppressWarnings("unchecked")
     public final Optional<R1> getOptionalReferenceHolder(T1 owner) {

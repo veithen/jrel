@@ -28,10 +28,10 @@ import java.util.LinkedList;
  * not yet been stored yet, i.e. before the corresponding call to
  * {@link BinaryRelation#newReferenceHolder(Object)} returns.
  */
-final class NewReferenceHolderTracker {
-    private static final ThreadLocal<Deque<NewReferenceHolderTracker>> stack = new ThreadLocal<Deque<NewReferenceHolderTracker>>() {
+public final class ReferenceHolderCreationContext {
+    private static final ThreadLocal<Deque<ReferenceHolderCreationContext>> stack = new ThreadLocal<Deque<ReferenceHolderCreationContext>>() {
         @Override
-        protected Deque<NewReferenceHolderTracker> initialValue() {
+        protected Deque<ReferenceHolderCreationContext> initialValue() {
             return new LinkedList<>();
         }
     };
@@ -40,25 +40,28 @@ final class NewReferenceHolderTracker {
     private final Object owner;
     private ReferenceHolder<?> referenceHolder;
 
-    NewReferenceHolderTracker(BinaryRelation<?,?,?,?> relation, Object owner) {
+    ReferenceHolderCreationContext(BinaryRelation<?,?,?,?> relation, Object owner) {
         this.relation = relation;
         this.owner = owner;
     }
 
-    static void push(BinaryRelation<?,?,?,?> relation, Object owner) {
-        stack.get().push(new NewReferenceHolderTracker(relation, owner));
+    Object getOwner() {
+        return owner;
     }
 
-    static void created(ReferenceHolder<?> referenceHolder, Object owner) {
-        NewReferenceHolderTracker current = stack.get().peek();
-        if (current.referenceHolder != null || current.owner != owner) {
+    void setReferenceHolder(ReferenceHolder<?> referenceHolder) {
+        if (this.referenceHolder != null) {
             throw new IllegalStateException();
         }
-        current.referenceHolder = referenceHolder;
+        this.referenceHolder = referenceHolder;
+    }
+
+    void push() {
+        stack.get().push(this);
     }
 
     static ReferenceHolder<?> match(BinaryRelation<?,?,?,?> relation, Object owner) {
-        for (NewReferenceHolderTracker tracker : stack.get()) {
+        for (ReferenceHolderCreationContext tracker : stack.get()) {
             if (tracker.relation == relation && tracker.owner == owner) {
                 return tracker.referenceHolder;
             }
@@ -66,8 +69,8 @@ final class NewReferenceHolderTracker {
         return null;
     }
 
-    static void pop() {
-        if (stack.get().pop().referenceHolder == null) {
+    void pop() {
+        if (stack.get().pop() != this) {
             throw new IllegalStateException();
         }
     }
