@@ -19,36 +19,10 @@
  */
 package com.github.veithen.jrel;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-import org.objectweb.asm.ClassReader;
-
 public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
-    private static final Map<Class<?>,Descriptor> descriptors = new HashMap<>();
-
-    private synchronized Descriptor getDescriptor(Class<?> clazz) {
-        Descriptor descriptor = descriptors.get(clazz);
-        if (descriptor == null) {
-            Class<?> superClass = clazz.getSuperclass();
-            Descriptor parent = superClass == Object.class ? null : getDescriptor(superClass);
-            Map<BinaryRelation<?,?,?,?>,Field> fieldMap = new HashMap<>();
-            try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
-                new ClassReader(in).accept(new ClassAnalyzer(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-            } catch (IOException ex) {
-                throw new AnalyzerException(ex);
-            }
-            descriptor = new Descriptor(parent, fieldMap);
-            descriptors.put(clazz, descriptor);
-        }
-        return descriptor;
-    }
-
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
      * 
@@ -76,7 +50,7 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
 
     @SuppressWarnings("unchecked")
     public final Optional<R1> getOptionalReferenceHolder(T1 owner) {
-        ReferenceHolderAccessor accessor = getDescriptor(owner.getClass()).getReferenceHolderAccessor(this);
+        ReferenceHolderAccessor accessor = Descriptor.getInstance(owner.getClass()).getReferenceHolderAccessor(this);
         return accessor == null ? Optional.empty() : Optional.of((R1)accessor.get(owner));
     }
 

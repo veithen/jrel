@@ -19,15 +19,21 @@
  */
 package com.github.veithen.jrel;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.objectweb.asm.ClassReader;
+
 final class Descriptor {
+    private static final Map<Class<?>,Descriptor> instances = new HashMap<>();
+
     private final Descriptor parent;
     private final Map<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
 
-    Descriptor(Descriptor parent, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
+    private Descriptor(Descriptor parent, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
         this.parent = parent;
         for (Map.Entry<BinaryRelation<?,?,?,?>,Field> entry : fieldMap.entrySet()) {
             accessorMap.put(entry.getKey(), new FieldAccessor(entry.getKey(), entry.getValue()));
@@ -48,6 +54,23 @@ final class Descriptor {
             }
             break;
         }
+    }
+
+    static synchronized Descriptor getInstance(Class<?> clazz) {
+        Descriptor descriptor = instances.get(clazz);
+        if (descriptor == null) {
+            Class<?> superClass = clazz.getSuperclass();
+            Descriptor parent = superClass == Object.class ? null : getInstance(superClass);
+            Map<BinaryRelation<?,?,?,?>,Field> fieldMap = new HashMap<>();
+            try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
+                new ClassReader(in).accept(new ClassAnalyzer(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+            } catch (IOException ex) {
+                throw new AnalyzerException(ex);
+            }
+            descriptor = new Descriptor(parent, fieldMap);
+            instances.put(clazz, descriptor);
+        }
+        return descriptor;
     }
 
     ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?,?,?> relation) {
