@@ -20,7 +20,6 @@
 package com.github.veithen.jrel.transitive;
 
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.ReferenceHolderCreationContext;
 import com.github.veithen.jrel.UnmodifiableReferences;
 import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.collection.ListenableSet;
@@ -30,8 +29,7 @@ final class TransitiveReferences<T> extends UnmodifiableReferences<T> {
     private final TransitiveClosure<T> closure;
     private final ReferenceHolder<T> referenceHolder;
 
-    TransitiveReferences(TransitiveClosure<T> closure, ReferenceHolderCreationContext context, T owner) {
-        super(context);
+    TransitiveReferences(TransitiveClosure<T> closure, T owner) {
         this.closure = closure;
         referenceHolder = closure.getRelation().getReferenceHolder(owner);
         if (closure.isIncludeSelf()) {

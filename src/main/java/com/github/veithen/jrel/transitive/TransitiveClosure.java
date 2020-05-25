@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
-import com.github.veithen.jrel.ReferenceHolderCreationContext;
 import com.github.veithen.jrel.References;
 
 public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>> {
@@ -69,8 +68,8 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     }
 
     @Override
-    protected References<T> createReferenceHolder(ReferenceHolderCreationContext context, T owner) {
-        return new TransitiveReferences<>(this, context, owner);
+    protected References<T> createReferenceHolder(T owner) {
+        return new TransitiveReferences<>(this, owner);
     }
 
     /**

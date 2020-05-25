@@ -28,7 +28,7 @@ import java.util.LinkedList;
  * not yet been stored yet, i.e. before the corresponding call to
  * {@link BinaryRelation#newReferenceHolder(Object)} returns.
  */
-public final class ReferenceHolderCreationContext {
+final class ReferenceHolderCreationContext {
     private static final ThreadLocal<Deque<ReferenceHolderCreationContext>> stack = new ThreadLocal<Deque<ReferenceHolderCreationContext>>() {
         @Override
         protected Deque<ReferenceHolderCreationContext> initialValue() {
@@ -60,6 +60,10 @@ public final class ReferenceHolderCreationContext {
 
     void push() {
         stack.get().push(this);
+    }
+
+    static ReferenceHolderCreationContext current() {
+        return stack.get().peek();
     }
 
     static ReferenceHolderSet getReferenceHolderSet(Object owner) {

@@ -20,15 +20,13 @@
 package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.Reference;
-import com.github.veithen.jrel.ReferenceHolderCreationContext;
 import com.github.veithen.jrel.collection.ListenableSet;
 import com.github.veithen.jrel.collection.SingletonIdentitySet;
 
 public final class MutableReference<T> extends Reference<T> {
     private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
 
-    MutableReference(ReferenceHolderCreationContext context) {
-        super(context);
+    MutableReference() {
     }
 
     @Override

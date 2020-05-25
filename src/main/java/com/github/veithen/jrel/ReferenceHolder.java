@@ -38,7 +38,8 @@ import com.github.veithen.jrel.collection.ListenableSet;
 public abstract class ReferenceHolder<T> {
     private final ReferenceHolderSet referenceHolderSet;
 
-    protected ReferenceHolder(ReferenceHolderCreationContext context) {
+    protected ReferenceHolder() {
+        ReferenceHolderCreationContext context = ReferenceHolderCreationContext.current();
         context.setReferenceHolder(this);
         this.referenceHolderSet = context.getReferenceHolderSet();
     }

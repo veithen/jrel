@@ -107,13 +107,13 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
         ReferenceHolderCreationContext context = new ReferenceHolderCreationContext(this, owner, referenceHolderSet);
         context.push();
         try {
-            return createReferenceHolder(context, owner);
+            return createReferenceHolder(owner);
         } finally {
             context.pop();
         }
     }
 
-    protected abstract R1 createReferenceHolder(ReferenceHolderCreationContext context, T1 owner);
+    protected abstract R1 createReferenceHolder(T1 owner);
 
     @SuppressWarnings("unchecked")
     public final Optional<R1> getOptionalReferenceHolder(T1 owner) {

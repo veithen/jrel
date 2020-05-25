@@ -20,7 +20,6 @@
 package com.github.veithen.jrel.composition;
 
 import com.github.veithen.jrel.BinaryRelation;
-import com.github.veithen.jrel.ReferenceHolderCreationContext;
 import com.github.veithen.jrel.References;
 
 public final class CompositionRelation<T1,T2,T3> extends BinaryRelation<T1,T3,References<T3>,References<T1>>{
@@ -60,7 +59,7 @@ public final class CompositionRelation<T1,T2,T3> extends BinaryRelation<T1,T3,Re
     }
 
     @Override
-    protected References<T3> createReferenceHolder(ReferenceHolderCreationContext context, T1 owner) {
-        return new CompositeReferences<>(this, context, owner);
+    protected References<T3> createReferenceHolder(T1 owner) {
+        return new CompositeReferences<>(this, owner);
     }
 }
