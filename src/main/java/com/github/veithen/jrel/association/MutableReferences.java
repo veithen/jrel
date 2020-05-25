@@ -30,6 +30,10 @@ import com.github.veithen.jrel.collection.SetListener;
 public final class MutableReferences<T> extends References<T> implements ListenableSet<T> {
     private final LinkedIdentityHashSet<T> set = new LinkedIdentityHashSet<T>();
 
+    MutableReferences(Object owner) {
+        super(owner);
+    }
+
     @Override
     public ListenableSet<T> asSet() {
         return this;

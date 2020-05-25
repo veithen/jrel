@@ -29,6 +29,7 @@ final class CompositeReferences<T1,T2,T3> extends UnmodifiableReferences<T3> {
     private final ReferenceHolder<T2> referenceHolder;
 
     CompositeReferences(CompositionRelation<T1,T2,T3> relation, T1 owner) {
+        super(owner);
         this.relation = relation;
         referenceHolder = relation.getRelation1().getReferenceHolder(owner);
         SetListener<T3> relation2Listener = new SetListener<T3>() {

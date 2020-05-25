@@ -19,18 +19,18 @@
  */
 package com.github.veithen.jrel;
 
-final class PiggybackAccessor extends ReferenceHolderAccessor {
-    private final ReferenceHolderAccessor parent;
+final class UnboundReferenceHolderAccessor extends ReferenceHolderAccessor {
+    private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
     private final BinaryRelation<?,?,?,?> relation;
 
-    PiggybackAccessor(ReferenceHolderAccessor parent, BinaryRelation<?,?,?,?> relation) {
-        this.parent = parent;
+    UnboundReferenceHolderAccessor(ReferenceHolderSetAccessor referenceHolderSetAccessor, BinaryRelation<?,?,?,?> relation) {
+        this.referenceHolderSetAccessor = referenceHolderSetAccessor;
         this.relation = relation;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     ReferenceHolder<?> get(Object owner) {
-        return parent.get(owner).getPiggybackedReferenceHolder((BinaryRelation)relation, owner);
+        return referenceHolderSetAccessor.get(owner).getUnboundReferenceHolder((BinaryRelation)relation, owner);
     }
 }

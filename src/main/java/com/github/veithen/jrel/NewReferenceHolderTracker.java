@@ -49,9 +49,9 @@ final class NewReferenceHolderTracker {
         stack.get().push(new NewReferenceHolderTracker(relation, owner));
     }
 
-    static void created(ReferenceHolder<?> referenceHolder) {
+    static void created(ReferenceHolder<?> referenceHolder, Object owner) {
         NewReferenceHolderTracker current = stack.get().peek();
-        if (current.referenceHolder != null) {
+        if (current.referenceHolder != null || current.owner != owner) {
             throw new IllegalStateException();
         }
         current.referenceHolder = referenceHolder;

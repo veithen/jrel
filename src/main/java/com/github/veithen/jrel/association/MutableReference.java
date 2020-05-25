@@ -26,6 +26,10 @@ import com.github.veithen.jrel.collection.SingletonIdentitySet;
 public final class MutableReference<T> extends Reference<T> {
     private final SingletonIdentitySet<T> set = new SingletonIdentitySet<>();
 
+    MutableReference(Object owner) {
+        super(owner);
+    }
+
     @Override
     public ListenableSet<T> asSet() {
         return set;

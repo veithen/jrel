@@ -30,6 +30,7 @@ final class TransitiveReferences<T> extends UnmodifiableReferences<T> {
     private final ReferenceHolder<T> referenceHolder;
 
     TransitiveReferences(TransitiveClosure<T> closure, T owner) {
+        super(owner);
         this.closure = closure;
         referenceHolder = closure.getRelation().getReferenceHolder(owner);
         if (closure.isIncludeSelf()) {

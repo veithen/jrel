@@ -22,6 +22,7 @@ package com.github.veithen.jrel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -35,26 +36,36 @@ final class Descriptor {
     private static final Map<Class<?>,Descriptor> instances = new HashMap<>();
 
     private final Map<BinaryRelation<?,?,?,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
+    private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
 
     private Descriptor(Class<?> clazz, Map<BinaryRelation<?,?,?,?>,Field> fieldMap) {
         Class<?> superClass = clazz.getSuperclass();
         if (superClass != Object.class) {
             accessorMap.putAll(getInstance(superClass).accessorMap);
         }
-        FieldAccessor piggybackParentAccessor = null;
+        BoundReferenceHolderAccessor piggybackParentAccessor = null;
         for (Map.Entry<BinaryRelation<?,?,?,?>,Field> entry : fieldMap.entrySet()) {
-            FieldAccessor fieldAccessor = new FieldAccessor(entry.getKey(), entry.getValue());
+            BoundReferenceHolderAccessor fieldAccessor = new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue());
             accessorMap.put(entry.getKey(), fieldAccessor);
             if (piggybackParentAccessor == null) {
                 piggybackParentAccessor = fieldAccessor;
             }
         }
-        if (piggybackParentAccessor != null) {
+        List<BoundReferenceHolderAccessor> boundReferenceHolderAccessors = new ArrayList<>();
+        for (ReferenceHolderAccessor accessor : accessorMap.values()) {
+            if (accessor instanceof BoundReferenceHolderAccessor) {
+                boundReferenceHolderAccessors.add((BoundReferenceHolderAccessor)accessor);
+            }
+        }
+        if (boundReferenceHolderAccessors.isEmpty()) {
+            referenceHolderSetAccessor = null;
+        } else {
+            referenceHolderSetAccessor = new ReferenceHolderSetAccessor(boundReferenceHolderAccessors);
             List<BinaryRelation<?,?,?,?>> registeredRelations = registeredRelationsByClass.get(clazz);
             if (registeredRelations != null) {
                 for (BinaryRelation<?,?,?,?> relation : registeredRelations) {
                     if (!accessorMap.containsKey(relation)) {
-                        accessorMap.put(relation, new PiggybackAccessor(piggybackParentAccessor, relation));
+                        accessorMap.put(relation, new UnboundReferenceHolderAccessor(referenceHolderSetAccessor, relation));
                     }
                 }
             }
@@ -85,5 +96,9 @@ final class Descriptor {
 
     ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?,?,?> relation) {
         return accessorMap.get(relation);
+    }
+
+    ReferenceHolderSetAccessor getReferenceHolderSetAccessor() {
+        return referenceHolderSetAccessor;
     }
 }

@@ -28,6 +28,6 @@ public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>> ex
 
     @Override
     protected final MutableReferences<T2> doCreateReferenceHolder(T1 owner) {
-        return new MutableReferences<>();
+        return new MutableReferences<>(owner);
     }
 }

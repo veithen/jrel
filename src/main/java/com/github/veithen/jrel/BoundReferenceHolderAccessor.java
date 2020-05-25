@@ -21,11 +21,11 @@ package com.github.veithen.jrel;
 
 import java.lang.reflect.Field;
 
-final class FieldAccessor extends ReferenceHolderAccessor {
+final class BoundReferenceHolderAccessor extends ReferenceHolderAccessor {
     private final BinaryRelation<?,?,?,?> relation;
     private final Field field;
 
-    FieldAccessor(BinaryRelation<?,?,?,?> relation, Field field) {
+    BoundReferenceHolderAccessor(BinaryRelation<?,?,?,?> relation, Field field) {
         this.relation = relation;
         this.field = field;
     }

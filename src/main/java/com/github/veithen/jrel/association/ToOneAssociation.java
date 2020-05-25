@@ -30,7 +30,7 @@ public abstract class ToOneAssociation<T1,T2,R2 extends ReferenceHolder<T1>> ext
 
     @Override
     protected final MutableReference<T2> doCreateReferenceHolder(T1 owner) {
-        return new MutableReference<>();
+        return new MutableReference<>(owner);
     }
 
     @Override
