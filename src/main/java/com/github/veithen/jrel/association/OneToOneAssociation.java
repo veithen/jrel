@@ -20,15 +20,16 @@
 package com.github.veithen.jrel.association;
 
 public final class OneToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReference<T1>,OneToOneAssociation<T2,T1>> {
-    private OneToOneAssociation(Class<T1> type1, Class<T2> type2, OneToOneAssociation<T2,T1> converse, boolean bidirectional) {
-        super(type1, type2, converse, bidirectional);
+    private OneToOneAssociation(Class<T1> type1, Class<T2> type2, OneToOneAssociation<T2,T1> converse) {
+        // One-to-one associations must be bidirectional so that the multiplicity can be enforced.
+        super(type1, type2, converse, true);
     }
 
-    public OneToOneAssociation(Class<T1> type1, Class<T2> type2, boolean bidirectional) {
-        this(type1, type2, null, bidirectional);
+    public OneToOneAssociation(Class<T1> type1, Class<T2> type2) {
+        this(type1, type2, null);
     }
 
     protected OneToOneAssociation<T2,T1> doCreateConverse() {
-        return new OneToOneAssociation<T2,T1>(getType2(), getType1(), this, bidirectional);
+        return new OneToOneAssociation<T2,T1>(getType2(), getType1(), this);
     }
 }

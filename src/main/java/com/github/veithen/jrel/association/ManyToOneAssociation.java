@@ -29,6 +29,6 @@ public final class ManyToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,Mu
     }
 
     protected OneToManyAssociation<T2,T1> doCreateConverse() {
-        return new OneToManyAssociation<T2,T1>(getType2(), getType1(), this, bidirectional);
+        return new OneToManyAssociation<T2,T1>(getType2(), getType1(), this);
     }
 }
