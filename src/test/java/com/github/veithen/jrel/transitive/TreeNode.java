@@ -23,9 +23,10 @@ import com.github.veithen.jrel.References;
 import com.github.veithen.jrel.association.ManyToOneAssociation;
 import com.github.veithen.jrel.association.MutableReference;
 import com.github.veithen.jrel.association.MutableReferences;
+import com.github.veithen.jrel.association.Navigability;
 
 public class TreeNode {
-    private static final ManyToOneAssociation<TreeNode,TreeNode> PARENT = new ManyToOneAssociation<>(TreeNode.class, TreeNode.class, true);
+    private static final ManyToOneAssociation<TreeNode,TreeNode> PARENT = new ManyToOneAssociation<>(TreeNode.class, TreeNode.class, Navigability.BIDIRECTIONAL);
     private static final TransitiveClosure<TreeNode> ANCESTOR = new TransitiveClosure<>(PARENT, false);
     private static final TransitiveClosure<TreeNode> ANCESTOR_OR_SELF = new TransitiveClosure<>(PARENT, true);
 

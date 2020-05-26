@@ -24,9 +24,10 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.github.veithen.jrel.association.ManyToManyAssociation;
+import com.github.veithen.jrel.association.Navigability;
 
 public class BinaryRelationTest {
-    private static final ManyToManyAssociation<Node,Node> TEST = new ManyToManyAssociation<>(Node.class, Node.class, true);
+    private static final ManyToManyAssociation<Node,Node> TEST = new ManyToManyAssociation<>(Node.class, Node.class, Navigability.BIDIRECTIONAL);
 
     @Test
     public void testGetName() {

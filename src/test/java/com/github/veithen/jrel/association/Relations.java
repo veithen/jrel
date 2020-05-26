@@ -22,5 +22,5 @@ package com.github.veithen.jrel.association;
 public final class Relations {
     private Relations() {}
 
-    static final ManyToOneAssociation<Child,Parent> PARENT = new ManyToOneAssociation<>(Child.class, Parent.class, true);
+    static final ManyToOneAssociation<Child,Parent> PARENT = new ManyToOneAssociation<>(Child.class, Parent.class, Navigability.BIDIRECTIONAL);
 }

@@ -23,16 +23,16 @@ import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
 
 public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,R1,?>> extends BinaryRelation<T1,T2,R1,R2,C> {
-    protected final boolean bidirectional;
+    protected final Navigability navigability;
 
-    public Association(Class<T1> type1, Class<T2> type2, C converse, boolean bidirectional) {
+    public Association(Class<T1> type1, Class<T2> type2, C converse, Navigability navigability) {
         super(type1, type2, converse);
-        this.bidirectional = bidirectional;
+        this.navigability = navigability;
     }
 
     @Override
     protected final C createConverse() {
-        if (!bidirectional) {
+        if (navigability != Navigability.BIDIRECTIONAL) {
             throw new UnsupportedOperationException("Association " + this + " is not bidirectional");
         }
         return doCreateConverse();
@@ -48,7 +48,7 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     @Override
     protected final R1 createReferenceHolder(T1 owner) {
         R1 referenceHolder = doCreateReferenceHolder();
-        if (bidirectional) {
+        if (navigability == Navigability.BIDIRECTIONAL) {
             referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
         }
         return referenceHolder;

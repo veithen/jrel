@@ -22,7 +22,7 @@ package com.github.veithen.jrel.association;
 public final class OneToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReference<T1>,OneToOneAssociation<T2,T1>> {
     private OneToOneAssociation(Class<T1> type1, Class<T2> type2, OneToOneAssociation<T2,T1> converse) {
         // One-to-one associations must be bidirectional so that the multiplicity can be enforced.
-        super(type1, type2, converse, true);
+        super(type1, type2, converse, Navigability.BIDIRECTIONAL);
     }
 
     public OneToOneAssociation(Class<T1> type1, Class<T2> type2) {

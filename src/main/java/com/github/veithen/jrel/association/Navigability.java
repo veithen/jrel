@@ -17,13 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package com.github.veithen.jrel.composition;
+package com.github.veithen.jrel.association;
 
-import com.github.veithen.jrel.association.ManyToManyAssociation;
-import com.github.veithen.jrel.association.Navigability;
-
-public class Relations {
-    public static final ManyToManyAssociation<A,B> AB = new ManyToManyAssociation<>(A.class, B.class, Navigability.UNIDIRECTIONAL);
-    public static final ManyToManyAssociation<B,C> BC = new ManyToManyAssociation<>(B.class, C.class, Navigability.UNIDIRECTIONAL);
-    public static final CompositionRelation<A,B,C> AC = new CompositionRelation<>(AB, BC);
+public enum Navigability {
+    UNIDIRECTIONAL,
+    BIDIRECTIONAL,
 }
