@@ -22,7 +22,7 @@ package com.github.veithen.jrel.composition;
 import com.github.veithen.jrel.association.ManyToManyAssociation;
 
 public class Relations {
-    public static final ManyToManyAssociation<A,B> AB = new ManyToManyAssociation<>(A.class, B.class);
-    public static final ManyToManyAssociation<B,C> BC = new ManyToManyAssociation<>(B.class, C.class);
+    public static final ManyToManyAssociation<A,B> AB = new ManyToManyAssociation<>(A.class, B.class, false);
+    public static final ManyToManyAssociation<B,C> BC = new ManyToManyAssociation<>(B.class, C.class, false);
     public static final CompositionRelation<A,B,C> AC = new CompositionRelation<>(AB, BC);
 }

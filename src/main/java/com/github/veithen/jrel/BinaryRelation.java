@@ -21,7 +21,6 @@ package com.github.veithen.jrel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Optional;
 import java.util.function.BiPredicate;
 
 public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends BinaryRelation<T2,T1,R2,R1,?>> implements BiPredicate<T1,T2> {
@@ -133,13 +132,12 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
     protected abstract R1 createReferenceHolder(T1 owner);
 
     @SuppressWarnings("unchecked")
-    public final Optional<R1> getOptionalReferenceHolder(T1 owner) {
-        ReferenceHolderAccessor accessor = Descriptor.getInstance(owner.getClass()).getReferenceHolderAccessor(this);
-        return accessor == null ? Optional.empty() : Optional.of((R1)accessor.get(owner));
-    }
-
     public final R1 getReferenceHolder(T1 owner) {
-        return getOptionalReferenceHolder(owner).orElseThrow(() -> new IllegalStateException("Not bound"));
+        ReferenceHolderAccessor accessor = Descriptor.getInstance(owner.getClass()).getReferenceHolderAccessor(this);
+        if (accessor == null) {
+            throw new IllegalStateException("Not bound");
+        }
+        return (R1)accessor.get(owner);
     }
 
     @Override

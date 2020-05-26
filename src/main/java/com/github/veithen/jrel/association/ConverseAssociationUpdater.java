@@ -21,7 +21,6 @@ package com.github.veithen.jrel.association;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Optional;
 
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.collection.SetListener;
@@ -63,15 +62,12 @@ final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
     }
 
     private void update(Action action, U object) {
-        Optional<? extends ReferenceHolder<T>> referenceHolderToUpdate = converseAssociation.getOptionalReferenceHolder(object);
-        if (!referenceHolderToUpdate.isPresent()) {
-            return;
-        }
+        ReferenceHolder<T> referenceHolderToUpdate = converseAssociation.getReferenceHolder(object);
         Deque<ReferenceHolder<?>> firingReferenceHolders = ConverseAssociationUpdater.firingReferenceHolders.get();
-        if (firingReferenceHolders.peek() != referenceHolderToUpdate.get()) {
+        if (firingReferenceHolders.peek() != referenceHolderToUpdate) {
             firingReferenceHolders.push(referenceHolder);
             try {
-                if (!action.execute(referenceHolderToUpdate.get(), owner)) {
+                if (!action.execute(referenceHolderToUpdate, owner)) {
                     throw new IllegalStateException();
                 }
             } finally {

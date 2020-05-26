@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 import com.github.veithen.jrel.association.ManyToManyAssociation;
 
 public class BinaryRelationTest {
-    private static final ManyToManyAssociation<Node,Node> TEST = new ManyToManyAssociation<>(Node.class, Node.class);
+    private static final ManyToManyAssociation<Node,Node> TEST = new ManyToManyAssociation<>(Node.class, Node.class, true);
 
     @Test
     public void testGetName() {

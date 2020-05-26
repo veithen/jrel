@@ -20,7 +20,7 @@
 package com.github.veithen.jrel.association;
 
 public class Interface {
-    private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>(Interface.class, Interface.class);
+    private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>(Interface.class, Interface.class, true);
 
     public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);
     public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);

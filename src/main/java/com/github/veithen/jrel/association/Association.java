@@ -23,9 +23,22 @@ import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
 
 public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,R1,?>> extends BinaryRelation<T1,T2,R1,R2,C> {
-    public Association(Class<T1> type1, Class<T2> type2, C converse) {
+    protected final boolean bidirectional;
+
+    public Association(Class<T1> type1, Class<T2> type2, C converse, boolean bidirectional) {
         super(type1, type2, converse);
+        this.bidirectional = bidirectional;
     }
+
+    @Override
+    protected final C createConverse() {
+        if (!bidirectional) {
+            throw new UnsupportedOperationException("Association " + this + " is not bidirectional");
+        }
+        return doCreateConverse();
+    }
+
+    protected abstract C doCreateConverse();
 
     @Override
     public final BinaryRelation<?,?,?,?,?>[] getDependencies() {
@@ -35,7 +48,9 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     @Override
     protected final R1 createReferenceHolder(T1 owner) {
         R1 referenceHolder = doCreateReferenceHolder();
-        referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
+        if (bidirectional) {
+            referenceHolder.asSet().addListener(new ConverseAssociationUpdater<T1,T2>(owner, getConverse(), referenceHolder));
+        }
         return referenceHolder;
     }
 

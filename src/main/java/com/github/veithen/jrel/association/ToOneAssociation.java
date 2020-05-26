@@ -24,8 +24,8 @@ import java.util.function.Function;
 import com.github.veithen.jrel.ReferenceHolder;
 
 public abstract class ToOneAssociation<T1,T2,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,MutableReference<T2>,?>> extends Association<T1,T2,MutableReference<T2>,R2,C> implements Function<T1,T2> {
-    public ToOneAssociation(Class<T1> type1, Class<T2> type2, C converse) {
-        super(type1, type2, converse);
+    public ToOneAssociation(Class<T1> type1, Class<T2> type2, C converse, boolean bidirectional) {
+        super(type1, type2, converse, bidirectional);
     }
 
     @Override
