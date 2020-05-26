@@ -24,18 +24,22 @@ import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>> implements BiPredicate<T1,T2> {
-    private final Class<T1> type;
+public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends BinaryRelation<T2,T1,R2,R1,?>> implements BiPredicate<T1,T2> {
+    private final Class<T1> type1;
+    private final Class<T2> type2;
     private final Class<?> declaringClass;
     private String name;
+    private C converse;
 
-    public BinaryRelation(Class<T1> type) {
-        this.type = type;
+    public BinaryRelation(Class<T1> type1, Class<T2> type2, C converse) {
+        this.type1 = type1;
+        this.type2 = type2;
+        this.converse = converse;
         Class<?> declaringClass = null;
         for (StackTraceElement frame : Thread.currentThread().getStackTrace()) {
             if (frame.getMethodName().equals("<clinit>")) {
                 try {
-                    declaringClass = type.getClassLoader().loadClass(frame.getClassName());
+                    declaringClass = type1.getClassLoader().loadClass(frame.getClassName());
                 } catch (ClassNotFoundException ex) {
                     // Just continue
                 }
@@ -43,11 +47,15 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
             }
         }
         this.declaringClass = declaringClass;
-        Descriptor.registerRelation(type, this);
+        Descriptor.registerRelation(type1, this);
     }
 
-    public final Class<T1> getType() {
-        return type;
+    public final Class<T1> getType1() {
+        return type1;
+    }
+
+    public final Class<T2> getType2() {
+        return type2;
     }
 
     public synchronized final String getName() {
@@ -57,12 +65,10 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
                     if (Modifier.isStatic(field.getModifiers())) {
                         field.setAccessible(true);
                         try {
-                            BinaryRelation<?,?,?,?> relation = (BinaryRelation<?,?,?,?>)field.get(null);
+                            BinaryRelation<?,?,?,?,?> relation = (BinaryRelation<?,?,?,?,?>)field.get(null);
                             if (relation == this) {
                                 name = declaringClass.getName() + "." + field.getName();
                                 break;
-                            } else if (relation.getConverse() == this) {
-                                name = declaringClass.getName() + "." + field.getName() + "(^T)";
                             }
                         } catch (ClassCastException | IllegalAccessException ex) {
                             // Ignore and continue
@@ -71,7 +77,11 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
                 }
             }
             if (name == null) {
-                name = "<anonymous>";
+                if (converse != null) {
+                    name = converse.getName() + "(^T)";
+                } else {
+                    name = "<anonymous>";
+                }
             }
         }
         return name;
@@ -87,14 +97,21 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
      * 
      * @return the converse relation
      */
-    public abstract BinaryRelation<T2,T1,R2,R1> getConverse();
+    public final synchronized C getConverse() {
+        if (converse == null) {
+            converse = createConverse();
+        }
+        return converse;
+    }
+
+    protected abstract C createConverse();
 
     /**
      * If this is a derived relation, returns the binary relations used to compute the derived relation.
      * 
      * @return the dependencies or an empty array if this is not a derived relation
      */
-    public abstract BinaryRelation<?,?,?,?>[] getDependencies();
+    public abstract BinaryRelation<?,?,?,?,?>[] getDependencies();
 
     public final R1 newReferenceHolder(T1 owner) {
         ReferenceHolderSet referenceHolderSet = ReferenceHolderCreationContext.getReferenceHolderSet(owner);

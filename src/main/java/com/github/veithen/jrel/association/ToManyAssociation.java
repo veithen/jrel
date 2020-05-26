@@ -21,9 +21,9 @@ package com.github.veithen.jrel.association;
 
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>> extends Association<T1,T2,MutableReferences<T2>,R2> {
-    public ToManyAssociation(Class<T1> type) {
-        super(type);
+public abstract class ToManyAssociation<T1,T2,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,MutableReferences<T2>,?>> extends Association<T1,T2,MutableReferences<T2>,R2,C> {
+    public ToManyAssociation(Class<T1> type1, Class<T2> type2, C converse) {
+        super(type1, type2, converse);
     }
 
     @Override

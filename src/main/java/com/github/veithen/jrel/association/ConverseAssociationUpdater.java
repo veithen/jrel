@@ -53,10 +53,10 @@ final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
     };
 
     private final T owner;
-    private final Association<U,T,?,?> converseAssociation;
+    private final Association<U,T,?,?,?> converseAssociation;
     private final ReferenceHolder<U> referenceHolder;
 
-    ConverseAssociationUpdater(T owner, Association<U,T,?,?> converseAssociation, ReferenceHolder<U> referenceHolder) {
+    ConverseAssociationUpdater(T owner, Association<U,T,?,?,?> converseAssociation, ReferenceHolder<U> referenceHolder) {
         this.owner = owner;
         this.converseAssociation = converseAssociation;
         this.referenceHolder = referenceHolder;

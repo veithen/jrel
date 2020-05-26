@@ -23,10 +23,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class ReferenceHolderSet {
-    private Map<BinaryRelation<?,?,?,?>,ReferenceHolder<?>> unboundReferenceHolders;
+    private Map<BinaryRelation<?,?,?,?,?>,ReferenceHolder<?>> unboundReferenceHolders;
 
 
-    final <T1,T2> ReferenceHolder<T2> getUnboundReferenceHolder(BinaryRelation<T1,T2,?,?> relation, T1 owner) {
+    final <T1,T2> ReferenceHolder<T2> getUnboundReferenceHolder(BinaryRelation<T1,T2,?,?,?> relation, T1 owner) {
         if (unboundReferenceHolders == null) {
             unboundReferenceHolders = new HashMap<>();
         }

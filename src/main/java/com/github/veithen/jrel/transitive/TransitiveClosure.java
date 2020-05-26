@@ -25,23 +25,18 @@ import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.References;
 
-public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>> {
-    private final BinaryRelation<T,T,?,?> relation;
+public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>,TransitiveClosure<T>> {
+    private final BinaryRelation<T,T,?,?,?> relation;
     private final boolean includeSelf;
-    private final TransitiveClosure<T> converse;
 
-    TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf, TransitiveClosure<T> converse) {
-        super(relation.getType());
+    private TransitiveClosure(BinaryRelation<T,T,?,?,?> relation, boolean includeSelf, TransitiveClosure<T> converse) {
+        super(relation.getType1(), relation.getType2(), converse);
         this.relation = relation;
         this.includeSelf = includeSelf;
-        this.converse = converse;
     }
 
-    public TransitiveClosure(BinaryRelation<T,T,?,?> relation, boolean includeSelf) {
-        super(relation.getType());
-        this.relation = relation;
-        this.includeSelf = includeSelf;
-        converse = new TransitiveClosure<T>(relation.getConverse(), includeSelf, this);
+    public TransitiveClosure(BinaryRelation<T,T,?,?,?> relation, boolean includeSelf) {
+        this(relation, includeSelf, null);
     }
 
     /**
@@ -49,7 +44,7 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
      * 
      * @return
      */
-    public BinaryRelation<T,T,?,?> getRelation() {
+    public BinaryRelation<T,T,?,?,?> getRelation() {
         return relation;
     }
 
@@ -58,13 +53,13 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     }
 
     @Override
-    public TransitiveClosure<T> getConverse() {
-        return converse;
+    public TransitiveClosure<T> createConverse() {
+        return new TransitiveClosure<T>(relation.getConverse(), includeSelf, this);
     }
 
     @Override
-    public BinaryRelation<?,?,?,?>[] getDependencies() {
-        return new BinaryRelation<?,?,?,?>[] { relation };
+    public BinaryRelation<?,?,?,?,?>[] getDependencies() {
+        return new BinaryRelation<?,?,?,?,?>[] { relation };
     }
 
     @Override

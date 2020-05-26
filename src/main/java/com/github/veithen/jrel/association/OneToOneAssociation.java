@@ -19,20 +19,16 @@
  */
 package com.github.veithen.jrel.association;
 
-public final class OneToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReference<T1>> {
-    private final OneToOneAssociation<T2,T1> converse;
-
-    OneToOneAssociation(Class<T1> type, OneToOneAssociation<T2,T1> converse) {
-        super(type);
-        this.converse = converse;
+public final class OneToOneAssociation<T1,T2> extends ToOneAssociation<T1,T2,MutableReference<T1>,OneToOneAssociation<T2,T1>> {
+    private OneToOneAssociation(Class<T1> type1, Class<T2> type2, OneToOneAssociation<T2,T1> converse) {
+        super(type1, type2, converse);
     }
 
     public OneToOneAssociation(Class<T1> type1, Class<T2> type2) {
-        super(type1);
-        converse = new OneToOneAssociation<T2,T1>(type2, this);
+        this(type1, type2, null);
     }
 
-    public OneToOneAssociation<T2,T1> getConverse() {
-        return converse;
+    protected OneToOneAssociation<T2,T1> createConverse() {
+        return new OneToOneAssociation<T2,T1>(getType2(), getType1(), this);
     }
 }

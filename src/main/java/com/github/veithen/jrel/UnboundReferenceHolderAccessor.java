@@ -21,9 +21,9 @@ package com.github.veithen.jrel;
 
 final class UnboundReferenceHolderAccessor extends ReferenceHolderAccessor {
     private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
-    private final BinaryRelation<?,?,?,?> relation;
+    private final BinaryRelation<?,?,?,?,?> relation;
 
-    UnboundReferenceHolderAccessor(ReferenceHolderSetAccessor referenceHolderSetAccessor, BinaryRelation<?,?,?,?> relation) {
+    UnboundReferenceHolderAccessor(ReferenceHolderSetAccessor referenceHolderSetAccessor, BinaryRelation<?,?,?,?,?> relation) {
         this.referenceHolderSetAccessor = referenceHolderSetAccessor;
         this.relation = relation;
     }
