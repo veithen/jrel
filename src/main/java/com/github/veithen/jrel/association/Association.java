@@ -19,10 +19,11 @@
  */
 package com.github.veithen.jrel.association;
 
+import com.github.veithen.jrel.AbstractBinaryRelation;
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
 
-public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,R1,?>> extends BinaryRelation<T1,T2,R1,R2,C> {
+public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends Association<T2,T1,R2,R1,?>> extends AbstractBinaryRelation<T1,T2,R1,R2,C> {
     protected final Navigability navigability;
 
     public Association(Class<T1> type1, Class<T2> type2, C converse, Navigability navigability) {
@@ -41,8 +42,8 @@ public abstract class Association<T1,T2,R1 extends ReferenceHolder<T2>,R2 extend
     protected abstract C doCreateConverse();
 
     @Override
-    public final BinaryRelation<?,?,?,?,?>[] getDependencies() {
-        return new BinaryRelation<?,?,?,?,?>[0];
+    public final BinaryRelation<?,?>[] getDependencies() {
+        return new BinaryRelation<?,?>[0];
     }
 
     @Override

@@ -37,11 +37,11 @@ final class ConstructorAnalyzer extends MethodVisitor {
     }
 
     private final Class<?> clazz;
-    private final Map<BinaryRelation<?,?,?,?,?>,Field> fieldMap;
+    private final Map<BinaryRelation<?,?>,Field> fieldMap;
     private State state = State.NONE;
-    private @Nullable BinaryRelation<?,?,?,?,?> relation;
+    private @Nullable BinaryRelation<?,?> relation;
 
-    ConstructorAnalyzer(Class<?> clazz, Map<BinaryRelation<?,?,?,?,?>,Field> fieldMap) {
+    ConstructorAnalyzer(Class<?> clazz, Map<BinaryRelation<?,?>,Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
@@ -81,7 +81,7 @@ final class ConstructorAnalyzer extends MethodVisitor {
             }
             if (fieldValue instanceof BinaryRelation) {
                 state = State.RELATION_LOADED;
-                relation = (BinaryRelation<?,?,?,?,?>)fieldValue;
+                relation = (BinaryRelation<?,?>)fieldValue;
                 return;
             }
         } else if (state == State.NEW_RELATION_HOLDER_INVOKED && opcode == Opcodes.PUTFIELD) {

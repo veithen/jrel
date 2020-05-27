@@ -23,21 +23,22 @@ import java.util.Iterator;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import com.github.veithen.jrel.AbstractBinaryRelation;
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.References;
 
-public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>,References<T>,TransitiveClosure<T>> {
-    private final BinaryRelation<T,T,?,?,?> relation;
+public final class TransitiveClosure<T> extends AbstractBinaryRelation<T,T,References<T>,References<T>,TransitiveClosure<T>> {
+    private final BinaryRelation<T,T> relation;
     private final boolean includeSelf;
 
-    private TransitiveClosure(BinaryRelation<T,T,?,?,?> relation, boolean includeSelf, @Nullable TransitiveClosure<T> converse) {
+    private TransitiveClosure(BinaryRelation<T,T> relation, boolean includeSelf, @Nullable TransitiveClosure<T> converse) {
         super(relation.getType1(), relation.getType2(), converse);
         this.relation = relation;
         this.includeSelf = includeSelf;
     }
 
-    public TransitiveClosure(BinaryRelation<T,T,?,?,?> relation, boolean includeSelf) {
+    public TransitiveClosure(BinaryRelation<T,T> relation, boolean includeSelf) {
         this(relation, includeSelf, null);
     }
 
@@ -46,7 +47,7 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
      * 
      * @return
      */
-    public BinaryRelation<T,T,?,?,?> getRelation() {
+    public BinaryRelation<T,T> getRelation() {
         return relation;
     }
 
@@ -60,8 +61,8 @@ public final class TransitiveClosure<T> extends BinaryRelation<T,T,References<T>
     }
 
     @Override
-    public BinaryRelation<?,?,?,?,?>[] getDependencies() {
-        return new BinaryRelation<?,?,?,?,?>[] { relation };
+    public BinaryRelation<?,?>[] getDependencies() {
+        return new BinaryRelation<?,?>[] { relation };
     }
 
     @Override
