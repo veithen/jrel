@@ -43,13 +43,8 @@ final class Descriptor {
         if (superClass != Object.class) {
             accessorMap.putAll(getInstance(superClass).accessorMap);
         }
-        BoundReferenceHolderAccessor piggybackParentAccessor = null;
         for (Map.Entry<BinaryRelation<?,?>,Field> entry : fieldMap.entrySet()) {
-            BoundReferenceHolderAccessor fieldAccessor = new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue());
-            accessorMap.put(entry.getKey(), fieldAccessor);
-            if (piggybackParentAccessor == null) {
-                piggybackParentAccessor = fieldAccessor;
-            }
+            accessorMap.put(entry.getKey(), new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue()));
         }
         List<BoundReferenceHolderAccessor> boundReferenceHolderAccessors = new ArrayList<>();
         for (ReferenceHolderAccessor accessor : accessorMap.values()) {
