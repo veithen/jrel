@@ -25,25 +25,53 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.ClassReader;
 
-final class Descriptor {
-    private static final Map<Class<?>,List<BinaryRelation<?,?>>> registeredRelationsByClass = new HashMap<>();
-    private static final Map<Class<?>,Descriptor> instances = new HashMap<>();
+final class Descriptor<T> {
+    private static class ClassData<T> {
+        private final Class<T> clazz;
+        private final List<BinaryRelation<T,?>> registeredRelations = new ArrayList<>();
+        private Descriptor<T> descriptor;
+        
+        ClassData(Class<T> clazz) {
+            this.clazz = clazz;
+        }
 
-    private final Map<BinaryRelation<?,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
+        synchronized void registerRelation(BinaryRelation<T,?> relation) {
+            if (descriptor != null) {
+                throw new IllegalStateException();
+            }
+            registeredRelations.add(relation);
+        }
+        
+        synchronized Descriptor<T> getDescriptor() {
+            if (descriptor == null) {
+                Map<BinaryRelation<? super T,?>,Field> fieldMap = new LinkedHashMap<>();
+                try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
+                    new ClassReader(in).accept(new ClassAnalyzer<>(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+                } catch (IOException ex) {
+                    throw new AnalyzerException(ex);
+                }
+                descriptor = new Descriptor<>(clazz, fieldMap, registeredRelations);
+            }
+            return descriptor;
+        }
+    }
+
+    private static final Map<Class<?>,ClassData<?>> classData = new HashMap<>();
+
+    private final Map<BinaryRelation<? super T,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
     private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
 
-    private Descriptor(Class<?> clazz, Map<BinaryRelation<?,?>,Field> fieldMap) {
-        Class<?> superClass = clazz.getSuperclass();
+    private Descriptor(Class<T> clazz, Map<BinaryRelation<? super T,?>,Field> fieldMap, List<BinaryRelation<T,?>> registeredRelations) {
+        Class<? super T> superClass = clazz.getSuperclass();
         if (superClass != Object.class) {
             accessorMap.putAll(getInstance(superClass).accessorMap);
         }
-        for (Map.Entry<BinaryRelation<?,?>,Field> entry : fieldMap.entrySet()) {
+        for (Map.Entry<BinaryRelation<? super T,?>,Field> entry : fieldMap.entrySet()) {
             accessorMap.put(entry.getKey(), new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue()));
         }
         List<BoundReferenceHolderAccessor> boundReferenceHolderAccessors = new ArrayList<>();
@@ -56,37 +84,25 @@ final class Descriptor {
             referenceHolderSetAccessor = null;
         } else {
             referenceHolderSetAccessor = new ReferenceHolderSetAccessor(boundReferenceHolderAccessors);
-            List<BinaryRelation<?,?>> registeredRelations = registeredRelationsByClass.get(clazz);
-            if (registeredRelations != null) {
-                for (BinaryRelation<?,?> relation : registeredRelations) {
-                    if (!accessorMap.containsKey(relation)) {
-                        accessorMap.put(relation, new UnboundReferenceHolderAccessor(referenceHolderSetAccessor, relation));
-                    }
+            for (BinaryRelation<T,?> relation : registeredRelations) {
+                if (!accessorMap.containsKey(relation)) {
+                    accessorMap.put(relation, new UnboundReferenceHolderAccessor(referenceHolderSetAccessor, relation));
                 }
             }
         }
     }
 
-    static synchronized <T> void registerRelation(Class<T> type, BinaryRelation<T,?> relation) {
-        if (instances.containsKey(type)) {
-            throw new IllegalStateException();
-        }
-        registeredRelationsByClass.computeIfAbsent(type, k -> new LinkedList<>()).add(relation);
+    @SuppressWarnings("unchecked")
+    private static synchronized <T> ClassData<T> getClassData(Class<T> clazz) {
+        return (ClassData<T>)classData.computeIfAbsent(clazz, k -> new ClassData<>(k));
     }
 
-    static synchronized Descriptor getInstance(Class<?> clazz) {
-        Descriptor descriptor = instances.get(clazz);
-        if (descriptor == null) {
-            Map<BinaryRelation<?,?>,Field> fieldMap = new LinkedHashMap<>();
-            try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
-                new ClassReader(in).accept(new ClassAnalyzer(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-            } catch (IOException ex) {
-                throw new AnalyzerException(ex);
-            }
-            descriptor = new Descriptor(clazz, fieldMap);
-            instances.put(clazz, descriptor);
-        }
-        return descriptor;
+    static <T> void registerRelation(Class<T> clazz, BinaryRelation<T,?> relation) {
+        getClassData(clazz).registerRelation(relation);
+    }
+
+    static <T> Descriptor<T> getInstance(Class<T> clazz) {
+        return getClassData(clazz).getDescriptor();
     }
 
     ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?> relation) {

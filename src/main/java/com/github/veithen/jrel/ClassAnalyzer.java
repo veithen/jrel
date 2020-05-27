@@ -26,11 +26,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-final class ClassAnalyzer extends ClassVisitor {
-    private final Class<?> clazz;
-    private final Map<BinaryRelation<?,?>,Field> fieldMap;
+final class ClassAnalyzer<T> extends ClassVisitor {
+    private final Class<T> clazz;
+    private final Map<BinaryRelation<? super T,?>,Field> fieldMap;
 
-    ClassAnalyzer(Class<?> clazz, Map<BinaryRelation<?,?>,Field> fieldMap) {
+    ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<? super T,?>,Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
@@ -40,7 +40,7 @@ final class ClassAnalyzer extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature,
             String[] exceptions) {
         if (name.contentEquals("<init>")) {
-            return new ConstructorAnalyzer(clazz, fieldMap);
+            return new ConstructorAnalyzer<>(clazz, fieldMap);
         } else {
             return null;
         }
