@@ -116,6 +116,7 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
     public final R1 newReferenceHolder(T1 owner) {
         ReferenceHolderSet referenceHolderSet = ReferenceHolderCreationContext.getReferenceHolderSet(owner);
         if (referenceHolderSet == null) {
+            // TODO: should this be owner.getClass() or getType1() ?
             referenceHolderSet = Descriptor.getInstance(owner.getClass()).getReferenceHolderSetAccessor().get(owner);
         }
         if (referenceHolderSet == null) {
