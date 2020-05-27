@@ -23,11 +23,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.function.BiPredicate;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends BinaryRelation<T2,T1,R2,R1,?>> implements BiPredicate<T1,T2> {
     private final Class<T1> type1;
     private final Class<T2> type2;
-    private final Class<?> declaringClass;
-    private String name;
+    private final @Nullable Class<?> declaringClass;
+    private @Nullable String name;
     private C converse;
 
     public BinaryRelation(Class<T1> type1, Class<T2> type2, C converse) {
@@ -38,7 +40,7 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
         for (StackTraceElement frame : Thread.currentThread().getStackTrace()) {
             if (frame.getMethodName().equals("<clinit>")) {
                 try {
-                    declaringClass = type1.getClassLoader().loadClass(frame.getClassName());
+                    declaringClass = ReflectionUtil.getClassLoader(type1).loadClass(frame.getClassName());
                 } catch (ClassNotFoundException ex) {
                     // Just continue
                 }
@@ -64,7 +66,7 @@ public abstract class BinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 ext
                     if (Modifier.isStatic(field.getModifiers())) {
                         field.setAccessible(true);
                         try {
-                            BinaryRelation<?,?,?,?,?> relation = (BinaryRelation<?,?,?,?,?>)field.get(null);
+                            BinaryRelation<?,?,?,?,?> relation = (BinaryRelation<?,?,?,?,?>)ReflectionUtil.getStaticFieldValue(field);
                             if (relation == this) {
                                 name = declaringClass.getName() + "." + field.getName();
                                 break;

@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -38,7 +39,7 @@ final class ConstructorAnalyzer extends MethodVisitor {
     private final Class<?> clazz;
     private final Map<BinaryRelation<?,?,?,?,?>,Field> fieldMap;
     private State state = State.NONE;
-    private BinaryRelation<?,?,?,?,?> relation;
+    private @Nullable BinaryRelation<?,?,?,?,?> relation;
 
     ConstructorAnalyzer(Class<?> clazz, Map<BinaryRelation<?,?,?,?,?>,Field> fieldMap) {
         super(Opcodes.ASM8);
@@ -72,9 +73,9 @@ final class ConstructorAnalyzer extends MethodVisitor {
         if (state == State.THIS_LOADED && opcode == Opcodes.GETSTATIC) {
             Object fieldValue;
             try {
-                Field field = clazz.getClassLoader().loadClass(owner.replace('/', '.')).getDeclaredField(name);
+                Field field = ReflectionUtil.getClassLoader(clazz).loadClass(owner.replace('/', '.')).getDeclaredField(name);
                 field.setAccessible(true);
-                fieldValue = field.get(null);
+                fieldValue = ReflectionUtil.getStaticFieldValue(field);
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ex) {
                 throw new AnalyzerException(ex);
             }
@@ -94,6 +95,7 @@ final class ConstructorAnalyzer extends MethodVisitor {
                 throw new AnalyzerException("Field " + name + " in " + clazz.getName() + " is not final");
             }
             field.setAccessible(true);
+            assert relation != null;
             if (fieldMap.containsKey(relation)) {
                 throw new AnalyzerException("Relation is already bound");
             }
@@ -106,6 +108,7 @@ final class ConstructorAnalyzer extends MethodVisitor {
     public void visitMethodInsn(int opcode, String owner, String name, String descriptor,
             boolean isInterface) {
         if (state == State.RELATION_LOADED && opcode == Opcodes.INVOKEVIRTUAL && name.equals("getConverse")) {
+            assert relation != null;
             relation = relation.getConverse();
             return;
         } else if (state == State.OWNER_LOADED && opcode == Opcodes.INVOKEVIRTUAL && name.equals("newReferenceHolder")) {

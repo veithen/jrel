@@ -35,7 +35,7 @@ import com.github.veithen.jrel.collection.ListenableSet;
  * 
  * @param <T> the type of reference stored by this holder
  */
-public abstract class ReferenceHolder<T> {
+public abstract class ReferenceHolder<T extends Object> {
     private final ReferenceHolderSet referenceHolderSet;
 
     protected ReferenceHolder() {
