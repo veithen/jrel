@@ -52,6 +52,7 @@
     <properties>
         <github.repository>jrel</github.repository>
         <javaVersion>1.8</javaVersion>
+        <checkt.version>0.1.0-SNAPSHOT</checkt.version>
     </properties>
 
     <repositories>
@@ -69,6 +70,12 @@
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
             <version>8.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.veithen.checkt</groupId>
+            <artifactId>checkt-annotations</artifactId>
+            <version>${checkt.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.checkerframework</groupId>
@@ -95,24 +102,29 @@
 
     <build>
         <plugins>
-            <!-- plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <annotationProcessors>
+                    <!-- annotationProcessors>
                         <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
-                    </annotationProcessors>
+                    </annotationProcessors -->
                     <annotationProcessorPaths combine.children="append">
                         <annotationProcessorPath>
+                            <groupId>com.github.veithen.checkt</groupId>
+                            <artifactId>checkt-annotation-processor</artifactId>
+                            <version>${checkt.version}</version>
+                        </annotationProcessorPath>
+                        <!-- annotationProcessorPath>
                             <groupId>org.checkerframework</groupId>
                             <artifactId>checker</artifactId>
                             <version>3.4.0</version>
-                        </annotationProcessorPath>
+                        </annotationProcessorPath -->
                     </annotationProcessorPaths>
-                    <compilerArgs combine.children="append">
+                    <!-- compilerArgs combine.children="append">
                         <compilerArg>-AassumeAssertionsAreEnabled</compilerArg>
-                    </compilerArgs>
+                    </compilerArgs -->
                 </configuration>
-            </plugin -->
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>

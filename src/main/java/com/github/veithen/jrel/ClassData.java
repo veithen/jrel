@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.veithen.checkt.annotation.TypeToken;
+
 class ClassData<T> {
     private static final Map<Class<?>,ClassData<?>> instances = new HashMap<>();
 
@@ -35,9 +37,13 @@ class ClassData<T> {
         this.clazz = clazz;
     }
 
-    @SuppressWarnings("unchecked")
+    @TypeToken
+    Class<T> getClazz() {
+        return clazz;
+    }
+
     static synchronized <T> ClassData<T> getInstance(Class<T> clazz) {
-        return (ClassData<T>)instances.computeIfAbsent(clazz, k -> new ClassData<>(k));
+        return SafeCast.cast(instances.computeIfAbsent(clazz, k -> new ClassData<>(k)), clazz);
     }
 
     synchronized void registerRelation(BinaryRelation<T,?> relation) {
