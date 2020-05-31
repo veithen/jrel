@@ -31,39 +31,13 @@ import java.util.Map;
 import org.objectweb.asm.ClassReader;
 
 final class Descriptor<T> {
-    private static class ClassData<T> {
-        private final Class<T> clazz;
-        private final List<BinaryRelation<T,?>> registeredRelations = new ArrayList<>();
-        private Descriptor<T> descriptor;
-        
-        ClassData(Class<T> clazz) {
-            this.clazz = clazz;
-        }
-
-        synchronized void registerRelation(BinaryRelation<T,?> relation) {
-            if (descriptor != null) {
-                throw new IllegalStateException();
-            }
-            registeredRelations.add(relation);
-        }
-        
-        synchronized Descriptor<T> getDescriptor() {
-            if (descriptor == null) {
-                descriptor = new Descriptor<>(clazz, registeredRelations);
-            }
-            return descriptor;
-        }
-    }
-
-    private static final Map<Class<?>,ClassData<?>> classData = new HashMap<>();
-
     private final Map<BinaryRelation<? super T,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
     private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
 
-    private Descriptor(Class<T> clazz, List<BinaryRelation<T,?>> registeredRelations) {
+    Descriptor(Class<T> clazz, List<BinaryRelation<T,?>> registeredRelations) {
         Class<? super T> superClass = clazz.getSuperclass();
         if (superClass != Object.class) {
-            accessorMap.putAll(getInstance(superClass).accessorMap);
+            accessorMap.putAll(ClassData.getInstance(superClass).getDescriptor().accessorMap);
         }
         Map<BinaryRelation<? super T,?>,Field> fieldMap = new LinkedHashMap<>();
         try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
@@ -90,19 +64,6 @@ final class Descriptor<T> {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static synchronized <T> ClassData<T> getClassData(Class<T> clazz) {
-        return (ClassData<T>)classData.computeIfAbsent(clazz, k -> new ClassData<>(k));
-    }
-
-    static <T> void registerRelation(Class<T> clazz, BinaryRelation<T,?> relation) {
-        getClassData(clazz).registerRelation(relation);
-    }
-
-    static <T> Descriptor<T> getInstance(Class<T> clazz) {
-        return getClassData(clazz).getDescriptor();
     }
 
     ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?,?> relation) {

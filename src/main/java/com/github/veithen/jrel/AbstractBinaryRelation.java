@@ -47,7 +47,7 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
             }
         }
         this.declaringClass = declaringClass;
-        Descriptor.registerRelation(type1, this);
+        ClassData.getInstance(type1).registerRelation(this);
     }
 
     public final Class<T1> getType1() {
@@ -117,7 +117,7 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
         ReferenceHolderSet referenceHolderSet = ReferenceHolderCreationContext.getReferenceHolderSet(owner);
         if (referenceHolderSet == null) {
             // TODO: should this be owner.getClass() or getType1() ?
-            referenceHolderSet = Descriptor.getInstance(owner.getClass()).getReferenceHolderSetAccessor().get(owner);
+            referenceHolderSet = ClassData.getInstance(owner.getClass()).getDescriptor().getReferenceHolderSetAccessor().get(owner);
         }
         if (referenceHolderSet == null) {
             referenceHolderSet = new ReferenceHolderSet();
@@ -135,7 +135,7 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
 
     @SuppressWarnings("unchecked")
     public final R1 getReferenceHolder(T1 owner) {
-        ReferenceHolderAccessor accessor = Descriptor.getInstance(owner.getClass()).getReferenceHolderAccessor(this);
+        ReferenceHolderAccessor accessor = ClassData.getInstance(owner.getClass()).getDescriptor().getReferenceHolderAccessor(this);
         if (accessor == null) {
             throw new IllegalStateException("Not bound");
         }
