@@ -49,13 +49,7 @@ final class Descriptor<T> {
         
         synchronized Descriptor<T> getDescriptor() {
             if (descriptor == null) {
-                Map<BinaryRelation<? super T,?>,Field> fieldMap = new LinkedHashMap<>();
-                try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
-                    new ClassReader(in).accept(new ClassAnalyzer<>(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-                } catch (IOException ex) {
-                    throw new AnalyzerException(ex);
-                }
-                descriptor = new Descriptor<>(clazz, fieldMap, registeredRelations);
+                descriptor = new Descriptor<>(clazz, registeredRelations);
             }
             return descriptor;
         }
@@ -66,10 +60,16 @@ final class Descriptor<T> {
     private final Map<BinaryRelation<? super T,?>,ReferenceHolderAccessor> accessorMap = new HashMap<>();
     private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
 
-    private Descriptor(Class<T> clazz, Map<BinaryRelation<? super T,?>,Field> fieldMap, List<BinaryRelation<T,?>> registeredRelations) {
+    private Descriptor(Class<T> clazz, List<BinaryRelation<T,?>> registeredRelations) {
         Class<? super T> superClass = clazz.getSuperclass();
         if (superClass != Object.class) {
             accessorMap.putAll(getInstance(superClass).accessorMap);
+        }
+        Map<BinaryRelation<? super T,?>,Field> fieldMap = new LinkedHashMap<>();
+        try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
+            new ClassReader(in).accept(new ClassAnalyzer<>(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+        } catch (IOException ex) {
+            throw new AnalyzerException(ex);
         }
         for (Map.Entry<BinaryRelation<? super T,?>,Field> entry : fieldMap.entrySet()) {
             accessorMap.put(entry.getKey(), new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue()));
