@@ -21,9 +21,15 @@ package com.github.veithen.jrel;
 
 import java.util.function.BiPredicate;
 
+import com.github.veithen.checkt.annotation.TypeToken;
+
 public interface BinaryRelation<T1,T2> extends BiPredicate<T1,T2> {
+    @TypeToken
     Class<T1> getType1();
+
+    @TypeToken
     Class<T2> getType2();
+
     BinaryRelation<T2,T1> getConverse();
     ReferenceHolder<T2> newReferenceHolder(T1 owner);
     ReferenceHolder<T2> getReferenceHolder(T1 owner);

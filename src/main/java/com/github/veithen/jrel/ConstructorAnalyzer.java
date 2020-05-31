@@ -37,11 +37,11 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     }
 
     private final Class<T> clazz;
-    private final Map<BinaryRelation<? super T,?>,Field> fieldMap;
+    private final Map<BinaryRelation<T,?>,Field> fieldMap;
     private State state = State.NONE;
     private @Nullable BinaryRelation<?,?> relation;
 
-    ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<? super T,?>,Field> fieldMap) {
+    ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T,?>,Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
@@ -99,7 +99,7 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
             if (fieldMap.containsKey(relation)) {
                 throw new AnalyzerException("Relation is already bound");
             }
-            fieldMap.put((BinaryRelation<? super T,?>)relation, field);
+            fieldMap.put(SafeCast.castByType1(relation, clazz), field);
         }
         reset();
     }

@@ -28,9 +28,9 @@ import org.objectweb.asm.Opcodes;
 
 final class ClassAnalyzer<T> extends ClassVisitor {
     private final Class<T> clazz;
-    private final Map<BinaryRelation<? super T,?>,Field> fieldMap;
+    private final Map<BinaryRelation<T,?>,Field> fieldMap;
 
-    ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<? super T,?>,Field> fieldMap) {
+    ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<T,?>,Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;

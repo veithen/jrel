@@ -39,13 +39,13 @@ final class Descriptor<T> {
         if (superClass != Object.class) {
             accessorMap.putAll(ClassData.getInstance(superClass).getDescriptor().accessorMap);
         }
-        Map<BinaryRelation<? super T,?>,Field> fieldMap = new LinkedHashMap<>();
+        Map<BinaryRelation<T,?>,Field> fieldMap = new LinkedHashMap<>();
         try (InputStream in = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class")) {
             new ClassReader(in).accept(new ClassAnalyzer<>(clazz, fieldMap), ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
         } catch (IOException ex) {
             throw new AnalyzerException(ex);
         }
-        for (Map.Entry<BinaryRelation<? super T,?>,Field> entry : fieldMap.entrySet()) {
+        for (Map.Entry<BinaryRelation<T,?>,Field> entry : fieldMap.entrySet()) {
             accessorMap.put(entry.getKey(), new BoundReferenceHolderAccessor(entry.getKey(), entry.getValue()));
         }
         List<BoundReferenceHolderAccessor> boundReferenceHolderAccessors = new ArrayList<>();
