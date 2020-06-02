@@ -19,18 +19,15 @@
  */
 package com.github.veithen.jrel;
 
-final class ReferenceHolderSet {
-    private RelationToReferenceHolderMapping unboundReferenceHolders;
+import java.util.AbstractMap;
 
-    final <T1,T2> ReferenceHolder<T2> getUnboundReferenceHolder(BinaryRelation<T1,T2> relation, T1 owner) {
-        if (unboundReferenceHolders == null) {
-            unboundReferenceHolders = new RelationToReferenceHolderMapping();
-        }
-        ReferenceHolder<T2> referenceHolder = unboundReferenceHolders.get(relation);
-        if (referenceHolder == null) {
-            referenceHolder = relation.newReferenceHolder(owner);
-            unboundReferenceHolders.put(relation, referenceHolder);
-        }
-        return referenceHolder;
+import com.github.veithen.checkt.annotation.Container;
+
+@Container("RelationToReferenceHolderMapping")
+final class RelationToReferenceHolder<T> extends AbstractMap.SimpleEntry<BinaryRelation<?,T>,ReferenceHolder<T>> {
+    private static final long serialVersionUID = 1L;
+
+    RelationToReferenceHolder(BinaryRelation<?,T> key, ReferenceHolder<T> value) {
+        super(key, value);
     }
 }
