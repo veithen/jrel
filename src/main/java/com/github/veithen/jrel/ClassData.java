@@ -48,7 +48,7 @@ class ClassData<T> {
 
     synchronized void registerRelation(BinaryRelation<T,?> relation) {
         if (descriptor != null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException(String.format("Attempt to create a new relation for class %s after instances of that class have already been created", clazz.getName()));
         }
         registeredRelations.add(relation);
     }
