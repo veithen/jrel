@@ -23,15 +23,10 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.veithen.jrel.association.ManyToManyAssociation;
-import com.github.veithen.jrel.association.Navigability;
-
 public class BinaryRelationTest {
-    private static final ManyToManyAssociation<Node,Node> TEST = new ManyToManyAssociation<>(Node.class, Node.class, Navigability.BIDIRECTIONAL);
-
     @Test
     public void testGetName() {
-        assertThat(TEST.getName()).isEqualTo("com.github.veithen.jrel.BinaryRelationTest.TEST");
-        assertThat(TEST.getConverse().getName()).isEqualTo("com.github.veithen.jrel.BinaryRelationTest.TEST(^T)");
+        assertThat(Node.PARENT.getName()).isEqualTo("com.github.veithen.jrel.Node.PARENT");
+        assertThat(Node.PARENT.getConverse().getName()).isEqualTo("com.github.veithen.jrel.Node.PARENT(^T)");
     }
 }
