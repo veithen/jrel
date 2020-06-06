@@ -20,8 +20,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
-        key: maven-java-${{ matrix.java }}
-        restore-keys: maven-
+        key: maven-java-${{ matrix.java }}-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-java-${{ matrix.java }}-
+          maven-
     - name: Set up Java
       uses: actions/setup-java@v1
       with:
@@ -42,8 +44,10 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
-        key: maven-deploy
-        restore-keys: maven-
+        key: maven-deploy-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          maven-deploy-
+          maven-
     - name: Set up Java
       uses: actions/setup-java@v1
       with:
