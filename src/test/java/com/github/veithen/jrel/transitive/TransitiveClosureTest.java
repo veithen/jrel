@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,10 +45,11 @@ public class TransitiveClosureTest {
         node4.parent.set(node1);
         node5.parent.set(node2);
         assertThat(node1.descendants).containsExactly(node2, node3, node4, node5);
-        assertThat(node1.descendantsOrSelf).containsExactly(node1,node2, node3, node4, node5);
+        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3, node4, node5);
         node6.parent.set(node4);
         assertThat(node1.descendants).containsExactly(node2, node3, node4, node5, node6);
-        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3, node4, node5, node6);
+        assertThat(node1.descendantsOrSelf)
+                .containsExactly(node1, node2, node3, node4, node5, node6);
         node2.children.clear();
         assertThat(node1.descendants).containsExactly(node2, node4, node6);
         assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node4, node6);
@@ -95,7 +96,11 @@ public class TransitiveClosureTest {
     public void testAddAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.asSet().addAll(Arrays.asList(new TreeNode("2"))));
+                () ->
+                        new TreeNode("1")
+                                .descendants
+                                .asSet()
+                                .addAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
@@ -109,14 +114,22 @@ public class TransitiveClosureTest {
     public void testRemoveAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.asSet().removeAll(Arrays.asList(new TreeNode("2"))));
+                () ->
+                        new TreeNode("1")
+                                .descendants
+                                .asSet()
+                                .removeAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test
     public void testRetainAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () -> new TreeNode("1").descendants.asSet().retainAll(Arrays.asList(new TreeNode("2"))));
+                () ->
+                        new TreeNode("1")
+                                .descendants
+                                .asSet()
+                                .retainAll(Arrays.asList(new TreeNode("2"))));
     }
 
     @Test

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -100,32 +100,37 @@ public class ManyToOneTest {
         boolean[] removedFired = new boolean[2];
         Parent parent = new Parent();
         Child child = new Child();
-        parent.getChildren().addListener(new SetListener<Child>() {
-            @Override
-            public void added(Child object) {
-                assertThat(object).isSameInstanceAs(child);
-                addedFired[0] = true;
-            }
+        parent.getChildren()
+                .addListener(
+                        new SetListener<Child>() {
+                            @Override
+                            public void added(Child object) {
+                                assertThat(object).isSameInstanceAs(child);
+                                addedFired[0] = true;
+                            }
 
-            @Override
-            public void removed(Child object) {
-                assertThat(object).isSameInstanceAs(child);
-                removedFired[0] = true;
-            }
-        });
-        child.getParentReference().asSet().addListener(new SetListener<Parent>() {
-            @Override
-            public void added(Parent object) {
-                assertThat(object).isSameInstanceAs(parent);
-                addedFired[1] = true;
-            }
+                            @Override
+                            public void removed(Child object) {
+                                assertThat(object).isSameInstanceAs(child);
+                                removedFired[0] = true;
+                            }
+                        });
+        child.getParentReference()
+                .asSet()
+                .addListener(
+                        new SetListener<Parent>() {
+                            @Override
+                            public void added(Parent object) {
+                                assertThat(object).isSameInstanceAs(parent);
+                                addedFired[1] = true;
+                            }
 
-            @Override
-            public void removed(Parent object) {
-                assertThat(object).isSameInstanceAs(parent);
-                removedFired[1] = true;
-            }
-        });
+                            @Override
+                            public void removed(Parent object) {
+                                assertThat(object).isSameInstanceAs(parent);
+                                removedFired[1] = true;
+                            }
+                        });
         child.setParent(parent);
         assertThat(addedFired).asList().containsExactly(true, true);
         assertThat(removedFired).asList().containsExactly(false, false);
@@ -160,28 +165,32 @@ public class ManyToOneTest {
         Child child = new Child();
         child.setParent(parent1);
         List<String> events = new ArrayList<>();
-        parent1.getChildren().addListener(new SetListener<Child>() {
-            @Override
-            public void added(Child object) {
-                fail();
-            }
+        parent1.getChildren()
+                .addListener(
+                        new SetListener<Child>() {
+                            @Override
+                            public void added(Child object) {
+                                fail();
+                            }
 
-            @Override
-            public void removed(Child object) {
-                events.add("removed from parent 1");
-            }
-        });
-        parent2.getChildren().addListener(new SetListener<Child>() {
-            @Override
-            public void added(Child object) {
-                events.add("added to parent 1");
-            }
+                            @Override
+                            public void removed(Child object) {
+                                events.add("removed from parent 1");
+                            }
+                        });
+        parent2.getChildren()
+                .addListener(
+                        new SetListener<Child>() {
+                            @Override
+                            public void added(Child object) {
+                                events.add("added to parent 1");
+                            }
 
-            @Override
-            public void removed(Child object) {
-                fail();
-            }
-        });
+                            @Override
+                            public void removed(Child object) {
+                                fail();
+                            }
+                        });
         child.setParent(parent2);
         assertThat(events).containsExactly("removed from parent 1", "added to parent 1").inOrder();
     }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,12 +27,12 @@ import java.util.Map;
 import com.github.veithen.checkt.annotation.TypeToken;
 
 class ClassData<T> {
-    private static final Map<Class<?>,ClassData<?>> instances = new HashMap<>();
+    private static final Map<Class<?>, ClassData<?>> instances = new HashMap<>();
 
     private final Class<T> clazz;
-    private final List<BinaryRelation<T,?>> registeredRelations = new ArrayList<>();
+    private final List<BinaryRelation<T, ?>> registeredRelations = new ArrayList<>();
     private Descriptor<T> descriptor;
-    
+
     ClassData(Class<T> clazz) {
         this.clazz = clazz;
     }
@@ -46,13 +46,16 @@ class ClassData<T> {
         return SafeCast.cast(instances.computeIfAbsent(clazz, k -> new ClassData<>(k)), clazz);
     }
 
-    synchronized void registerRelation(BinaryRelation<T,?> relation) {
+    synchronized void registerRelation(BinaryRelation<T, ?> relation) {
         if (descriptor != null) {
-            throw new IllegalStateException(String.format("Attempt to create a new relation for class %s after instances of that class have already been created", clazz.getName()));
+            throw new IllegalStateException(
+                    String.format(
+                            "Attempt to create a new relation for class %s after instances of that class have already been created",
+                            clazz.getName()));
         }
         registeredRelations.add(relation);
     }
-    
+
     synchronized Descriptor<T> getDescriptor() {
         if (descriptor == null) {
             descriptor = new Descriptor<>(clazz, registeredRelations);

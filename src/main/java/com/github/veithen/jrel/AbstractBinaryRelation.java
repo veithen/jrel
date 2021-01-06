@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,13 @@ import java.lang.reflect.Modifier;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
-public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2>,R2 extends ReferenceHolder<T1>,C extends AbstractBinaryRelation<T2,T1,R2,R1,?>> implements BinaryRelation<T1,T2> {
+public abstract class AbstractBinaryRelation<
+                T1,
+                T2,
+                R1 extends ReferenceHolder<T2>,
+                R2 extends ReferenceHolder<T1>,
+                C extends AbstractBinaryRelation<T2, T1, R2, R1, ?>>
+        implements BinaryRelation<T1, T2> {
     private final Class<T1> type1;
     private final Class<T2> type2;
     private final @Nullable Class<?> declaringClass;
@@ -39,7 +45,8 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
         for (StackTraceElement frame : Thread.currentThread().getStackTrace()) {
             if (frame.getMethodName().equals("<clinit>")) {
                 try {
-                    declaringClass = ReflectionUtil.getClassLoader(type1).loadClass(frame.getClassName());
+                    declaringClass =
+                            ReflectionUtil.getClassLoader(type1).loadClass(frame.getClassName());
                 } catch (ClassNotFoundException ex) {
                     // Just continue
                 }
@@ -58,14 +65,16 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
         return type2;
     }
 
-    public synchronized final String getName() {
+    public final synchronized String getName() {
         if (name == null) {
             if (declaringClass != null) {
                 for (Field field : declaringClass.getDeclaredFields()) {
                     if (Modifier.isStatic(field.getModifiers())) {
                         field.setAccessible(true);
                         try {
-                            BinaryRelation<?,?> relation = (BinaryRelation<?,?>)ReflectionUtil.getStaticFieldValue(field);
+                            BinaryRelation<?, ?> relation =
+                                    (BinaryRelation<?, ?>)
+                                            ReflectionUtil.getStaticFieldValue(field);
                             if (relation == this) {
                                 name = declaringClass.getName() + "." + field.getName();
                                 break;
@@ -94,7 +103,7 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
 
     /**
      * Get the converse, i.e. the binary relation with both ends reversed.
-     * 
+     *
      * @return the converse relation
      */
     public final synchronized C getConverse() {
@@ -107,22 +116,29 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
     protected abstract C createConverse();
 
     /**
-     * If this is a derived relation, returns the binary relations used to compute the derived relation.
-     * 
+     * If this is a derived relation, returns the binary relations used to compute the derived
+     * relation.
+     *
      * @return the dependencies or an empty array if this is not a derived relation
      */
-    public abstract BinaryRelation<?,?>[] getDependencies();
+    public abstract BinaryRelation<?, ?>[] getDependencies();
 
     public final R1 newReferenceHolder(T1 owner) {
-        ReferenceHolderSet referenceHolderSet = ReferenceHolderCreationContext.getReferenceHolderSet(owner);
+        ReferenceHolderSet referenceHolderSet =
+                ReferenceHolderCreationContext.getReferenceHolderSet(owner);
         if (referenceHolderSet == null) {
             // TODO: should this be owner.getClass() or getType1() ?
-            referenceHolderSet = ClassData.getInstance(owner.getClass()).getDescriptor().getReferenceHolderSetAccessor().get(owner);
+            referenceHolderSet =
+                    ClassData.getInstance(owner.getClass())
+                            .getDescriptor()
+                            .getReferenceHolderSetAccessor()
+                            .get(owner);
         }
         if (referenceHolderSet == null) {
             referenceHolderSet = new ReferenceHolderSet();
         }
-        ReferenceHolderCreationContext context = new ReferenceHolderCreationContext(this, owner, referenceHolderSet);
+        ReferenceHolderCreationContext context =
+                new ReferenceHolderCreationContext(this, owner, referenceHolderSet);
         context.push();
         try {
             return createReferenceHolder(owner);
@@ -135,11 +151,14 @@ public abstract class AbstractBinaryRelation<T1,T2,R1 extends ReferenceHolder<T2
 
     @SuppressWarnings("unchecked")
     public final R1 getReferenceHolder(T1 owner) {
-        ReferenceHolderAccessor accessor = ClassData.getInstance(owner.getClass()).getDescriptor().getReferenceHolderAccessor(this);
+        ReferenceHolderAccessor accessor =
+                ClassData.getInstance(owner.getClass())
+                        .getDescriptor()
+                        .getReferenceHolderAccessor(this);
         if (accessor == null) {
             throw new IllegalStateException("Not bound");
         }
-        return (R1)accessor.get(owner);
+        return (R1) accessor.get(owner);
     }
 
     @Override

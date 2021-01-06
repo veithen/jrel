@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,37 +25,43 @@ import java.util.LinkedList;
 import com.github.veithen.jrel.ReferenceHolder;
 import com.github.veithen.jrel.collection.SetListener;
 
-final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
+final class ConverseAssociationUpdater<T, U> implements SetListener<U> {
     private interface Action {
         <T> boolean execute(ReferenceHolder<T> referenceHolder, T object);
     }
 
-    private static final ThreadLocal<Deque<ReferenceHolder<?>>> firingReferenceHolders = new ThreadLocal<Deque<ReferenceHolder<?>>>() {
-        @Override
-        protected LinkedList<ReferenceHolder<?>> initialValue() {
-            return new LinkedList<>();
-        }
-    };
+    private static final ThreadLocal<Deque<ReferenceHolder<?>>> firingReferenceHolders =
+            new ThreadLocal<Deque<ReferenceHolder<?>>>() {
+                @Override
+                protected LinkedList<ReferenceHolder<?>> initialValue() {
+                    return new LinkedList<>();
+                }
+            };
 
-    private static final Action ADD = new Action() {
-        @Override
-        public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
-            return referenceHolder.asSet().add(object);
-        }
-    };
+    private static final Action ADD =
+            new Action() {
+                @Override
+                public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
+                    return referenceHolder.asSet().add(object);
+                }
+            };
 
-    private static final Action REMOVE = new Action() {
-        @Override
-        public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
-            return referenceHolder.asSet().remove(object);
-        }
-    };
+    private static final Action REMOVE =
+            new Action() {
+                @Override
+                public <T> boolean execute(ReferenceHolder<T> referenceHolder, T object) {
+                    return referenceHolder.asSet().remove(object);
+                }
+            };
 
     private final T owner;
-    private final Association<U,T,?,?,?> converseAssociation;
+    private final Association<U, T, ?, ?, ?> converseAssociation;
     private final ReferenceHolder<U> referenceHolder;
 
-    ConverseAssociationUpdater(T owner, Association<U,T,?,?,?> converseAssociation, ReferenceHolder<U> referenceHolder) {
+    ConverseAssociationUpdater(
+            T owner,
+            Association<U, T, ?, ?, ?> converseAssociation,
+            ReferenceHolder<U> referenceHolder) {
         this.owner = owner;
         this.converseAssociation = converseAssociation;
         this.referenceHolder = referenceHolder;
@@ -63,7 +69,8 @@ final class ConverseAssociationUpdater<T,U> implements SetListener<U> {
 
     private void update(Action action, U object) {
         ReferenceHolder<T> referenceHolderToUpdate = converseAssociation.getReferenceHolder(object);
-        Deque<ReferenceHolder<?>> firingReferenceHolders = ConverseAssociationUpdater.firingReferenceHolders.get();
+        Deque<ReferenceHolder<?>> firingReferenceHolders =
+                ConverseAssociationUpdater.firingReferenceHolders.get();
         if (firingReferenceHolders.peek() != referenceHolderToUpdate) {
             firingReferenceHolders.push(referenceHolder);
             try {

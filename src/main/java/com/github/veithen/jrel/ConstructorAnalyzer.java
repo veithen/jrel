@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,11 +37,11 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     }
 
     private final Class<T> clazz;
-    private final Map<BinaryRelation<T,?>,Field> fieldMap;
+    private final Map<BinaryRelation<T, ?>, Field> fieldMap;
     private State state = State.NONE;
-    private @Nullable BinaryRelation<?,?> relation;
+    private @Nullable BinaryRelation<?, ?> relation;
 
-    ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T,?>,Field> fieldMap) {
+    ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
@@ -73,7 +73,10 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
         if (state == State.THIS_LOADED && opcode == Opcodes.GETSTATIC) {
             Object fieldValue;
             try {
-                Field field = ReflectionUtil.getClassLoader(clazz).loadClass(owner.replace('/', '.')).getDeclaredField(name);
+                Field field =
+                        ReflectionUtil.getClassLoader(clazz)
+                                .loadClass(owner.replace('/', '.'))
+                                .getDeclaredField(name);
                 field.setAccessible(true);
                 fieldValue = ReflectionUtil.getStaticFieldValue(field);
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ex) {
@@ -81,7 +84,7 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
             }
             if (fieldValue instanceof BinaryRelation) {
                 state = State.RELATION_LOADED;
-                relation = (BinaryRelation<?,?>)fieldValue;
+                relation = (BinaryRelation<?, ?>) fieldValue;
                 return;
             }
         } else if (state == State.NEW_RELATION_HOLDER_INVOKED && opcode == Opcodes.PUTFIELD) {
@@ -92,7 +95,8 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
                 throw new AnalyzerException(ex);
             }
             if (!Modifier.isFinal(field.getModifiers())) {
-                throw new AnalyzerException("Field " + name + " in " + clazz.getName() + " is not final");
+                throw new AnalyzerException(
+                        "Field " + name + " in " + clazz.getName() + " is not final");
             }
             field.setAccessible(true);
             assert relation != null;
@@ -105,13 +109,17 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     }
 
     @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String descriptor,
-            boolean isInterface) {
-        if (state == State.RELATION_LOADED && opcode == Opcodes.INVOKEVIRTUAL && name.equals("getConverse")) {
+    public void visitMethodInsn(
+            int opcode, String owner, String name, String descriptor, boolean isInterface) {
+        if (state == State.RELATION_LOADED
+                && opcode == Opcodes.INVOKEVIRTUAL
+                && name.equals("getConverse")) {
             assert relation != null;
             relation = relation.getConverse();
             return;
-        } else if (state == State.OWNER_LOADED && opcode == Opcodes.INVOKEVIRTUAL && name.equals("newReferenceHolder")) {
+        } else if (state == State.OWNER_LOADED
+                && opcode == Opcodes.INVOKEVIRTUAL
+                && name.equals("newReferenceHolder")) {
             state = State.NEW_RELATION_HOLDER_INVOKED;
             return;
         }

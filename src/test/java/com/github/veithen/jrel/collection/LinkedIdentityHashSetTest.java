@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -68,7 +68,7 @@ public class LinkedIdentityHashSetTest {
     public void testAddMany() {
         LinkedIdentityHashSet<Object> set = createTestSet();
         Object[] expectedObjects = new Object[1000];
-        for (int i=0; i<expectedObjects.length; i++) {
+        for (int i = 0; i < expectedObjects.length; i++) {
             Object object = new Object();
             set.add(object);
             expectedObjects[i] = object;
@@ -79,7 +79,7 @@ public class LinkedIdentityHashSetTest {
     @Test
     public void testContains() {
         LinkedIdentityHashSet<Object> set = createTestSet();
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             set.add(new Object());
         }
         Object object = new Object();
@@ -91,19 +91,19 @@ public class LinkedIdentityHashSetTest {
     @Test
     public void testRemove() {
         Object[] allObjects = new Object[10];
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             allObjects[i] = new Object();
         }
         LinkedIdentityHashSet<Object> set = createTestSet();
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             set.add(allObjects[i]);
         }
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             assertThat(set.remove(allObjects[i])).isTrue();
-            for (int j=0; j<=i; j++) {
+            for (int j = 0; j <= i; j++) {
                 assertThat(set).doesNotContain(allObjects[j]);
             }
-            for (int j=i+1; j<10; j++) {
+            for (int j = i + 1; j < 10; j++) {
                 assertThat(set).contains(allObjects[j]);
             }
         }
@@ -119,13 +119,13 @@ public class LinkedIdentityHashSetTest {
     @Test
     public void testAddRemoveRandom() {
         Object[] allObjects = new Object[1000];
-        for (int i=0; i<allObjects.length; i++) {
+        for (int i = 0; i < allObjects.length; i++) {
             allObjects[i] = new Object();
         }
         LinkedIdentityHashSet<Object> set = createTestSet();
         Random random = new Random(0);
         Set<Object> expectedObjects = new LinkedHashSet<>();
-        for (int i=0; i<allObjects.length*10; i++) {
+        for (int i = 0; i < allObjects.length * 10; i++) {
             Object object = allObjects[random.nextInt(allObjects.length)];
             if (random.nextBoolean()) {
                 assertThat(set.remove(object)).isEqualTo(expectedObjects.remove(object));
@@ -200,7 +200,8 @@ public class LinkedIdentityHashSetTest {
         Object object2 = new Object();
         set.add(object1);
         set.add(object2);
-        assertThat(set.toString()).isEqualTo(new LinkedHashSet<Object>(Arrays.asList(object1, object2)).toString());
+        assertThat(set.toString())
+                .isEqualTo(new LinkedHashSet<Object>(Arrays.asList(object1, object2)).toString());
     }
 
     @Test
@@ -221,7 +222,7 @@ public class LinkedIdentityHashSetTest {
     @Test
     public void testClearAfterRemove() {
         LinkedIdentityHashSet<Object> set = createTestSet();
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             set.add(new Object());
         }
         Iterator<Object> it = set.iterator();
@@ -252,7 +253,8 @@ public class LinkedIdentityHashSetTest {
                 set.add(object3);
             }
             seen.add(o);
-        };
+        }
+        ;
         assertThat(set).containsExactly(object1, object2, object3);
         assertThat(seen).containsExactly(object1, object2, object3).inOrder();
     }
@@ -272,7 +274,8 @@ public class LinkedIdentityHashSetTest {
                 set.remove(o);
             }
             seen.add(o);
-        };
+        }
+        ;
         assertThat(set).containsExactly(object1, object3);
         assertThat(seen).containsExactly(object1, object2, object3).inOrder();
     }
@@ -292,7 +295,8 @@ public class LinkedIdentityHashSetTest {
                 set.remove(object2);
             }
             seen.add(o);
-        };
+        }
+        ;
         assertThat(set).containsExactly(object1, object3);
         assertThat(seen).containsExactly(object1, object3).inOrder();
     }
@@ -312,7 +316,8 @@ public class LinkedIdentityHashSetTest {
                 set.clear();
             }
             seen.add(o);
-        };
+        }
+        ;
         assertThat(set).isEmpty();
         assertThat(seen).containsExactly(object1, object2).inOrder();
     }

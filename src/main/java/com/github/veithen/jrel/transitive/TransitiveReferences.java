@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,34 +35,38 @@ final class TransitiveReferences<T> extends UnmodifiableReferences<T> {
         if (closure.isIncludeSelf()) {
             set.add(owner);
         }
-        SetListener<T> transitiveReferencesListener = new SetListener<T>() {
-            @Override
-            public void added(T object) {
-                set.add(object);
-            }
+        SetListener<T> transitiveReferencesListener =
+                new SetListener<T>() {
+                    @Override
+                    public void added(T object) {
+                        set.add(object);
+                    }
 
-            @Override
-            public void removed(T object) {
-                maybeRemove(object);
-            }
-        };
-        SetListener<T> directReferenceListener = new SetListener<T>() {
-            @Override
-            public void added(T object) {
-                set.add(object);
-                ListenableSet<T> transitiveReferences = closure.getReferenceHolder(object).asSet();
-                set.addAll(transitiveReferences);
-                transitiveReferences.addListener(transitiveReferencesListener);
-            }
+                    @Override
+                    public void removed(T object) {
+                        maybeRemove(object);
+                    }
+                };
+        SetListener<T> directReferenceListener =
+                new SetListener<T>() {
+                    @Override
+                    public void added(T object) {
+                        set.add(object);
+                        ListenableSet<T> transitiveReferences =
+                                closure.getReferenceHolder(object).asSet();
+                        set.addAll(transitiveReferences);
+                        transitiveReferences.addListener(transitiveReferencesListener);
+                    }
 
-            @Override
-            public void removed(T object) {
-                maybeRemove(object);
-                ListenableSet<T> transitiveReferences = closure.getReferenceHolder(object).asSet();
-                transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
-                transitiveReferences.removeListener(transitiveReferencesListener);
-            }
-        };
+                    @Override
+                    public void removed(T object) {
+                        maybeRemove(object);
+                        ListenableSet<T> transitiveReferences =
+                                closure.getReferenceHolder(object).asSet();
+                        transitiveReferences.forEach(TransitiveReferences.this::maybeRemove);
+                        transitiveReferences.removeListener(transitiveReferencesListener);
+                    }
+                };
         referenceHolder.asSet().addListener(directReferenceListener);
         referenceHolder.asSet().forEach(directReferenceListener::added);
     }

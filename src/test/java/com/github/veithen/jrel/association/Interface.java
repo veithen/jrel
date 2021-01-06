@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,8 +20,11 @@
 package com.github.veithen.jrel.association;
 
 public class Interface {
-    private static final ManyToManyAssociation<Interface,Interface> SUPER = new ManyToManyAssociation<>(Interface.class, Interface.class, Navigability.BIDIRECTIONAL);
+    private static final ManyToManyAssociation<Interface, Interface> SUPER =
+            new ManyToManyAssociation<>(
+                    Interface.class, Interface.class, Navigability.BIDIRECTIONAL);
 
     public final MutableReferences<Interface> superInterfaces = SUPER.newReferenceHolder(this);
-    public final MutableReferences<Interface> childInterfaces = SUPER.getConverse().newReferenceHolder(this);
+    public final MutableReferences<Interface> childInterfaces =
+            SUPER.getConverse().newReferenceHolder(this);
 }

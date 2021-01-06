@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,17 +28,17 @@ import org.objectweb.asm.Opcodes;
 
 final class ClassAnalyzer<T> extends ClassVisitor {
     private final Class<T> clazz;
-    private final Map<BinaryRelation<T,?>,Field> fieldMap;
+    private final Map<BinaryRelation<T, ?>, Field> fieldMap;
 
-    ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<T,?>,Field> fieldMap) {
+    ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
         super(Opcodes.ASM8);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
     }
 
     @Override
-    public MethodVisitor visitMethod(int access, String name, String descriptor, String signature,
-            String[] exceptions) {
+    public MethodVisitor visitMethod(
+            int access, String name, String descriptor, String signature, String[] exceptions) {
         if (name.contentEquals("<init>")) {
             return new ConstructorAnalyzer<>(clazz, fieldMap);
         } else {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,19 +24,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * 
- * <p>
  * Iterators returned by this implementation make additional guarantees:
+ *
  * <ul>
- * <li>They will not throw {@link ConcurrentModificationException}.
- * <li>{@link Iterator#next()} will never return an element that is not contained in the set at the
- * time the method is called. That means that elements removed from the set while iterating will not
- * be visited (unless of course they had already been visited before being removed).
- * <li>If {@link Iterator#hasNext()} returns {@code false}, then all elements contained in the set
- * at the time that method is called have been visited. That means that elements added to the set
- * while iterating will be visited.
+ *   <li>They will not throw {@link ConcurrentModificationException}.
+ *   <li>{@link Iterator#next()} will never return an element that is not contained in the set at
+ *       the time the method is called. That means that elements removed from the set while
+ *       iterating will not be visited (unless of course they had already been visited before being
+ *       removed).
+ *   <li>If {@link Iterator#hasNext()} returns {@code false}, then all elements contained in the set
+ *       at the time that method is called have been visited. That means that elements added to the
+ *       set while iterating will be visited.
  * </ul>
- * 
+ *
  * @param <E> the type of elements in this set
  */
 public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
@@ -59,7 +59,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
 
         @SuppressWarnings("unchecked")
         <T> T getElement() {
-            return (T)element;
+            return (T) element;
         }
     }
 
@@ -119,11 +119,11 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     @Override
     public boolean add(E object) {
         int capacity = nodes.length;
-        if (size + tombstones >= capacity*loadFactor) {
+        if (size + tombstones >= capacity * loadFactor) {
             // We only take into account size here because we will remove the tombstones. Note that
             // this means that we don't necessarily increase the capacity (and just remove the
             // tombstones).
-            while (size >= capacity*loadFactor) {
+            while (size >= capacity * loadFactor) {
                 capacity *= 2;
             }
             Node[] newNodes = new Node[capacity];
@@ -251,7 +251,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         tombstones = 0;
         firstNode = null;
         lastNode = null;
-        for (int i=0; i<oldNodes.length; i++) {
+        for (int i = 0; i < oldNodes.length; i++) {
             Node node = oldNodes[i];
             if (node != null && !node.isRemoved()) {
                 fireRemoved(node.getElement());
