@@ -42,7 +42,7 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     private @Nullable BinaryRelation<?, ?> relation;
 
     ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
-        super(Opcodes.ASM8);
+        super(Opcodes.ASM9);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
     }

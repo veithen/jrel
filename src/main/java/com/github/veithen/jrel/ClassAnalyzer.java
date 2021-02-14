@@ -31,7 +31,7 @@ final class ClassAnalyzer<T> extends ClassVisitor {
     private final Map<BinaryRelation<T, ?>, Field> fieldMap;
 
     ClassAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
-        super(Opcodes.ASM8);
+        super(Opcodes.ASM9);
         this.clazz = clazz;
         this.fieldMap = fieldMap;
     }
