@@ -68,11 +68,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-            <version>3.4.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.2</version>
@@ -107,24 +102,13 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <!-- annotationProcessors>
-                        <annotationProcessor>org.checkerframework.checker.nullness.NullnessChecker</annotationProcessor>
-                    </annotationProcessors -->
                     <annotationProcessorPaths combine.children="append">
                         <annotationProcessorPath>
                             <groupId>com.github.veithen.checkt</groupId>
                             <artifactId>checkt-annotation-processor</artifactId>
                             <version>${checkt.version}</version>
                         </annotationProcessorPath>
-                        <!-- annotationProcessorPath>
-                            <groupId>org.checkerframework</groupId>
-                            <artifactId>checker</artifactId>
-                            <version>3.4.0</version>
-                        </annotationProcessorPath -->
                     </annotationProcessorPaths>
-                    <!-- compilerArgs combine.children="append">
-                        <compilerArg>-AassumeAssertionsAreEnabled</compilerArg>
-                    </compilerArgs -->
                 </configuration>
             </plugin>
             <plugin>

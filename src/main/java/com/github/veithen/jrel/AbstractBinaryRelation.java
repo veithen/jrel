@@ -22,8 +22,6 @@ package com.github.veithen.jrel;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 public abstract class AbstractBinaryRelation<
                 T1,
                 T2,
@@ -33,8 +31,8 @@ public abstract class AbstractBinaryRelation<
         implements BinaryRelation<T1, T2> {
     private final Class<T1> type1;
     private final Class<T2> type2;
-    private final @Nullable Class<?> declaringClass;
-    private @Nullable String name;
+    private final Class<?> declaringClass;
+    private String name;
     private C converse;
 
     public AbstractBinaryRelation(Class<T1> type1, Class<T2> type2, C converse) {

@@ -22,8 +22,6 @@ package com.github.veithen.jrel;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 /**
  * Keeps track of {@link ReferenceHolder} instances being created so that a call to {@link
  * BinaryRelation#getReferenceHolder(Object)} can successfully return an instance that has not yet
@@ -70,7 +68,7 @@ final class ReferenceHolderCreationContext {
         return stack.get().peek();
     }
 
-    static @Nullable ReferenceHolderSet getReferenceHolderSet(Object owner) {
+    static ReferenceHolderSet getReferenceHolderSet(Object owner) {
         for (ReferenceHolderCreationContext context : stack.get()) {
             if (context.owner == owner) {
                 return context.referenceHolderSet;

@@ -23,7 +23,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -39,7 +38,7 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     private final Class<T> clazz;
     private final Map<BinaryRelation<T, ?>, Field> fieldMap;
     private State state = State.NONE;
-    private @Nullable BinaryRelation<?, ?> relation;
+    private BinaryRelation<?, ?> relation;
 
     ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
         super(Opcodes.ASM9);

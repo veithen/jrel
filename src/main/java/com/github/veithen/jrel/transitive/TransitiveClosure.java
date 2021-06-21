@@ -21,8 +21,6 @@ package com.github.veithen.jrel.transitive;
 
 import java.util.Iterator;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-
 import com.github.veithen.jrel.AbstractBinaryRelation;
 import com.github.veithen.jrel.BinaryRelation;
 import com.github.veithen.jrel.ReferenceHolder;
@@ -34,9 +32,7 @@ public final class TransitiveClosure<T>
     private final boolean includeSelf;
 
     private TransitiveClosure(
-            BinaryRelation<T, T> relation,
-            boolean includeSelf,
-            @Nullable TransitiveClosure<T> converse) {
+            BinaryRelation<T, T> relation, boolean includeSelf, TransitiveClosure<T> converse) {
         super(relation.getType1(), relation.getType2(), converse);
         this.relation = relation;
         this.includeSelf = includeSelf;
