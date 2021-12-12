@@ -67,5 +67,5 @@ public final class FilteredIterator<E> implements Iterator<E> {
     @Override
     public void remove() {
         parent.remove();
-    };
+    }
 }
