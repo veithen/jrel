@@ -33,6 +33,7 @@ public final class ManyToOneAssociation<T1, T2>
         this(type1, type2, null, navigability);
     }
 
+    @Override
     protected OneToManyAssociation<T2, T1> doCreateConverse() {
         return new OneToManyAssociation<T2, T1>(getType2(), getType1(), this);
     }

@@ -55,10 +55,12 @@ public abstract class AbstractBinaryRelation<
         ClassData.getInstance(type1).registerRelation(this);
     }
 
+    @Override
     public final Class<T1> getType1() {
         return type1;
     }
 
+    @Override
     public final Class<T2> getType2() {
         return type2;
     }
@@ -104,6 +106,7 @@ public abstract class AbstractBinaryRelation<
      *
      * @return the converse relation
      */
+    @Override
     public final synchronized C getConverse() {
         if (converse == null) {
             converse = createConverse();
@@ -121,6 +124,7 @@ public abstract class AbstractBinaryRelation<
      */
     public abstract BinaryRelation<?, ?>[] getDependencies();
 
+    @Override
     public final R1 newReferenceHolder(T1 owner) {
         ReferenceHolderSet referenceHolderSet =
                 ReferenceHolderCreationContext.getReferenceHolderSet(owner);
@@ -147,6 +151,7 @@ public abstract class AbstractBinaryRelation<
 
     protected abstract R1 createReferenceHolder(T1 owner);
 
+    @Override
     @SuppressWarnings("unchecked")
     public final R1 getReferenceHolder(T1 owner) {
         ReferenceHolderAccessor accessor =

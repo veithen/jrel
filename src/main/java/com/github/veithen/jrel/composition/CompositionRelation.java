@@ -50,6 +50,7 @@ public final class CompositionRelation<T1, T2, T3>
         return relation2;
     }
 
+    @Override
     protected CompositionRelation<T3, T2, T1> createConverse() {
         return new CompositionRelation<T3, T2, T1>(
                 relation2.getConverse(), relation1.getConverse(), this);

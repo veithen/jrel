@@ -33,6 +33,7 @@ public final class MutableReference<T> extends Reference<T> {
         return set;
     }
 
+    @Override
     public T get() {
         return set.get();
     }

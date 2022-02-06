@@ -37,66 +37,82 @@ public final class MutableReferences<T> extends References<T> implements Listena
         return this;
     }
 
+    @Override
     public void addListener(SetListener<? super T> listener) {
         set.addListener(listener);
     }
 
+    @Override
     public void removeListener(SetListener<? super T> listener) {
         set.removeListener(listener);
     }
 
+    @Override
     public boolean isEmpty() {
         return set.isEmpty();
     }
 
+    @Override
     public boolean add(T object) {
         return set.add(object);
     }
 
+    @Override
     public Object[] toArray() {
         return set.toArray();
     }
 
+    @Override
     public boolean removeAll(Collection<?> c) {
         return set.removeAll(c);
     }
 
+    @Override
     public <V> V[] toArray(V[] a) {
         return set.toArray(a);
     }
 
+    @Override
     public boolean remove(Object object) {
         return set.remove(object);
     }
 
+    @Override
     public int size() {
         return set.size();
     }
 
+    @Override
     public boolean contains(Object object) {
         return set.contains(object);
     }
 
+    @Override
     public Iterator<T> iterator() {
         return set.iterator();
     }
 
+    @Override
     public void clear() {
         set.clear();
     }
 
+    @Override
     public boolean containsAll(Collection<?> c) {
         return set.containsAll(c);
     }
 
+    @Override
     public boolean addAll(Collection<? extends T> c) {
         return set.addAll(c);
     }
 
+    @Override
     public boolean retainAll(Collection<?> c) {
         return set.retainAll(c);
     }
 
+    @Override
     public String toString() {
         return set.toString();
     }
