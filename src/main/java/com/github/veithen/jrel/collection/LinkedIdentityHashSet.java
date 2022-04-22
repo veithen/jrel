@@ -40,12 +40,12 @@ import java.util.NoSuchElementException;
  * @param <E> the type of elements in this set
  */
 public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
-    private static class Node {
-        private Object element;
-        Node previous;
-        Node next;
+    private static class Node<E> {
+        private E element;
+        Node<E> previous;
+        Node<E> next;
 
-        Node(Object element) {
+        Node(E element) {
             this.element = element;
         }
 
@@ -57,17 +57,16 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             return element == null;
         }
 
-        @SuppressWarnings("unchecked")
-        <T> T getElement() {
-            return (T) element;
+        E getElement() {
+            return element;
         }
     }
 
     private class It implements Iterator<E> {
-        private Node currentNode;
+        private Node<E> currentNode;
 
-        private Node getNextNode() {
-            Node node = currentNode;
+        private Node<E> getNextNode() {
+            Node<E> node = currentNode;
             while (node != null && node.isRemoved()) {
                 node = node.previous;
             }
@@ -81,7 +80,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
 
         @Override
         public E next() {
-            Node nextNode = getNextNode();
+            Node<E> nextNode = getNextNode();
             if (nextNode == null) {
                 throw new NoSuchElementException();
             }
@@ -103,13 +102,13 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     private final float loadFactor;
     private int size;
     private int tombstones;
-    private Node[] nodes;
-    private Node firstNode;
-    private Node lastNode;
+    private Array<Node<E>> nodes;
+    private Node<E> firstNode;
+    private Node<E> lastNode;
 
     public LinkedIdentityHashSet(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
-        nodes = new Node[initialCapacity];
+        nodes = new Array<>(initialCapacity);
     }
 
     public LinkedIdentityHashSet() {
@@ -118,7 +117,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
 
     @Override
     public boolean add(E object) {
-        int capacity = nodes.length;
+        int capacity = nodes.length();
         if (size + tombstones >= capacity * loadFactor) {
             // We only take into account size here because we will remove the tombstones. Note that
             // this means that we don't necessarily increase the capacity (and just remove the
@@ -126,16 +125,16 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             while (size >= capacity * loadFactor) {
                 capacity *= 2;
             }
-            Node[] newNodes = new Node[capacity];
-            for (Node node : nodes) {
+            Array<Node<E>> newNodes = new Array<>(capacity);
+            for (Node<E> node : nodes) {
                 if (node == null || node.isRemoved()) {
                     continue;
                 }
                 int newIndex = System.identityHashCode(node.getElement()) % capacity;
-                while (newNodes[newIndex] != null) {
+                while (newNodes.get(newIndex) != null) {
                     newIndex = (newIndex + 1) % capacity;
                 }
-                newNodes[newIndex] = node;
+                newNodes.set(newIndex, node);
             }
             tombstones = 0;
             nodes = newNodes;
@@ -143,7 +142,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         int index = System.identityHashCode(object) % capacity;
         int tombstoneIndex = -1;
         while (true) {
-            Node node = nodes[index];
+            Node<E> node = nodes.get(index);
             if (node == null) {
                 break;
             }
@@ -162,8 +161,8 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             index = tombstoneIndex;
             tombstones--;
         }
-        Node node = new Node(object);
-        nodes[index] = node;
+        Node<E> node = new Node<>(object);
+        nodes.set(index, node);
         if (firstNode == null) {
             firstNode = node;
         }
@@ -177,7 +176,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         return true;
     }
 
-    private void removeElement(Node node) {
+    private void removeElement(Node<E> node) {
         E object = node.getElement();
         node.removed();
         if (node.previous != null) {
@@ -199,10 +198,10 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
 
     @Override
     public boolean remove(Object object) {
-        int capacity = nodes.length;
+        int capacity = nodes.length();
         int index = System.identityHashCode(object) % capacity;
         while (true) {
-            Node node = nodes[index];
+            Node<E> node = nodes.get(index);
             if (node == null) {
                 return false;
             }
@@ -221,10 +220,10 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
 
     @Override
     public boolean contains(Object object) {
-        int capacity = nodes.length;
+        int capacity = nodes.length();
         int index = System.identityHashCode(object) % capacity;
         while (true) {
-            Node node = nodes[index];
+            Node<E> node = nodes.get(index);
             if (node == null) {
                 return false;
             }
@@ -245,14 +244,14 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         if (size == 0) {
             return;
         }
-        Node[] oldNodes = nodes;
-        nodes = new Node[nodes.length];
+        Array<Node<E>> oldNodes = nodes;
+        nodes = new Array<Node<E>>(nodes.length());
         size = 0;
         tombstones = 0;
         firstNode = null;
         lastNode = null;
-        for (int i = 0; i < oldNodes.length; i++) {
-            Node node = oldNodes[i];
+        for (int i = 0; i < oldNodes.length(); i++) {
+            Node<E> node = oldNodes.get(i);
             if (node != null && !node.isRemoved()) {
                 fireRemoved(node.getElement());
                 node.removed();
