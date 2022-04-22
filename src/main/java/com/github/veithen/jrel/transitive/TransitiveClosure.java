@@ -42,11 +42,7 @@ public final class TransitiveClosure<T>
         this(relation, includeSelf, null);
     }
 
-    /**
-     * Get the binary relation from which this transitive closure was constructed.
-     *
-     * @return
-     */
+    /** Get the binary relation from which this transitive closure was constructed. */
     public BinaryRelation<T, T> getRelation() {
         return relation;
     }
@@ -75,8 +71,6 @@ public final class TransitiveClosure<T>
      * closure (denoted by <i>R<sup>+</sup></i>) is constructed. This will remove <i>(x,&nbsp;y)</i>
      * from <i>R</i> if there is a <i>z&nbsp;&#8800;&nbsp;y</i> such that <i>x&nbsp;R&nbsp;z</i> and
      * <i>z&nbsp;R<sup>+</sup>&nbsp;y</i>.
-     *
-     * @param x
      */
     public void reduce(T x) {
         ReferenceHolder<T> refs = relation.getReferenceHolder(x);

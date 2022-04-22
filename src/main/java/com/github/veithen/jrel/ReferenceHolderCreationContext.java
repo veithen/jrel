@@ -19,8 +19,8 @@
  */
 package com.github.veithen.jrel;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 
 /**
  * Keeps track of {@link ReferenceHolder} instances being created so that a call to {@link
@@ -33,7 +33,7 @@ final class ReferenceHolderCreationContext {
             new ThreadLocal<Deque<ReferenceHolderCreationContext>>() {
                 @Override
                 protected Deque<ReferenceHolderCreationContext> initialValue() {
-                    return new LinkedList<>();
+                    return new ArrayDeque<>();
                 }
             };
 

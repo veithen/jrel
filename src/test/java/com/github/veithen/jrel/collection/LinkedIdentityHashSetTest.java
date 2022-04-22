@@ -33,6 +33,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+// Modifying a LinkedIdentityHashSet while iterating is safe.
+@SuppressWarnings("ModifyCollectionInEnhancedForLoop")
 public class LinkedIdentityHashSetTest {
     private static LinkedIdentityHashSet<Object> createTestSet() {
         LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
