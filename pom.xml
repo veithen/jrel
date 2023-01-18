@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.11.0</version>
+            <version>5.0.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -110,6 +110,36 @@
                             <version>${checkt.version}</version>
                         </annotationProcessorPath>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.veithen.alta</groupId>
+                <artifactId>alta-maven-plugin</artifactId>
+                <version>0.7.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-properties</goal>
+                        </goals>
+                        <configuration>
+                            <name>byteBuddyAgent</name>
+                            <value>%file%</value>
+                            <artifactSet>
+                                <dependencySet>
+                                    <scope>test</scope>
+                                    <includes>
+                                        <include>net.bytebuddy:byte-buddy-agent:jar:*</include>
+                                    </includes>
+                                </dependencySet>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>${argLine} -javaagent:${byteBuddyAgent}</argLine>
                 </configuration>
             </plugin>
             <plugin>
