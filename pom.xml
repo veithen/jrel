@@ -115,15 +115,15 @@
             <plugin>
                 <groupId>com.github.veithen.alta</groupId>
                 <artifactId>alta-maven-plugin</artifactId>
-                <version>0.7.1</version>
+                <version>0.7.2-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>generate-properties</goal>
                         </goals>
                         <configuration>
-                            <name>byteBuddyAgent</name>
-                            <value>%file%</value>
+                            <name>argLine</name>
+                            <value>-javaagent:%file%</value>
                             <artifactSet>
                                 <dependencySet>
                                     <scope>test</scope>
@@ -135,12 +135,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>${argLine} -javaagent:${byteBuddyAgent}</argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
