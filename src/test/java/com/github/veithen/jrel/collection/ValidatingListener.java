@@ -19,26 +19,26 @@
  */
 package com.github.veithen.jrel.collection;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ValidatingListener implements SetListener<Object> {
-    private final ListenableSet<?> set;
+public class ValidatingListener<E> implements SetListener<E> {
+    private final ListenableSet<E> set;
 
-    private ValidatingListener(ListenableSet<?> set) {
+    private ValidatingListener(ListenableSet<E> set) {
         this.set = set;
     }
 
-    public static void addTo(ListenableSet<?> set) {
-        set.addListener(new ValidatingListener(set));
+    public static <E> void addTo(ListenableSet<E> set) {
+        set.addListener(new ValidatingListener<E>(set));
     }
 
     @Override
-    public void added(Object object) {
+    public void added(E object) {
         assertThat(set).contains(object);
     }
 
     @Override
-    public void removed(Object object) {
+    public void removed(E object) {
         assertThat(set).doesNotContain(object);
     }
 }

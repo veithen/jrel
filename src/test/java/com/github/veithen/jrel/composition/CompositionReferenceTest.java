@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.composition;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,15 +37,15 @@ public class CompositionReferenceTest {
         a.b.add(b1);
         assertThat(a.c).containsExactly(c1);
         b1.c.add(c2);
-        assertThat(a.c).containsExactly(c1, c2);
+        assertThat(a.c).containsExactlyInAnyOrder(c1, c2);
         a.b.add(b2);
         b2.c.add(c3);
-        assertThat(a.c).containsExactly(c1, c2, c3);
+        assertThat(a.c).containsExactlyInAnyOrder(c1, c2, c3);
         b1.c.add(c3);
-        assertThat(a.c).containsExactly(c1, c2, c3);
+        assertThat(a.c).containsExactlyInAnyOrder(c1, c2, c3);
         b2.c.remove(c3);
-        assertThat(a.c).containsExactly(c1, c2, c3);
+        assertThat(a.c).containsExactlyInAnyOrder(c1, c2, c3);
         b1.c.remove(c3);
-        assertThat(a.c).containsExactly(c1, c2);
+        assertThat(a.c).containsExactlyInAnyOrder(c1, c2);
     }
 }

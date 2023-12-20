@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.collection;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class LinkedIdentityHashSetTest {
             set.add(object);
             expectedObjects[i] = object;
         }
-        assertThat(set).containsExactlyElementsIn(expectedObjects);
+        assertThat(set).containsExactly(expectedObjects);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class LinkedIdentityHashSetTest {
             } else {
                 assertThat(set.add(object)).isEqualTo(expectedObjects.add(object));
             }
-            assertThat(set).containsExactlyElementsIn(expectedObjects).inOrder();
+            assertThat(set).containsExactlyInAnyOrderElementsOf(expectedObjects);
         }
     }
 
@@ -150,9 +150,9 @@ public class LinkedIdentityHashSetTest {
         set.remove(object2);
         Iterator<Object> it = set.iterator();
         assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object1);
+        assertThat(it.next()).isSameAs(object1);
         assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object3);
+        assertThat(it.next()).isSameAs(object3);
         assertThat(it.hasNext()).isFalse();
         assertThrows(NoSuchElementException.class, it::next);
     }
@@ -171,7 +171,7 @@ public class LinkedIdentityHashSetTest {
         it.next();
         it.remove();
         assertThat(it.hasNext()).isTrue();
-        assertThat(it.next()).isSameInstanceAs(object3);
+        assertThat(it.next()).isSameAs(object3);
         assertThat(set).containsExactly(object1, object3);
     }
 
@@ -258,7 +258,7 @@ public class LinkedIdentityHashSetTest {
         }
         ;
         assertThat(set).containsExactly(object1, object2, object3);
-        assertThat(seen).containsExactly(object1, object2, object3).inOrder();
+        assertThat(seen).containsExactly(object1, object2, object3);
     }
 
     @Test
@@ -279,7 +279,7 @@ public class LinkedIdentityHashSetTest {
         }
         ;
         assertThat(set).containsExactly(object1, object3);
-        assertThat(seen).containsExactly(object1, object2, object3).inOrder();
+        assertThat(seen).containsExactly(object1, object2, object3);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class LinkedIdentityHashSetTest {
         }
         ;
         assertThat(set).containsExactly(object1, object3);
-        assertThat(seen).containsExactly(object1, object3).inOrder();
+        assertThat(seen).containsExactly(object1, object3);
     }
 
     @Test
@@ -321,6 +321,6 @@ public class LinkedIdentityHashSetTest {
         }
         ;
         assertThat(set).isEmpty();
-        assertThat(seen).containsExactly(object1, object2).inOrder();
+        assertThat(seen).containsExactly(object1, object2);
     }
 }

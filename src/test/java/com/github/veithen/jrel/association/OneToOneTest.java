@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
@@ -30,9 +30,9 @@ public class OneToOneTest {
         LinkedListNode node2 = new LinkedListNode();
         LinkedListNode node3 = new LinkedListNode();
         node1.next.set(node2);
-        assertThat(node2.previous.get()).isSameInstanceAs(node1);
+        assertThat(node2.previous.get()).isSameAs(node1);
         node2.next.set(node3);
-        assertThat(node3.previous.get()).isSameInstanceAs(node2);
+        assertThat(node3.previous.get()).isSameAs(node2);
         node1.next.set(node3);
         assertThat(node2.previous.get()).isNull();
         assertThat(node2.next.get()).isNull();

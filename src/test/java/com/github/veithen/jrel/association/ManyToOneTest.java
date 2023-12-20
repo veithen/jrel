@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.association;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ManyToOneTest {
         Child child2 = new Child();
         child1.setParent(parent);
         child2.setParent(parent);
-        assertThat(parent.getChildren()).containsExactly(child1, child2).inOrder();
+        assertThat(parent.getChildren()).containsExactly(child1, child2);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ManyToOneTest {
         Parent parent = new Parent();
         Child child = new Child();
         parent.getChildren().add(child);
-        assertThat(child.getParent()).isSameInstanceAs(parent);
+        assertThat(child.getParent()).isSameAs(parent);
     }
 
     @Test
@@ -56,9 +56,9 @@ public class ManyToOneTest {
         Parent parent2 = new Parent();
         Child child = new Child();
         parent1.getChildren().add(child);
-        assertThat(child.getParent()).isSameInstanceAs(parent1);
+        assertThat(child.getParent()).isSameAs(parent1);
         parent2.getChildren().add(child);
-        assertThat(child.getParent()).isSameInstanceAs(parent2);
+        assertThat(child.getParent()).isSameAs(parent2);
         assertThat(parent1.getChildren()).isEmpty();
     }
 
@@ -105,13 +105,13 @@ public class ManyToOneTest {
                         new SetListener<Child>() {
                             @Override
                             public void added(Child object) {
-                                assertThat(object).isSameInstanceAs(child);
+                                assertThat(object).isSameAs(child);
                                 addedFired[0] = true;
                             }
 
                             @Override
                             public void removed(Child object) {
-                                assertThat(object).isSameInstanceAs(child);
+                                assertThat(object).isSameAs(child);
                                 removedFired[0] = true;
                             }
                         });
@@ -121,23 +121,23 @@ public class ManyToOneTest {
                         new SetListener<Parent>() {
                             @Override
                             public void added(Parent object) {
-                                assertThat(object).isSameInstanceAs(parent);
+                                assertThat(object).isSameAs(parent);
                                 addedFired[1] = true;
                             }
 
                             @Override
                             public void removed(Parent object) {
-                                assertThat(object).isSameInstanceAs(parent);
+                                assertThat(object).isSameAs(parent);
                                 removedFired[1] = true;
                             }
                         });
         child.setParent(parent);
-        assertThat(addedFired).asList().containsExactly(true, true);
-        assertThat(removedFired).asList().containsExactly(false, false);
+        assertThat(addedFired).containsExactly(true, true);
+        assertThat(removedFired).containsExactly(false, false);
         Arrays.fill(addedFired, false);
         child.setParent(null);
-        assertThat(addedFired).asList().containsExactly(false, false);
-        assertThat(removedFired).asList().containsExactly(true, true);
+        assertThat(addedFired).containsExactly(false, false);
+        assertThat(removedFired).containsExactly(true, true);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ManyToOneTest {
         Child child = new Child();
         assertThat(Relations.PARENT.apply(child)).isNull();
         child.setParent(parent);
-        assertThat(Relations.PARENT.apply(child)).isSameInstanceAs(parent);
+        assertThat(Relations.PARENT.apply(child)).isSameAs(parent);
     }
 
     @Test
@@ -192,6 +192,6 @@ public class ManyToOneTest {
                             }
                         });
         child.setParent(parent2);
-        assertThat(events).containsExactly("removed from parent 1", "added to parent 1").inOrder();
+        assertThat(events).containsExactly("removed from parent 1", "added to parent 1");
     }
 }

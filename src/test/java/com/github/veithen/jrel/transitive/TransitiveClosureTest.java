@@ -19,7 +19,7 @@
  */
 package com.github.veithen.jrel.transitive;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
@@ -38,21 +38,22 @@ public class TransitiveClosureTest {
         TreeNode node6 = new TreeNode("6");
         node2.parent.set(node1);
         node3.parent.set(node2);
-        assertThat(node1.descendants).containsExactly(node2, node3);
-        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3);
-        assertThat(node3.ancestors).containsExactly(node1, node2);
-        assertThat(node3.ancestorsOrSelf).containsExactly(node1, node2, node3);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3);
+        assertThat(node1.descendantsOrSelf).containsExactlyInAnyOrder(node1, node2, node3);
+        assertThat(node3.ancestors).containsExactlyInAnyOrder(node1, node2);
+        assertThat(node3.ancestorsOrSelf).containsExactlyInAnyOrder(node1, node2, node3);
         node4.parent.set(node1);
         node5.parent.set(node2);
-        assertThat(node1.descendants).containsExactly(node2, node3, node4, node5);
-        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node3, node4, node5);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3, node4, node5);
+        assertThat(node1.descendantsOrSelf)
+                .containsExactlyInAnyOrder(node1, node2, node3, node4, node5);
         node6.parent.set(node4);
-        assertThat(node1.descendants).containsExactly(node2, node3, node4, node5, node6);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3, node4, node5, node6);
         assertThat(node1.descendantsOrSelf)
                 .containsExactly(node1, node2, node3, node4, node5, node6);
         node2.children.clear();
-        assertThat(node1.descendants).containsExactly(node2, node4, node6);
-        assertThat(node1.descendantsOrSelf).containsExactly(node1, node2, node4, node6);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node4, node6);
+        assertThat(node1.descendantsOrSelf).containsExactlyInAnyOrder(node1, node2, node4, node6);
     }
 
     @Test
@@ -65,9 +66,9 @@ public class TransitiveClosureTest {
         node4.parent.set(node2);
         assertThat(node1.descendants).isEmpty();
         node2.parent.set(node1);
-        assertThat(node1.descendants).containsExactly(node2, node3, node4);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3, node4);
         node4.parent.set(null);
-        assertThat(node1.descendants).containsExactly(node2, node3);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3);
     }
 
     @Test
@@ -78,7 +79,7 @@ public class TransitiveClosureTest {
         TreeNode node4 = new TreeNode("4");
         node2.parent.set(node1);
         node3.parent.set(node2);
-        assertThat(node1.descendants).containsExactly(node2, node3);
+        assertThat(node1.descendants).containsExactlyInAnyOrder(node2, node3);
         node2.parent.set(null);
         assertThat(node1.descendants).isEmpty();
         node4.parent.set(node2);
