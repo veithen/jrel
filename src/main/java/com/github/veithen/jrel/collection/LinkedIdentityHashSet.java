@@ -23,6 +23,9 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
  * Iterators returned by this implementation make additional guarantees:
  *
@@ -39,11 +42,12 @@ import java.util.NoSuchElementException;
  *
  * @param <E> the type of elements in this set
  */
+@NullMarked
 public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     private static class Node<E> {
-        private E element;
-        Node<E> previous;
-        Node<E> next;
+        private @Nullable E element;
+        @Nullable Node<E> previous;
+        @Nullable Node<E> next;
 
         Node(E element) {
             this.element = element;
@@ -58,14 +62,17 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         }
 
         E getElement() {
+            if (element == null) {
+                throw new IllegalStateException("Element has been removed");
+            }
             return element;
         }
     }
 
     private class It implements Iterator<E> {
-        private Node<E> currentNode;
+        private @Nullable Node<E> currentNode;
 
-        private Node<E> getNextNode() {
+        private @Nullable Node<E> getNextNode() {
             Node<E> node = currentNode;
             while (node != null && node.isRemoved()) {
                 node = node.previous;
@@ -103,8 +110,8 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     private int size;
     private int tombstones;
     private Array<Node<E>> nodes;
-    private Node<E> firstNode;
-    private Node<E> lastNode;
+    private @Nullable Node<E> firstNode;
+    private @Nullable Node<E> lastNode;
 
     public LinkedIdentityHashSet(int initialCapacity, float loadFactor) {
         this.loadFactor = loadFactor;
@@ -205,7 +212,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             if (node == null) {
                 return false;
             }
-            if (node.getElement() == object) {
+            if (!node.isRemoved() && node.getElement() == object) {
                 removeElement(node);
                 return true;
             }
@@ -227,7 +234,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             if (node == null) {
                 return false;
             }
-            if (node.getElement() == object) {
+            if (!node.isRemoved() && node.getElement() == object) {
                 return true;
             }
             index = (index + 1) % capacity;
