@@ -21,6 +21,9 @@ package com.github.veithen.jrel.collection;
 
 import java.util.Set;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public interface ListenableSet<E> extends Set<E> {
     void addListener(SetListener<? super E> listener);
 

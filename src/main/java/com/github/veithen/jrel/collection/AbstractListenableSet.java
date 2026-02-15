@@ -21,6 +21,9 @@ package com.github.veithen.jrel.collection;
 
 import java.util.AbstractSet;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public abstract class AbstractListenableSet<E> extends AbstractSet<E> implements ListenableSet<E> {
     private final SetListenerList<E> listeners = new SetListenerList<>();
 

@@ -22,11 +22,14 @@ package com.github.veithen.jrel.collection;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Maintains a list of {@link SetListener} instances for use by {@link ListenableSet} instances.
  *
  * @param <E> the type of elements in the set
  */
+@NullMarked
 public final class SetListenerList<E> {
     private final List<SetListener<? super E>> listeners = new ArrayList<>();
 

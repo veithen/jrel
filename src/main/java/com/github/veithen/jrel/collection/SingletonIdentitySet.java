@@ -22,10 +22,14 @@ package com.github.veithen.jrel.collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
-    private E element;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-    public void set(E element) {
+@NullMarked
+public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
+    private @Nullable E element;
+
+    public void set(@Nullable E element) {
         if (this.element == element) {
             return;
         }
@@ -36,7 +40,7 @@ public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
         }
     }
 
-    public E get() {
+    public @Nullable E get() {
         return element;
     }
 
@@ -64,7 +68,7 @@ public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
     }
 
     @Override
-    public boolean remove(Object element) {
+    public boolean remove(@Nullable Object element) {
         if (element == null || this.element != element) {
             return false;
         }
@@ -82,7 +86,7 @@ public final class SingletonIdentitySet<E> extends AbstractListenableSet<E> {
     }
 
     @Override
-    public boolean contains(Object element) {
+    public boolean contains(@Nullable Object element) {
         return element != null && this.element == element;
     }
 

@@ -19,6 +19,9 @@
  */
 package com.github.veithen.jrel.collection;
 
+import org.jspecify.annotations.NullMarked;
+
+@NullMarked
 public interface SetListener<E> {
     void added(E object);
 
