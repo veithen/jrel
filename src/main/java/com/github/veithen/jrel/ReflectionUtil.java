@@ -22,6 +22,10 @@ package com.github.veithen.jrel;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+@NullMarked
 final class ReflectionUtil {
     private ReflectionUtil() {}
 
@@ -33,7 +37,7 @@ final class ReflectionUtil {
         return classLoader;
     }
 
-    static Object getStaticFieldValue(Field field) throws IllegalAccessException {
+    static @Nullable Object getStaticFieldValue(Field field) throws IllegalAccessException {
         if (!Modifier.isStatic(field.getModifiers())) {
             throw new IllegalArgumentException(field + " is not static");
         }

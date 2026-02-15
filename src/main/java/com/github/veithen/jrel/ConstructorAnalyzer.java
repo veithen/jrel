@@ -23,9 +23,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+@NullMarked
 final class ConstructorAnalyzer<T> extends MethodVisitor {
     private enum State {
         NONE,
@@ -38,7 +41,7 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     private final Class<T> clazz;
     private final Map<BinaryRelation<T, ?>, Field> fieldMap;
     private State state = State.NONE;
-    private BinaryRelation<?, ?> relation;
+    private @Nullable BinaryRelation<?, ?> relation;
 
     ConstructorAnalyzer(Class<T> clazz, Map<BinaryRelation<T, ?>, Field> fieldMap) {
         super(Opcodes.ASM9);

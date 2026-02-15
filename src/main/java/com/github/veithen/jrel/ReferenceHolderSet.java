@@ -19,8 +19,12 @@
  */
 package com.github.veithen.jrel;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+@NullMarked
 final class ReferenceHolderSet {
-    private RelationToReferenceHolderMapping unboundReferenceHolders;
+    private @Nullable RelationToReferenceHolderMapping unboundReferenceHolders;
 
     final <T1, T2> ReferenceHolder<T2> getUnboundReferenceHolder(
             BinaryRelation<T1, T2> relation, T1 owner) {

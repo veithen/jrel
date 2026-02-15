@@ -28,12 +28,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 
+@NullMarked
 final class Descriptor<T> {
     private final Map<BinaryRelation<? super T, ?>, ReferenceHolderAccessor> accessorMap =
             new HashMap<>();
-    private final ReferenceHolderSetAccessor referenceHolderSetAccessor;
+    private final @Nullable ReferenceHolderSetAccessor referenceHolderSetAccessor;
 
     Descriptor(Class<T> clazz, List<BinaryRelation<T, ?>> registeredRelations) {
         Class<? super T> superClass = clazz.getSuperclass();
@@ -78,11 +81,11 @@ final class Descriptor<T> {
         }
     }
 
-    ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?, ?> relation) {
+    @Nullable ReferenceHolderAccessor getReferenceHolderAccessor(BinaryRelation<?, ?> relation) {
         return accessorMap.get(relation);
     }
 
-    ReferenceHolderSetAccessor getReferenceHolderSetAccessor() {
+    @Nullable ReferenceHolderSetAccessor getReferenceHolderSetAccessor() {
         return referenceHolderSetAccessor;
     }
 }

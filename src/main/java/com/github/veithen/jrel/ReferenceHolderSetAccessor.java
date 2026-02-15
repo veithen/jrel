@@ -21,6 +21,10 @@ package com.github.veithen.jrel;
 
 import java.util.List;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
+@NullMarked
 final class ReferenceHolderSetAccessor {
     private final List<BoundReferenceHolderAccessor> boundReferenceHolderAccessors;
 
@@ -28,7 +32,7 @@ final class ReferenceHolderSetAccessor {
         this.boundReferenceHolderAccessors = boundReferenceHolderAccessors;
     }
 
-    ReferenceHolderSet get(Object owner) {
+    @Nullable ReferenceHolderSet get(Object owner) {
         for (BoundReferenceHolderAccessor accessor : boundReferenceHolderAccessors) {
             ReferenceHolder<?> referenceHolder = accessor.get(owner);
             if (referenceHolder == null) {
