@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -203,7 +202,7 @@ public class LinkedIdentityHashSetTest {
         set.add(object1);
         set.add(object2);
         assertThat(set.toString())
-                .isEqualTo(new LinkedHashSet<Object>(Arrays.asList(object1, object2)).toString());
+                .isEqualTo(new LinkedHashSet<>(List.of(object1, object2)).toString());
     }
 
     @Test

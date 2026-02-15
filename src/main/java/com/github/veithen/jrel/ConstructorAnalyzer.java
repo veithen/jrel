@@ -55,13 +55,15 @@ final class ConstructorAnalyzer<T> extends MethodVisitor {
     public void visitVarInsn(int opcode, int var) {
         if (opcode == Opcodes.ALOAD && var == 0) {
             switch (state) {
-                case NONE:
+                case NONE -> {
                     state = State.THIS_LOADED;
                     return;
-                case RELATION_LOADED:
+                }
+                case RELATION_LOADED -> {
                     state = State.OWNER_LOADED;
                     return;
-                default:
+                }
+                default -> {}
             }
         }
         reset();

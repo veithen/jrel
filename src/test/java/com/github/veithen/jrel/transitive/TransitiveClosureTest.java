@@ -22,7 +22,7 @@ package com.github.veithen.jrel.transitive;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
@@ -97,11 +97,7 @@ public class TransitiveClosureTest {
     public void testAddAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () ->
-                        new TreeNode("1")
-                                .descendants
-                                .asSet()
-                                .addAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().addAll(List.of(new TreeNode("2"))));
     }
 
     @Test
@@ -115,22 +111,14 @@ public class TransitiveClosureTest {
     public void testRemoveAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () ->
-                        new TreeNode("1")
-                                .descendants
-                                .asSet()
-                                .removeAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().removeAll(List.of(new TreeNode("2"))));
     }
 
     @Test
     public void testRetainAll() {
         assertThrows(
                 UnsupportedOperationException.class,
-                () ->
-                        new TreeNode("1")
-                                .descendants
-                                .asSet()
-                                .retainAll(Arrays.asList(new TreeNode("2"))));
+                () -> new TreeNode("1").descendants.asSet().retainAll(List.of(new TreeNode("2"))));
     }
 
     @Test
