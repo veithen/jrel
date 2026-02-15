@@ -22,6 +22,9 @@ package com.github.veithen.jrel.collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
  * Minimal fixed-size mutable array.
  *
@@ -38,8 +41,9 @@ import java.util.NoSuchElementException;
  * replace with a {@code List} only if the full {@code List} API is needed or when interoperability
  * with external APIs is a concern.
  */
-final class Array<E> implements Iterable<E> {
-    private class It implements Iterator<E> {
+@NullMarked
+final class Array<E> implements Iterable<@Nullable E> {
+    private class It implements Iterator<@Nullable E> {
         private int index;
 
         @Override
@@ -49,7 +53,7 @@ final class Array<E> implements Iterable<E> {
 
         @Override
         @SuppressWarnings("unchecked")
-        public E next() {
+        public @Nullable E next() {
             if (index == array.length) {
                 throw new NoSuchElementException();
             }
@@ -62,18 +66,18 @@ final class Array<E> implements Iterable<E> {
         }
     }
 
-    private final Object[] array;
+    private final @Nullable Object[] array;
 
     Array(int size) {
         array = new Object[size];
     }
 
-    void set(int index, E element) {
+    void set(int index, @Nullable E element) {
         array[index] = element;
     }
 
     @SuppressWarnings("unchecked")
-    E get(int index) {
+    @Nullable E get(int index) {
         return (E) array[index];
     }
 
@@ -82,7 +86,7 @@ final class Array<E> implements Iterable<E> {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public Iterator<@Nullable E> iterator() {
         return new It();
     }
 }
