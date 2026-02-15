@@ -22,7 +22,22 @@ package com.github.veithen.jrel.collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/** Generic fixed size array. */
+/**
+ * Minimal fixed-size mutable array.
+ *
+ * <p>This class provides constant-time indexed access (via {@link #get(int)} / {@link #set(int,
+ * Object)}) and an {@link java.lang.Iterable} view backed by a compact {@code Object[]}.
+ *
+ * <p>It is intentionally lighter-weight than a full {@link java.util.List} implementation: the size
+ * is fixed (no resizing or capacity management), the API surface is intentionally small, and the
+ * class avoids exposing callers to unchecked generic-array creation. Compared to {@link
+ * java.util.Arrays#asList(Object[])}, this class avoids caller-side casts and keeps the
+ * implementation minimal.
+ *
+ * <p>Keep this class when a tiny, allocation-efficient, fixed-size mutable container is required;
+ * replace with a {@code List} only if the full {@code List} API is needed or when interoperability
+ * with external APIs is a concern.
+ */
 final class Array<E> implements Iterable<E> {
     private class It implements Iterator<E> {
         private int index;
