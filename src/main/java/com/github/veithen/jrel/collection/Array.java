@@ -31,6 +31,9 @@ import org.jspecify.annotations.Nullable;
  * <p>This class provides constant-time indexed access (via {@link #get(int)} / {@link #set(int,
  * Object)}) and an {@link java.lang.Iterable} view backed by a compact {@code Object[]}.
  *
+ * <p>The iterator returned by {@link #iterator()} iterates over set (non-null) elements only; unset
+ * entries (those still {@code null}) are skipped and the iterator never returns {@code null}.
+ *
  * <p>It is intentionally lighter-weight than a full {@link java.util.List} implementation: the size
  * is fixed (no resizing or capacity management), the API surface is intentionally small, and the
  * class avoids exposing callers to unchecked generic-array creation. Compared to {@link
@@ -42,22 +45,35 @@ import org.jspecify.annotations.Nullable;
  * with external APIs is a concern.
  */
 @NullMarked
-final class Array<E> implements Iterable<@Nullable E> {
-    private class It implements Iterator<@Nullable E> {
+final class Array<E> implements Iterable<E> {
+    private class It implements Iterator<E> {
         private int index;
 
         @Override
         public boolean hasNext() {
-            return index < array.length;
+            while (true) {
+                if (index == array.length) {
+                    return false;
+                }
+                if (array[index] != null) {
+                    return true;
+                }
+                index++;
+            }
         }
 
         @Override
         @SuppressWarnings("unchecked")
-        public @Nullable E next() {
-            if (index == array.length) {
-                throw new NoSuchElementException();
+        public E next() {
+            while (true) {
+                if (index == array.length) {
+                    throw new NoSuchElementException();
+                }
+                Object o = array[index++];
+                if (o != null) {
+                    return (E) o;
+                }
             }
-            return (E) array[index++];
         }
 
         @Override
@@ -86,7 +102,7 @@ final class Array<E> implements Iterable<@Nullable E> {
     }
 
     @Override
-    public Iterator<@Nullable E> iterator() {
+    public Iterator<E> iterator() {
         return new It();
     }
 }

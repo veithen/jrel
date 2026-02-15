@@ -134,7 +134,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             }
             Array<Node<E>> newNodes = new Array<>(capacity);
             for (Node<E> node : nodes) {
-                if (node == null || node.isRemoved()) {
+                if (node.isRemoved()) {
                     continue;
                 }
                 int newIndex = System.identityHashCode(node.getElement()) % capacity;
