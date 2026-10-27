@@ -122,6 +122,15 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
         this(16, 0.5f);
     }
 
+    /**
+     * Compute the initial slot for an object. {@link System#identityHashCode(Object)} may be
+     * negative (this is the case for about half of the values on OpenJ9), so we can't use {@code %}
+     * directly.
+     */
+    private static int indexFor(Object object, int capacity) {
+        return Math.floorMod(System.identityHashCode(object), capacity);
+    }
+
     @Override
     public boolean add(E object) {
         int capacity = nodes.length();
@@ -137,7 +146,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
                 if (node.isRemoved()) {
                     continue;
                 }
-                int newIndex = System.identityHashCode(node.getElement()) % capacity;
+                int newIndex = indexFor(node.getElement(), capacity);
                 while (newNodes.get(newIndex) != null) {
                     newIndex = (newIndex + 1) % capacity;
                 }
@@ -146,7 +155,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
             tombstones = 0;
             nodes = newNodes;
         }
-        int index = System.identityHashCode(object) % capacity;
+        int index = indexFor(object, capacity);
         int tombstoneIndex = -1;
         while (true) {
             Node<E> node = nodes.get(index);
@@ -206,7 +215,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     @Override
     public boolean remove(Object object) {
         int capacity = nodes.length();
-        int index = System.identityHashCode(object) % capacity;
+        int index = indexFor(object, capacity);
         while (true) {
             Node<E> node = nodes.get(index);
             if (node == null) {
@@ -228,7 +237,7 @@ public final class LinkedIdentityHashSet<E> extends AbstractListenableSet<E> {
     @Override
     public boolean contains(Object object) {
         int capacity = nodes.length();
-        int index = System.identityHashCode(object) % capacity;
+        int index = indexFor(object, capacity);
         while (true) {
             Node<E> node = nodes.get(index);
             if (node == null) {
