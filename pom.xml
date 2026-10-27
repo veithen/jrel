@@ -127,4 +127,19 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- The Error Prone version inherited from the parent POM (2.49.0) is compiled for Java 21
+             (class file version 65) and can't be loaded by a JDK 17 javac (e.g. IBM Semeru 17).
+             2.41.0 is built for Java 17 (class file version 61). -->
+        <profile>
+            <id>jdk17-errorprone</id>
+            <activation>
+                <jdk>[17,21)</jdk>
+            </activation>
+            <properties>
+                <errorprone.version>2.41.0</errorprone.version>
+            </properties>
+        </profile>
+    </profiles>
 </project>
