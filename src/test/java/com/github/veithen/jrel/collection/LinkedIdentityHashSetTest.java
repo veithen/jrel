@@ -322,4 +322,26 @@ public class LinkedIdentityHashSetTest {
         assertThat(set).isEmpty();
         assertThat(seen).containsExactly(object1, object2);
     }
+
+    // On OpenJ9, about half of the identity hash codes are negative.
+    @Test
+    public void testManyObjects() {
+        LinkedIdentityHashSet<Object> set = new LinkedIdentityHashSet<>();
+        List<Object> objects = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            Object object = new Object();
+            objects.add(object);
+            assertThat(set.add(object)).isTrue();
+        }
+        assertThat(set).hasSize(objects.size());
+        for (Object object : objects) {
+            assertThat(set.contains(object)).isTrue();
+            assertThat(set.add(object)).isFalse();
+        }
+        for (Object object : objects) {
+            assertThat(set.remove(object)).isTrue();
+            assertThat(set.contains(object)).isFalse();
+        }
+        assertThat(set).isEmpty();
+    }
 }
