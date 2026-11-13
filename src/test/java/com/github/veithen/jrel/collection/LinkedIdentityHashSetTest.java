@@ -255,7 +255,6 @@ public class LinkedIdentityHashSetTest {
             }
             seen.add(o);
         }
-        ;
         assertThat(set).containsExactly(object1, object2, object3);
         assertThat(seen).containsExactly(object1, object2, object3);
     }
@@ -276,7 +275,6 @@ public class LinkedIdentityHashSetTest {
             }
             seen.add(o);
         }
-        ;
         assertThat(set).containsExactly(object1, object3);
         assertThat(seen).containsExactly(object1, object2, object3);
     }
@@ -297,7 +295,6 @@ public class LinkedIdentityHashSetTest {
             }
             seen.add(o);
         }
-        ;
         assertThat(set).containsExactly(object1, object3);
         assertThat(seen).containsExactly(object1, object3);
     }
@@ -318,7 +315,6 @@ public class LinkedIdentityHashSetTest {
             }
             seen.add(o);
         }
-        ;
         assertThat(set).isEmpty();
         assertThat(seen).containsExactly(object1, object2);
     }
