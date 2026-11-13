@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>jrel</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>jrel</name>
@@ -46,13 +46,13 @@
         <url>https://github.com/veithen/jrel/tree/master</url>
         <connection>scm:git:http://github.com/veithen/jrel.git</connection>
         <developerConnection>scm:git:https://github.com/veithen/jrel.git</developerConnection>
-        <tag>0.2.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
         <github.repository>jrel</github.repository>
         <javaVersion>17</javaVersion>
-        <project.build.outputTimestamp>2026-11-13T17:26:57Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-11-13T17:27:20Z</project.build.outputTimestamp>
         <checkt.version>0.1.0</checkt.version>
     </properties>
 
